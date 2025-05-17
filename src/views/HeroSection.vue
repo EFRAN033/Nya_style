@@ -1,174 +1,194 @@
 <template>
   <section
     id="inicio"
-    class="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white pt-24 pb-16 md:pt-36 md:pb-24"
+    class="relative overflow-hidden bg-white pt-24 pb-16 md:pt-36 md:pb-24"
   >
-    <!-- Fondo abstracto dinámico -->
+    <!-- Fondo orgánico abstracto con movimiento sutil -->
     <div class="absolute inset-0 overflow-hidden opacity-10">
-      <div class="absolute top-0 left-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-500 to-teal-400 opacity-20 blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 h-[600px] w-[600px] translate-x-1/2 translate-y-1/2 rounded-full bg-gradient-to-r from-purple-400 to-indigo-500 opacity-20 blur-3xl"></div>
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAwIDEwMDAiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHBhdGggZD0iTTAgMCwxMDAgMCIgc3Ryb2tlPSJyZ2JhKDQsMTIwLDgxLDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjEwMDAiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=')] animate-float"></div>
     </div>
 
-    <!-- Contenido principal -->
+    <!-- Elementos decorativos abstractos -->
+    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-100/30 blur-3xl"></div>
+    <div class="absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-teal-100/30 blur-3xl"></div>
+
     <div class="container relative mx-auto px-6">
       <div class="flex flex-col items-center lg:flex-row">
         <!-- Columna de texto -->
         <div class="mb-12 lg:mb-0 lg:w-1/2 lg:pr-10 animate-slide-in-left">
-          <!-- Badge de novedad con efecto de atención -->
-          <div class="mb-6 inline-flex animate-bounce items-center rounded-full bg-gradient-to-r from-blue-600 to-teal-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-400/30 transition-all hover:shadow-blue-400/50">
-            <span class="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-white"></span>
-            ¡NUEVA VERSIÓN DISPONIBLE!
+          <!-- Badge de novedad con diseño orgánico -->
+          <div class="mb-8 inline-flex items-center rounded-full bg-gradient-to-r from-teal-400 to-emerald-500 px-4 py-2 text-xs font-medium text-white tracking-wider shadow-md relative overflow-hidden group">
+            <span class="absolute inset-0 bg-gradient-to-r from-teal-500 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            <span class="relative flex items-center">
+              <span class="mr-2 inline-block h-2 w-2 rounded-full bg-white/90 animate-pulse"></span>
+              ¡NUEVA VERSIÓN DISPONIBLE!
+              <svg class="ml-2 h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </span>
           </div>
 
-          <!-- Título principal con gradiente -->
-          <h1 class="mb-4 text-4xl font-extrabold leading-tight text-gray-900 md:text-5xl lg:text-6xl">
-            <span class="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">Optimiza</span> tu cadena de<br>
-            <span class="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">suministro</span> con inteligencia
+          <h1 class="mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-5xl lg:text-6xl">
+            <span class="relative inline-block">
+              <span class="absolute -bottom-1 left-0 h-2 w-full bg-emerald-200/70 rounded-full"></span>
+              <span class="relative bg-gradient-to-r from-teal-600 to-emerald-700 bg-clip-text text-transparent">Revoluciona</span>
+            </span> tu cadena de<br>
+            <span class="relative">
+              <span class="absolute -bottom-1 left-0 h-1 w-full bg-teal-100 rounded-full"></span>
+              <span class="relative text-gray-800">suministro digital</span>
+            </span>
           </h1>
 
-          <!-- Subtítulo descriptivo -->
-          <p class="mb-6 text-lg text-gray-600 md:text-xl">
-            La plataforma todo-en-uno que transforma tus procesos de compras,
-            <span class="font-semibold text-blue-600">reduciendo costos</span> y
-            <span class="font-semibold text-teal-500">maximizando eficiencia</span>
-            con tecnología de vanguardia.
+          <!-- Subtítulo con efecto de aparición progresiva -->
+          <p class="mb-8 text-lg text-gray-600 md:text-xl max-w-lg">
+            <span class="inline-block opacity-0 animate-fade-in [animation-delay:0.2s] animate-fill-forwards">Plataforma inteligente que</span>
+            <span class="inline-block opacity-0 animate-fade-in [animation-delay:0.4s] animate-fill-forwards"> <span class="font-semibold text-teal-600">automatiza</span> procesos,</span>
+            <span class="inline-block opacity-0 animate-fade-in [animation-delay:0.6s] animate-fill-forwards"> <span class="font-semibold text-emerald-600">reduce costos</span> y</span>
+            <span class="inline-block opacity-0 animate-fade-in [animation-delay:0.8s] animate-fill-forwards"> <span class="font-semibold text-green-700">maximiza eficiencia</span>.</span>
           </p>
 
-          <!-- CTA Principal y secundario -->
-          <div class="mb-10 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-            <!-- Botón "Ver categorías" -->
+          <!-- CTA con diseño orgánico -->
+          <div class="mb-12 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
             <router-link
               to="/afiliados"
-              class="flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-teal-500 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-teal-600 hover:shadow-xl hover:shadow-blue-400/30 group"
+              class="relative overflow-hidden flex items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:shadow-xl group"
             >
-              Ver categorías
-              <svg
-                class="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                ></path>
-              </svg>
+              <span class="absolute inset-0 bg-gradient-to-br from-teal-600 to-emerald-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span class="relative flex items-center">
+                Comenzar ahora
+                <svg
+                  class="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  ></path>
+                </svg>
+              </span>
             </router-link>
 
-            <!-- Botón secundario -->
             <a
               href="#features"
-              class="flex items-center justify-center rounded-xl border-2 border-gray-300 px-8 py-4 text-lg font-semibold text-gray-700 transition-all duration-300 hover:border-blue-500 hover:text-blue-600"
+              class="relative flex items-center justify-center rounded-lg border-2 border-emerald-100 bg-white px-8 py-4 text-lg font-semibold text-emerald-800 transition-all hover:bg-emerald-50 group"
             >
-              <svg
-                class="mr-2 h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                ></path>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                ></path>
-              </svg>
-              Ver características
+              <span class="absolute inset-0 rounded-md bg-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span class="relative flex items-center">
+                <svg
+                  class="mr-2 h-5 w-5 text-emerald-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
+                </svg>
+                Ver demostración
+              </span>
             </a>
           </div>
 
-          <!-- Social proof con avatares y ratings - Versión responsive -->
-          <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-0">
-            <div class="flex -space-x-3 shrink-0">
+          <!-- Social proof con diseño mejorado -->
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <div class="relative flex -space-x-3">
               <img
-                class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-white shadow-md"
+                class="relative z-30 h-12 w-12 rounded-full border-2 border-white shadow-md"
                 src="https://randomuser.me/api/portraits/women/44.jpg"
                 alt="Cliente satisfecho"
                 loading="lazy"
               />
               <img
-                class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-white shadow-md"
+                class="relative z-20 h-12 w-12 rounded-full border-2 border-white shadow-md"
                 src="https://randomuser.me/api/portraits/men/32.jpg"
                 alt="Cliente satisfecho"
                 loading="lazy"
               />
               <img
-                class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-white shadow-md"
+                class="relative z-10 h-12 w-12 rounded-full border-2 border-white shadow-md"
                 src="https://randomuser.me/api/portraits/women/68.jpg"
                 alt="Cliente satisfecho"
                 loading="lazy"
               />
-              <div class="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-xs font-bold text-white shadow-md">
+              <div class="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-emerald-700 to-teal-600 text-xs font-bold text-white shadow-md z-0">
                 +2.5K
               </div>
             </div>
             <div class="text-center sm:text-left sm:ml-4">
               <div class="flex items-center justify-center sm:justify-start">
-                <div class="flex text-yellow-400">
-                  <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 20 20">
+                <div class="flex text-amber-400">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                     ></path>
                   </svg>
-                  <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                     ></path>
                   </svg>
-                  <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                     ></path>
                   </svg>
-                  <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                     ></path>
                   </svg>
-                  <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                     ></path>
                   </svg>
                 </div>
-                <span class="ml-2 text-sm font-medium text-gray-600">4.9 (2.5K+)</span>
+                <span class="ml-2 text-sm font-medium text-gray-600">4.9 (2.5K+ reseñas)</span>
               </div>
-              <p class="mt-1 text-xs sm:text-sm text-gray-500 leading-tight">
-                Empresas líderes en 15 países confían en nosotros
+              <p class="mt-1 text-sm text-gray-500 leading-tight">
+                Empresas líderes en logística nos prefieren
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Columna de imagen -->
+        <!-- Columna de imagen con diseño mejorado -->
         <div class="lg:w-1/2 animate-slide-in-right">
           <div class="relative">
-            <div class="relative overflow-hidden rounded-3xl shadow-2xl">
+            <!-- Marco orgánico para la imagen -->
+            <div class="relative overflow-hidden rounded-2xl shadow-2xl border-8 border-white transform rotate-1">
+              <div class="absolute inset-0 bg-gradient-to-br from-emerald-100/20 to-teal-100/20 z-10"></div>
               <img
                 class="h-auto w-full transform transition-all duration-500 hover:scale-105"
                 src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
                 alt="Dashboard de gestión de suministros"
                 loading="lazy"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-blue-900/10"></div>
             </div>
+            
+            <!-- Tarjeta de métrica con diseño orgánico -->
             <div
-              class="absolute -bottom-6 -left-6 hidden rounded-xl bg-white p-5 shadow-2xl md:block"
+              class="absolute -bottom-6 -left-6 hidden rounded-xl bg-white p-6 shadow-xl md:block border-t-4 border-teal-500 transform -rotate-1"
             >
               <div class="flex items-start">
-                <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                <div class="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-teal-100 to-emerald-100">
                   <svg
-                    class="h-6 w-6 text-blue-600"
+                    class="h-6 w-6 text-teal-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -183,20 +203,20 @@
                   </svg>
                 </div>
                 <div>
-                  <p class="text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <p class="text-xs font-medium uppercase tracking-wider text-teal-600">
                     Eficiencia mejorada
                   </p>
                   <p class="text-2xl font-bold text-gray-900">+87%</p>
-                  <p class="text-sm text-gray-600">en procesos de compra</p>
+                  <p class="text-sm text-gray-600">en procesos logísticos</p>
                 </div>
               </div>
             </div>
 
-            <!-- Sello de garantía -->
+            <!-- Sello de garantía con diseño mejorado -->
             <div
-              class="absolute -right-6 -top-6 hidden items-center rounded-full bg-white px-4 py-2 shadow-lg md:flex"
+              class="absolute -right-6 -top-6 hidden items-center rounded-xl bg-white px-5 py-3 shadow-xl md:flex border border-emerald-100 transform rotate-2"
             >
-              <div class="mr-2 flex h-10 w-10 items-center justify-center rounded-full bg-green-500">
+              <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-emerald-500 shadow-md">
                 <svg
                   class="h-5 w-5 text-white"
                   fill="none"
@@ -213,8 +233,8 @@
                 </svg>
               </div>
               <div>
-                <p class="text-xs font-medium text-gray-500">GARANTÍA</p>
-                <p class="text-sm font-bold text-gray-900">30 días</p>
+                <p class="text-xs font-medium text-emerald-600 tracking-wider">GARANTÍA SATISFACCIÓN</p>
+                <p class="text-sm font-bold text-gray-900">30 días sin riesgo</p>
               </div>
             </div>
           </div>
@@ -222,17 +242,32 @@
       </div>
     </div>
 
-    <!-- Logos de empresas clientes-->
-    <div class="container mx-auto mt-16 px-6 animate-slide-in-bottom">
-      <p class="mb-6 text-center text-sm font-medium uppercase tracking-wider text-gray-500">
-        Confiado por equipos de todo el mundo
+    <!-- Logos de empresas con diseño mejorado -->
+    <div class="container mx-auto mt-20 px-6 animate-slide-in-bottom">
+      <p class="mb-8 text-center text-sm font-medium uppercase tracking-wider text-emerald-600">
+        Empresas que optimizan con nosotros
       </p>
-      <div class="flex flex-wrap items-center justify-center gap-8 opacity-70 grayscale">
-        <img class="h-8" src="https://logo.clearbit.com/google.com" alt="Google" loading="lazy" />
-        <img class="h-8" src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" loading="lazy" />
-        <img class="h-8" src="https://logo.clearbit.com/amazon.com" alt="Amazon" loading="lazy" />
-        <img class="h-8" src="https://logo.clearbit.com/slack.com" alt="Slack" loading="lazy" />
-        <img class="h-8" src="https://logo.clearbit.com/airbnb.com" alt="Airbnb" loading="lazy" />
+      <div class="flex flex-wrap items-center justify-center gap-10 grayscale hover:grayscale-0 transition-all duration-500">
+        <div class="group relative">
+          <img class="h-8 transition-all duration-300 group-hover:scale-110" src="https://logo.clearbit.com/google.com" alt="Google" loading="lazy" />
+          <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-2 h-2 bg-emerald-500 rounded-full"></div>
+        </div>
+        <div class="group relative">
+          <img class="h-8 transition-all duration-300 group-hover:scale-110" src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" loading="lazy" />
+          <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-2 h-2 bg-emerald-500 rounded-full"></div>
+        </div>
+        <div class="group relative">
+          <img class="h-8 transition-all duration-300 group-hover:scale-110" src="https://logo.clearbit.com/amazon.com" alt="Amazon" loading="lazy" />
+          <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-2 h-2 bg-emerald-500 rounded-full"></div>
+        </div>
+        <div class="group relative">
+          <img class="h-8 transition-all duration-300 group-hover:scale-110" src="https://logo.clearbit.com/slack.com" alt="Slack" loading="lazy" />
+          <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-2 h-2 bg-emerald-500 rounded-full"></div>
+        </div>
+        <div class="group relative">
+          <img class="h-8 transition-all duration-300 group-hover:scale-110" src="https://logo.clearbit.com/airbnb.com" alt="Airbnb" loading="lazy" />
+          <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-2 h-2 bg-emerald-500 rounded-full"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -242,7 +277,6 @@
 export default {
   name: "HeroSection",
   mounted() {
-    // Forzar repintado para asegurar que las animaciones se ejecuten
     const elements = document.querySelectorAll('.animate-slide-in-left, .animate-slide-in-right, .animate-slide-in-bottom');
     elements.forEach(el => {
       el.style.opacity = '0';
@@ -255,24 +289,9 @@ export default {
 </script>
 
 <style>
-/* Animaciones personalizadas */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
 @keyframes slideInLeft {
   from {
-    transform: translateX(-100px);
+    transform: translateX(-50px);
     opacity: 0;
   }
   to {
@@ -283,7 +302,7 @@ export default {
 
 @keyframes slideInRight {
   from {
-    transform: translateX(100px);
+    transform: translateX(50px);
     opacity: 0;
   }
   to {
@@ -294,7 +313,7 @@ export default {
 
 @keyframes slideInBottom {
   from {
-    transform: translateY(50px);
+    transform: translateY(30px);
     opacity: 0;
   }
   to {
@@ -303,40 +322,46 @@ export default {
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
 .animate-slide-in-left {
-  animation: slideInLeft 0.8s ease-out forwards;
+  animation: slideInLeft 0.6s ease-out forwards;
 }
 
 .animate-slide-in-right {
-  animation: slideInRight 0.8s ease-out forwards;
+  animation: slideInRight 0.6s ease-out forwards;
 }
 
 .animate-slide-in-bottom {
-  animation: slideInBottom 0.8s ease-out forwards;
+  animation: slideInBottom 0.6s ease-out forwards;
 }
 
-/* Transición para elementos interactivos */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
-/* Efecto de gradiente animado para el título */
-.gradient-text {
-  background-size: 200% auto;
-  animation: gradient-shift 3s ease infinite;
+.animate-float {
+  animation: float 15s ease-in-out infinite;
 }
 
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-  100% {
-    background-position: 0% center;
-  }
+/* Efectos hover personalizados */
+.hover-rotate:hover {
+  transform: rotate(1deg) scale(1.02);
 }
 </style>

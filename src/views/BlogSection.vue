@@ -1,8 +1,12 @@
 <template>
-  <section id="blog" class="py-16 bg-white">
-    <div class="container mx-auto px-4 sm:px-6">
-      <div class="text-center mb-12 max-w-2xl mx-auto">
-        <p class="text-blue-600 font-medium mb-3 text-sm uppercase tracking-wider">Blog especializado</p>
+  <section id="blog" class="relative py-16 bg-white overflow-hidden">
+    <!-- Elementos decorativos abstractos -->
+    <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-teal-100/30 blur-3xl"></div>
+    <div class="absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-emerald-100/30 blur-3xl"></div>
+
+    <div class="container mx-auto px-4 sm:px-6 relative z-10">
+      <div class="text-center mb-12 max-w-2xl mx-auto animate-slide-in-bottom">
+        <p class="text-emerald-600 font-medium mb-3 text-sm uppercase tracking-wider">Blog especializado</p>
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Optimiza tu cadena de suministro</h2>
         <p class="text-gray-600">Conoce las últimas tendencias en gestión logística</p>
       </div>
@@ -29,15 +33,15 @@
                 opacity: isCenter(index) ? '1' : '0.8'
               }"
             >
-              <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 h-full">
+              <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 h-full hover:border-emerald-100 group">
                 <!-- Imagen -->
-                <div class="relative h-48">
+                <div class="relative h-48 overflow-hidden">
                   <img
                     :src="post.image"
                     :alt="post.title"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div v-if="post.popular" class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                  <div v-if="post.popular" class="absolute top-3 right-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                     Destacado
                   </div>
                 </div>
@@ -50,12 +54,12 @@
                     <span>{{ post.readTime }}</span>
                   </div>
                   
-                  <h3 class="text-lg font-bold mb-3 text-gray-900">{{ post.title }}</h3>
+                  <h3 class="text-lg font-bold mb-3 text-gray-900 group-hover:text-emerald-700 transition-colors">{{ post.title }}</h3>
                   <p class="text-gray-600 text-sm mb-4">{{ post.excerpt }}</p>
                   
-                  <a href="#" class="text-blue-600 text-sm font-medium hover:underline flex items-center">
+                  <a href="#" class="text-emerald-600 text-sm font-medium hover:underline flex items-center group">
                     Leer más
-                    <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                   </a>
@@ -70,16 +74,16 @@
           <div
             v-for="(post, index) in posts"
             :key="index"
-            class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+            class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-emerald-100 group"
           >
             <!-- Imagen -->
-            <div class="relative h-48">
+            <div class="relative h-48 overflow-hidden">
               <img
                 :src="post.image"
                 :alt="post.title"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div v-if="post.popular" class="absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+              <div v-if="post.popular" class="absolute top-3 right-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                 Destacado
               </div>
             </div>
@@ -92,12 +96,12 @@
                 <span>{{ post.readTime }}</span>
               </div>
               
-              <h3 class="text-lg font-bold mb-3 text-gray-900">{{ post.title }}</h3>
+              <h3 class="text-lg font-bold mb-3 text-gray-900 group-hover:text-emerald-700 transition-colors">{{ post.title }}</h3>
               <p class="text-gray-600 text-sm mb-4">{{ post.excerpt }}</p>
               
-              <a href="#" class="text-blue-600 text-sm font-medium hover:underline flex items-center">
+              <a href="#" class="text-emerald-600 text-sm font-medium hover:underline flex items-center group">
                 Leer más
-                <svg class="ml-1 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
               </a>
@@ -107,13 +111,13 @@
       </div>
 
       <!-- CTA -->
-      <div class="text-center mt-10">
+      <div class="text-center mt-10 animate-slide-in-bottom">
         <a
           href="#"
-          class="inline-flex items-center px-6 py-2.5 border border-blue-600 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-50 transition-colors"
+          class="inline-flex items-center px-6 py-2.5 border-2 border-emerald-600 text-emerald-600 rounded-full text-sm font-medium hover:bg-emerald-50 transition-colors group"
         >
           Ver todos los artículos
-          <svg class="ml-2 h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </a>
@@ -199,10 +203,13 @@ export default {
   transition: all 0.3s ease;
 }
 .transition-shadow {
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.3s ease;
 }
 .transition-colors {
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.transition-transform {
+  transition: transform 0.5s ease;
 }
 
 /* Estilos para el carrusel */
@@ -227,5 +234,20 @@ export default {
 .scale-90 {
   transform: scale(0.9);
   z-index: 1;
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 0.6s ease-out forwards;
 }
 </style>

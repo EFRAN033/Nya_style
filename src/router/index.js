@@ -17,6 +17,10 @@ import StatsSection from '../views/StatsSection.vue';
 import TestimonialSection from '../views/TestimonialSection.vue';
 import Afileados from '../views/Afiliados.vue';
 import chatbot from '../views/chatbot.vue';
+import Login from '../views/login.vue';
+import RegisterAfiliado from '../views/registerafil.vue'; // Nombre exacto del archivo
+import RegisterProveedor from '../views/registerpro.vue'; // Nombre exacto del archivo
+
 
 // Definición de rutas
 const routes = [
@@ -43,7 +47,25 @@ const routes = [
     path: '/afiliados',
     name: 'Afileados',
     component: Afileados
-  }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: { hideHeader: true }
+  },
+  {
+    path: '/registro-afiliado',
+    name: 'RegisterAfiliado',
+    component: RegisterAfiliado,
+    meta: { hideHeader: true }
+  },
+  {
+    path: '/registro-proveedor',
+    name: 'RegisterProveedor',
+    component: RegisterProveedor,
+    meta: { hideHeader: true }
+  },
 ];
 
 // Creación del router
@@ -52,6 +74,24 @@ const router = createRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { top: 0 };
+  }
+});
+
+// Guardia de navegación
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('authToken');
+  const userRole = localStorage.getItem('userRole');
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next('/login');
+    } else if (to.meta.role && to.meta.role !== userRole) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
   }
 });
 
