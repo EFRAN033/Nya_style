@@ -1,49 +1,44 @@
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <Header />
     <HeroSection />
-    <ClientsSection />
-    <FeaturesSection />
-    <BlogSection />
-    <CaseStudySection />
-    <DesignSection />
-    <PricingSection />
-    <TestimonialSection />
-    <CtaSection />
+    <ProductList :products="products" />
     <Footer />
-    <Chat
-    botProveo />
   </div>
 </template>
 
 <script>
-import Header from './Header.vue';
-import HeroSection from './HeroSection.vue';
-import FeaturesSection from './FeaturesSection.vue';
-import BlogSection from './BlogSection.vue';
-import CaseStudySection from './CaseStudySection.vue';
-import DesignSection from './DesignSection.vue';
-import PricingSection from './PricingSection.vue';
-import TestimonialSection from './TestimonialSection.vue';
-import CtaSection from './CtaSection.vue';
-import ClientsSection from './ClientsSection.vue';
-import Footer from './Footer.vue';
-import ChatbotProveo from './chatbot.vue';
+import Header from './Header.vue'
+import HeroSection from './HeroSection.vue'
+import Footer from './Footer.vue'
+import ProductList from './ProductList.vue'
 
 export default {
   components: {
     Header,
     HeroSection,
-    FeaturesSection,
-    BlogSection,
-    CaseStudySection,
-    DesignSection,
-    PricingSection,
-    TestimonialSection,
-    CtaSection,
-    ClientsSection,
     Footer,
-    ChatbotProveo
+    ProductList
+  },
+  data() {
+    return {
+      products: [
+        {
+          id: 1,
+          name: 'Zapatillas Running',
+          description: 'Zapatillas profesionales para corredores',
+          price: 89.99,
+          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+        },
+        {
+          id: 2,
+          name: 'Cámara DSLR',
+          description: 'Cámara profesional 24.2MP con 4K',
+          price: 599.99,
+          image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+        }
+      ]
+    }
   }
-};
+}
 </script>

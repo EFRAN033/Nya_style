@@ -1,104 +1,65 @@
 <template>
-  <footer id="contacto" class="bg-gray-900 text-white pt-12 md:pt-16 pb-8 md:pb-10">
-    <div class="container mx-auto px-6">
-      <div class="grid md:grid-cols-4 gap-8 md:gap-10 mb-10 md:mb-14">
-        <!-- Logo y redes -->
+  <footer class="bg-gray-900 text-white py-8 px-4">
+    <div class="container mx-auto">
+      <!-- Grid de 3 columnas (md+) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Columna 1: Enlaces rápidos -->
         <div>
-          <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">
-            <span class="text-teal-400">Pro</span>
-            <span class="text-emerald-400">Veo</span>
-          </h3>
-          <p class="text-gray-400 text-sm md:text-base mb-4 md:mb-5">
-            Plataforma líder en gestión inteligente de compras y cadena de suministro.
-          </p>
-          <div class="flex space-x-3 md:space-x-4">
-            <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
-            <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">
-              <i class="fab fa-instagram"></i>
-            </a>
+          <h3 class="text-lg font-bold mb-4">ModaRenta</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="hover:text-purple-400 transition">Inicio</a></li>
+            <li><a href="#" class="hover:text-purple-400 transition">Explorar prendas</a></li>
+            <li><a href="#" class="hover:text-purple-400 transition">Cómo funciona</a></li>
+            <li><a href="#" class="hover:text-purple-400 transition">FAQs</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 2: Contacto -->
+        <div>
+          <h3 class="text-lg font-bold mb-4">Contacto</h3>
+          <p class="mb-2">¿Necesitas ayuda?</p>
+          <a href="mailto:soporte@modarenta.com" class="text-purple-400 hover:underline">soporte@modarenta.com</a>
+          
+          <!-- Redes Sociales -->
+          <div class="mt-4 flex space-x-4">
+            <a href="#"><IconInstagram class="w-6 h-6 hover:text-purple-400" /></a>
+            <a href="#"><IconTwitter class="w-6 h-6 hover:text-purple-400" /></a>
           </div>
         </div>
 
-        <!-- Producto (oculto en móvil) -->
-        <div class="hidden md:block">
-          <h4 class="font-semibold mb-3 md:mb-4 border-b border-gray-700 pb-2 text-base text-gray-400">Producto</h4>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Funcionalidades</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Precios</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Integraciones</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Actualizaciones</a></li>
-          </ul>
-        </div>
-
-        <!-- Recursos (oculto en móvil) -->
-        <div class="hidden md:block">
-          <h4 class="font-semibold mb-3 md:mb-4 border-b border-gray-700 pb-2 text-base text-gray-400">Recursos</h4>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Blog</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Guías</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Webinars</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">Centro de ayuda</a></li>
-          </ul>
-        </div>
-
-        <!-- Contacto -->
+        <!-- Columna 3: Suscripción (para arrendadores) -->
         <div>
-          <h4 class="font-semibold mb-3 md:mb-4 border-b border-gray-700 pb-2 text-base text-gray-400">Contacto</h4>
-          <ul class="space-y-2 mb-4 md:mb-5">
-            <li class="flex items-center">
-              <i class="fas fa-envelope text-teal-400 mr-3 text-sm"></i>
-              <a href="mailto:hola@Proveo.com" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">hola@Proveo.com</a>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-phone-alt text-teal-400 mr-3 text-sm"></i>
-              <a href="tel:+525512345678" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-sm md:text-base">+52 55 1234 5678</a>
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-map-marker-alt text-teal-400 mr-3 text-sm"></i>
-              <span class="text-gray-400 text-sm md:text-base">Av. Reforma 123, CDMX</span>
-            </li>
-          </ul>
-          <form class="space-y-3">
-            <input
-              type="email"
-              placeholder="Tu correo"
-              class="w-full bg-gray-800 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-400 text-white placeholder-gray-500 text-sm md:text-base"
-            />
-            <button
-              type="submit"
-              class="bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-medium w-full px-6 py-2.5 rounded-lg text-sm md:text-base transition-all hover:shadow-lg"
-            >
-              Suscribirse
-            </button>
-          </form>
+          <h3 class="text-lg font-bold mb-4">¿Quieres subir tus prendas?</h3>
+          <p class="mb-4">Únete como arrendador y gana dinero con tu armario.</p>
+          <button 
+            @click="navigateToUpload"
+            class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition"
+          >
+            Comenzar ahora
+          </button>
         </div>
       </div>
 
-      <!-- Copyright y legales -->
-      <div class="border-t border-gray-800 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 text-xs md:text-sm mb-3 md:mb-0">
-          © 2023 Proveo. Todos los derechos reservados.
-        </p>
-        <div class="flex space-x-4 md:space-x-6">
-          <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-xs md:text-sm">Términos</a>
-          <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-xs md:text-sm">Privacidad</a>
-          <a href="#" class="text-gray-400 hover:text-teal-400 transition-colors duration-300 text-xs md:text-sm">Cookies</a>
+      <!-- Línea divisoria y copyright -->
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>© 2025 ModaRenta. Todos los derechos reservados.</p>
+        <div class="mt-2 space-x-4">
+          <a href="#" class="hover:text-white transition">Términos</a>
+          <a href="#" class="hover:text-white transition">Privacidad</a>
         </div>
       </div>
     </div>
   </footer>
 </template>
 
-<script>
-export default {
-  name: "AppFooter",
+<script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const navigateToUpload = () => {
+  // Redirige al formulario de registro de arrendador
+  router.push('/arrendador/registro');
 };
 </script>
