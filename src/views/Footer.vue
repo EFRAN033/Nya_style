@@ -8,10 +8,10 @@
         <div>
           <h3 class="text-lg font-bold mb-4">VisteteYA</h3>
           <ul class="space-y-2">
-            <li><a href="#" class="hover:text-pink-400 transition">Inicio</a></li>
-            <li><a href="#" class="hover:text-pink-400 transition">Explorar prendas</a></li>
-            <li><a href="#" class="hover:text-pink-400 transition">Cómo funciona</a></li>
-            <li><a href="#" class="hover:text-pink-400 transition">FAQs</a></li>
+            <li><router-link to="/" class="hover:text-pink-400 transition">Inicio</router-link></li>
+            <li><router-link to="/explorar" class="hover:text-pink-400 transition">Explorar prendas</router-link></li>
+            <li><router-link to="/como-funciona" class="hover:text-pink-400 transition">Cómo funciona</router-link></li>
+            <li><router-link to="/faqs" class="hover:text-pink-400 transition">FAQs</router-link></li>
           </ul>
         </div>
 
@@ -19,13 +19,7 @@
         <div>
           <h3 class="text-lg font-bold mb-4">Contacto</h3>
           <p class="mb-2">¿Necesitas ayuda?</p>
-          <a href="mailto:soporte@modarenta.com" class="text-pink-400 hover:underline hover:text-pink-300">soporte@visteteYA.com</a>
-          
-          <!-- Redes Sociales -->
-          <div class="mt-4 flex space-x-4">
-            <a href="#"><IconInstagram class="w-6 h-6 hover:text-pink-400 transition" /></a>
-            <a href="#"><IconTwitter class="w-6 h-6 hover:text-pink-400 transition" /></a>
-          </div>
+          <a href="mailto:soporte@visteteya.com" class="text-pink-400 hover:underline hover:text-pink-300">soporte@visteteYA.com</a>
         </div>
 
         <!-- Columna 3: Suscripción (para arrendadores) -->
@@ -33,8 +27,8 @@
           <h3 class="text-lg font-bold mb-4">¿Quieres subir tus prendas?</h3>
           <p class="mb-4">Únete como arrendador y gana dinero con tu armario.</p>
           <button 
-            @click="navigateToUpload"
-            class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg transition"
+            @click="navigateToRegister"
+            class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50"
           >
             Comenzar ahora
           </button>
@@ -45,8 +39,8 @@
       <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
         <p>© 2025 VisteteYA. Todos los derechos reservados.</p>
         <div class="mt-2 space-x-4">
-          <a href="#" class="hover:text-white transition">Términos</a>
-          <a href="#" class="hover:text-white transition">Privacidad</a>
+          <router-link to="/terminos" class="hover:text-white transition">Términos</router-link>
+          <router-link to="/privacidad" class="hover:text-white transition">Privacidad</router-link>
         </div>
       </div>
     </div>
@@ -58,8 +52,8 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const navigateToUpload = () => {
-  // Redirige al formulario de registro de arrendador
-  router.push('/arrendador/registro');
+const navigateToRegister = () => {
+  // Redirige al formulario de registro general
+  router.push('/Register');
 };
 </script>
