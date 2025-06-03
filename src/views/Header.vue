@@ -36,7 +36,7 @@
               </svg>
             </button>
 
-            <!-- Corazoncito -->
+            <!-- Wishlist -->
             <router-link to="/wishlist" class="relative p-2 text-gray-500 hover:text-pink-400">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,11 +55,18 @@
               {{ user ? 'Mi Cuenta' : 'Unirse' }}
             </button>
 
-            <!-- Botón menú mobile -->
-            <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="md:hidden p-2 text-gray-500">
+            <!-- Botón hamburguesa -->
+            <button 
+              @click="isMobileMenuOpen = !isMobileMenuOpen" 
+              class="md:hidden p-2 text-gray-500 hover:text-pink-400 transition-colors"
+            >
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"/>
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  :d="isMobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'"
+                />
               </svg>
             </button>
           </div>
@@ -85,42 +92,45 @@
       </div>
     </div>
 
-    <!-- Menú móvil -->
-    <div v-if="isMobileMenuOpen" class="md:hidden bg-white border-t border-pink-100">
-      <div class="px-4 py-3 space-y-4">
-        <router-link
-          v-for="item in menuItems"
-          :key="item.name"
-          :to="item.path"
-          class="block py-2 text-gray-700 hover:text-pink-400 font-medium"
-          active-class="text-pink-400"
-          @click="handleMenuItemClick(item); isMobileMenuOpen = false"
-        >
-          {{ item.name }}
-        </router-link>
-        
-        <!-- Categorías móvil -->
-        <div class="grid grid-cols-2 gap-2 pt-2">
-          <router-link
-            v-for="category in categories"
-            :key="category.value"
-            :to="{ path: '/explore', query: { category: category.value } }"
-            class="px-3 py-2 text-sm font-medium text-center text-gray-600 hover:text-pink-400 hover:bg-pink-50 rounded-full transition-colors"
-            :class="{ 'text-pink-400 bg-pink-50': activeCategory === category.value }"
-            @click="setActiveCategory(category.value); isMobileMenuOpen = false"
-          >
-            {{ category.name }}
-          </router-link>
+    <!-- Menú móvil premium (SOLO 4 OPCIONES) -->
+    <transition
+      enter-active-class="transition-all duration-300 ease-out"
+      leave-active-class="transition-all duration-200 ease-in"
+      enter-from-class="opacity-0 -translate-y-2"
+      leave-to-class="opacity-0 -translate-y-2"
+    >
+      <div 
+        v-if="isMobileMenuOpen" 
+        class="md:hidden bg-white border-t border-pink-100 shadow-lg"
+      >
+        <div class="container mx-auto px-4 py-3">
+          <nav class="flex flex-col divide-y divide-pink-50">
+            <router-link
+              v-for="item in menuItems"
+              :key="item.name"
+              :to="item.path"
+              class="flex items-center justify-between py-3 px-2 transition-colors"
+              :class="{
+                'text-pink-500': route.path === item.path,
+                'text-gray-700 hover:text-pink-400': route.path !== item.path
+              }"
+              @click="isMobileMenuOpen = false"
+            >
+              <span class="font-medium">{{ item.name }}</span>
+              <svg 
+                v-if="route.path === item.path"
+                class="h-5 w-5 text-pink-400 animate-bounce-x"
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </router-link>
+          </nav>
         </div>
-
-        <button
-          @click="goToLogin"
-          class="w-full bg-gradient-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full mt-4"
-        >
-          {{ user ? 'Mi Cuenta' : 'Unirse' }}
-        </button>
       </div>
-    </div>
+    </transition>
   </header>
 </template>
 
@@ -153,13 +163,13 @@ const isMobileMenuOpen = ref(false);
 const activeCategory = ref(null);
 const user = ref(null);
 
-// Observar cambios en la ruta para actualizar la categoría activa
+// Observar cambios en la ruta
 watch(() => route.query.category, (newCategory) => {
   activeCategory.value = newCategory;
   scrollToProducts();
 });
 
-// Inicializar categoría activa desde la URL
+// Inicializar categoría activa
 onMounted(() => {
   if (route.query.category) {
     activeCategory.value = route.query.category;
@@ -201,31 +211,32 @@ const goToLogin = () => {
   display: none;
 }
 
-.router-link-active {
-  position: relative;
+/* Animación para el icono activo */
+.animate-bounce-x {
+  animation: bounce-x 1s infinite;
 }
 
-.router-link-active::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(to right, #f472b6, #ec4899);
+@keyframes bounce-x {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
 }
 
-/* Transiciones suaves para el menú móvil */
+/* Transición para el menú móvil */
 .md\\:hidden {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Mejora el feedback visual de los botones */
-button, .router-link {
-  transition: all 0.2s ease;
+/* Efecto al hacer tap */
+.router-link:active {
+  transform: scale(0.98);
 }
 
-button:hover, .router-link:hover {
-  transform: translateY(-1px);
+/* Sombra premium para el menú */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 </style>
