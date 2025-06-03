@@ -22,6 +22,7 @@
               :to="item.path"
               class="text-gray-700 hover:text-pink-400 font-medium transition-colors"
               active-class="text-pink-400 border-b-2 border-pink-400"
+              @click="handleMenuItemClick(item)"
             >
               {{ item.name }}
             </router-link>
@@ -70,16 +71,16 @@
     <div class="bg-white hidden md:block">
       <div class="container mx-auto px-4">
         <div class="flex overflow-x-auto py-3 space-x-6 hide-scrollbar">
-          <a
+          <router-link
             v-for="category in categories"
             :key="category.value"
-            href="#"
-            @click.prevent="selectCategory(category)"
+            :to="{ path: '/explore', query: { category: category.value } }"
             class="whitespace-nowrap px-2 py-1 text-sm font-medium text-gray-600 hover:text-pink-400 hover:bg-pink-50 rounded-full transition-colors"
             :class="{ 'text-pink-400 bg-pink-50': activeCategory === category.value }"
+            @click="setActiveCategory(category.value)"
           >
             {{ category.name }}
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
@@ -93,22 +94,23 @@
           :to="item.path"
           class="block py-2 text-gray-700 hover:text-pink-400 font-medium"
           active-class="text-pink-400"
+          @click="handleMenuItemClick(item); isMobileMenuOpen = false"
         >
           {{ item.name }}
         </router-link>
         
         <!-- Categorías móvil -->
         <div class="grid grid-cols-2 gap-2 pt-2">
-          <a
+          <router-link
             v-for="category in categories"
             :key="category.value"
-            href="#"
-            @click.prevent="selectCategory(category)"
+            :to="{ path: '/explore', query: { category: category.value } }"
             class="px-3 py-2 text-sm font-medium text-center text-gray-600 hover:text-pink-400 hover:bg-pink-50 rounded-full transition-colors"
             :class="{ 'text-pink-400 bg-pink-50': activeCategory === category.value }"
+            @click="setActiveCategory(category.value); isMobileMenuOpen = false"
           >
             {{ category.name }}
-          </a>
+          </router-link>
         </div>
 
         <button
@@ -123,7 +125,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
@@ -151,6 +153,12 @@ const isMobileMenuOpen = ref(false);
 const activeCategory = ref(null);
 const user = ref(null);
 
+// Observar cambios en la ruta para actualizar la categoría activa
+watch(() => route.query.category, (newCategory) => {
+  activeCategory.value = newCategory;
+  scrollToProducts();
+});
+
 // Inicializar categoría activa desde la URL
 onMounted(() => {
   if (route.query.category) {
@@ -158,20 +166,33 @@ onMounted(() => {
   }
 });
 
+const handleMenuItemClick = (item) => {
+  if (item.path === '/explore' && activeCategory.value) {
+    router.push({ path: item.path, query: { category: activeCategory.value } });
+  }
+};
+
+const setActiveCategory = (category) => {
+  activeCategory.value = category;
+  setTimeout(scrollToProducts, 100);
+};
+
+const scrollToProducts = () => {
+  if (route.path === '/explore') {
+    const productsSection = document.getElementById('products-section');
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+};
+
 const goToLogin = () => {
   if (user.value) {
     router.push('/mi-cuenta');
   } else {
     router.push('/login');
   }
-};
-
-const selectCategory = (category) => {
-  activeCategory.value = category.value;
-  router.push({
-    path: '/',
-    query: { ...route.query, category: category.value }
-  });
+  isMobileMenuOpen.value = false;
 };
 </script>
 
@@ -192,5 +213,19 @@ const selectCategory = (category) => {
   width: 100%;
   height: 2px;
   background: linear-gradient(to right, #f472b6, #ec4899);
+}
+
+/* Transiciones suaves para el menú móvil */
+.md\\:hidden {
+  transition: all 0.3s ease;
+}
+
+/* Mejora el feedback visual de los botones */
+button, .router-link {
+  transition: all 0.2s ease;
+}
+
+button:hover, .router-link:hover {
+  transform: translateY(-1px);
 }
 </style>

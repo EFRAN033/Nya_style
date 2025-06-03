@@ -440,6 +440,21 @@ export default {
       return Math.ceil(this.items.length / this.itemsPerPage);
     }
   },
+  watch: {
+    // Observar cambios en el parámetro de categoría de la URL
+    '$route.query.category': {
+      immediate: true,
+      handler(newCategory) {
+        if (newCategory) {
+          this.filters.category = newCategory;
+        } else {
+          this.filters.category = '';
+        }
+        // Resetear a la primera página cuando cambia la categoría
+        this.currentPage = 1;
+      }
+    }
+  },
   methods: {
     async loadItems() {
       this.loading = true;
@@ -605,11 +620,11 @@ export default {
     openProductDetail(item) {
       this.selectedProduct = item;
       this.currentImage = item.images[0];
-      document.body.style.overflow = 'hidden'; // Evita el scroll del body cuando el modal está abierto
+      document.body.style.overflow = 'hidden';
     },
     closeProductDetail() {
       this.selectedProduct = null;
-      document.body.style.overflow = 'auto'; // Restaura el scroll del body
+      document.body.style.overflow = 'auto';
     },
     changeMainImage(image) {
       this.currentImage = image;
@@ -619,8 +634,16 @@ export default {
       return new Date(dateString).toLocaleDateString('es-ES', options);
     },
     startRentalProcess(item) {
-      this.$emit('start-rental', item);
       this.closeProductDetail();
+      this.$router.push({
+        name: 'Rent',
+        params: { productId: item.id },
+        query: {
+          productName: encodeURIComponent(item.name),
+          rentPrice: item.rentPrice,
+          rentalType: item.rentalType
+        }
+      });
     },
     startBuyProcess(item) {
       this.$emit('start-buy', item);
@@ -634,6 +657,8 @@ export default {
         sort: 'popular'
       };
       this.currentPage = 1;
+      // Limpiar también el query de la URL
+      this.$router.replace({ query: null });
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
@@ -650,6 +675,10 @@ export default {
   },
   mounted() {
     this.loadItems();
+    // Inicializar filtros desde la URL
+    if (this.$route.query.category) {
+      this.filters.category = this.$route.query.category;
+    }
   }
 }
 </script>
