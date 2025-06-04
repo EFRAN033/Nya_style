@@ -7,13 +7,13 @@
           <!-- Logo -->
           <!-- Logo -->
           <router-link to="/" class="flex items-center">
-            <img 
-              src="@/assets/imagenes/visteteya.jpeg" 
-              alt="VisteteYA Logo" 
-              class="h-12 w-12 object-contain"  <!-- Ajusta el tamaño aquí -->
-            >
-            <span class="ml-2 text-xl font-bold text-gray-800">Vistete<span class="text-pink-400">YA</span></span>
-          </router-link>
+          <img 
+            src="@/assets/imagenes/visteteya.jpeg" 
+            alt="VisteteYA Logo" 
+            class="h-12 w-12 object-contain"  <!-- Ajusta el tamaño aquí -->
+          >
+          <span class="ml-2 text-xl font-bold text-gray-800">Vistete<span class="text-pink-400">YA</span></span>
+        </router-link>
 
           <!-- Menú desktop --> 
           <nav class="hidden md:flex space-x-8">
