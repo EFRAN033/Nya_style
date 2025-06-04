@@ -7,7 +7,11 @@
           <!-- Logo -->
           <!-- Logo -->
           <router-link to="/" class="flex items-center">
-            <img src="@/assets/imagenes/visteteya.jpeg" alt="VisteteYA Logo" class="h-8 w-8">
+            <img 
+              src="@/assets/imagenes/visteteya.jpeg" 
+              alt="VisteteYA Logo" 
+              class="h-12 w-12 object-contain" 
+            >
             <span class="ml-2 text-xl font-bold text-gray-800">Vistete<span class="text-pink-400">YA</span></span>
           </router-link>
 
