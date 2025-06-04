@@ -5,12 +5,9 @@
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
+          <!-- Logo -->
           <router-link to="/" class="flex items-center">
-            <svg class="w-8 h-8 text-pink-400" fill="none" viewBox="0 0 24 24">
-              <path d="M12 2L3 7L12 12L21 7L12 2Z" stroke="currentColor" stroke-width="2"/>
-              <path d="M3 17L12 22L21 17" stroke="currentColor" stroke-width="2"/>
-              <path d="M3 12L12 17L21 12" stroke="currentColor" stroke-width="2"/>
-            </svg>
+            <img src="@/assets/imagenes/visteteya.jpeg" alt="VisteteYA Logo" class="h-8 w-8">
             <span class="ml-2 text-xl font-bold text-gray-800">Vistete<span class="text-pink-400">YA</span></span>
           </router-link>
 
