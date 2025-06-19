@@ -1,152 +1,130 @@
 <template>
-  <section class="relative h-screen max-h-[800px] overflow-hidden">
-    <!-- Carrusel con efecto de desvanecido mejorado -->
+  <section class="relative h-screen max-h-[800px] overflow-hidden group">
     <div class="absolute inset-0 z-0">
       <div class="relative h-full w-full">
-        <!-- Imagen 1 con efecto parallax sutil -->
-        <transition 
-          :enter-active-class="currentDirection === 'next' ? 'enter-next' : 'enter-prev'"
-          :leave-active-class="currentDirection === 'next' ? 'leave-next' : 'leave-prev'"
+        <transition
+          :enter-active-class="currentDirection === 'next' ? 'carousel-slide-enter-next' : 'carousel-slide-enter-prev'"
+          :leave-active-class="currentDirection === 'next' ? 'carousel-slide-leave-next' : 'carousel-slide-leave-prev'"
           mode="out-in"
         >
           <div v-if="currentSlide === 0" key="slide-0" class="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-                 alt="Modelo con vestido de noche" 
-                 class="w-full h-full object-cover object-center transform transition-transform duration-1000 ease-out"
+            <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
+                 alt="Modelo con vestido de noche elegante en una pasarela con luces brillantes."
+                 class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out"
                  :class="{'scale-105': !isHovering, 'scale-100': isHovering}">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
           </div>
         </transition>
 
-        <!-- Imagen 2 -->
-        <transition 
-          :enter-active-class="currentDirection === 'next' ? 'enter-next' : 'enter-prev'"
-          :leave-active-class="currentDirection === 'next' ? 'leave-next' : 'leave-prev'"
+        <transition
+          :enter-active-class="currentDirection === 'next' ? 'carousel-slide-enter-next' : 'carousel-slide-enter-prev'"
+          :leave-active-class="currentDirection === 'next' ? 'carousel-slide-leave-next' : 'carousel-slide-leave-prev'"
           mode="out-in"
         >
           <div v-if="currentSlide === 1" key="slide-1" class="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-                 alt="Modelo con traje elegante" 
-                 class="w-full h-full object-cover object-center transform transition-transform duration-1000 ease-out"
+            <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
+                 alt="Modelo con un sofisticado traje elegante en una sesión de fotos urbana."
+                 class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out"
                  :class="{'scale-105': !isHovering, 'scale-100': isHovering}">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
           </div>
         </transition>
 
-        <!-- Imagen 3 -->
-        <transition 
-          :enter-active-class="currentDirection === 'next' ? 'enter-next' : 'enter-prev'"
-          :leave-active-class="currentDirection === 'next' ? 'leave-next' : 'leave-prev'"
+        <transition
+          :enter-active-class="currentDirection === 'next' ? 'carousel-slide-enter-next' : 'carousel-slide-enter-prev'"
+          :leave-active-class="currentDirection === 'next' ? 'carousel-slide-leave-next' : 'carousel-slide-leave-prev'"
           mode="out-in"
         >
           <div v-if="currentSlide === 2" key="slide-2" class="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-                 alt="Modelo con abrigo de diseñador" 
-                 class="w-full h-full object-cover object-center transform transition-transform duration-1000 ease-out"
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
+                 alt="Modelo posando con un elegante abrigo de diseñador en un estudio minimalista."
+                 class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out"
                  :class="{'scale-105': !isHovering, 'scale-100': isHovering}">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
           </div>
         </transition>
       </div>
     </div>
 
-    <!-- Contenido superpuesto -->
-    <div class="relative z-10 h-full flex flex-col justify-center" @mouseenter="isHovering = true" @mouseleave="isHovering = false">
-      <div class="container mx-auto px-6">
-        <div class="max-w-2xl">
-          <!-- Título con animación de entrada -->
-          <transition
-            appear
-            enter-active-class="transition-all duration-700 ease-out"
-            leave-active-class="transition-all duration-300 ease-in"
-            enter-from-class="opacity-0 translate-y-4"
-            enter-to-class="opacity-100 translate-y-0"
-          >
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              <span class="block">{{ slides[currentSlide].title }}</span>
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 block">
-                {{ slides[currentSlide].highlight }}
-              </span>
-            </h1>
-          </transition>
-          
-          <!-- Subtítulo con animación retardada -->
-          <transition
-            appear
-            enter-active-class="transition-all duration-700 ease-out delay-150"
-            leave-active-class="transition-all duration-300 ease-in"
-            enter-from-class="opacity-0 translate-y-4"
-            enter-to-class="opacity-100 translate-y-0"
-          >
-            <p class="text-lg md:text-xl text-gray-200 mb-8">
-              {{ slides[currentSlide].description }}
-            </p>
-          </transition>
-          
-          <!-- Botones CTA con animación -->
-          <transition
-            appear
-            enter-active-class="transition-all duration-700 ease-out delay-300"
-            leave-active-class="transition-all duration-300 ease-in"
-            enter-from-class="opacity-0 translate-y-4"
-            enter-to-class="opacity-100 translate-y-0"
-          >
-            <div class="flex flex-col sm:flex-row gap-4">
-              <router-link 
-                to="/explore" 
-                class="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-full hover:shadow-lg transition-all hover:scale-105"
-              >
-                Explorar Colección
-              </router-link>
-              <router-link 
-                to="/how-it-works" 
-                class="px-8 py-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-medium rounded-full hover:bg-white/20 transition-all"
-              >
-                Cómo Funciona
-              </router-link>
-            </div>
-          </transition>
-        </div>
+    <div class="relative z-10 h-full flex flex-col justify-center items-center text-center px-6"
+         @mouseenter="isHovering = true" @mouseleave="isHovering = false">
+      <div class="max-w-3xl">
+        <transition
+          appear
+          enter-active-class="animate-fade-in-up"
+        >
+          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
+            <span class="block">{{ slides[currentSlide].title }}</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 block mt-2">
+              {{ slides[currentSlide].highlight }}
+            </span>
+          </h1>
+        </transition>
+
+        <transition
+          appear
+          enter-active-class="animate-fade-in-up delay-150"
+        >
+          <p class="text-lg md:text-xl text-gray-100 mb-8 max-w-xl mx-auto drop-shadow">
+            {{ slides[currentSlide].description }}
+          </p>
+        </transition>
+
+        <transition
+          appear
+          enter-active-class="animate-fade-in-up delay-300"
+        >
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <router-link
+              to="/explore"
+              class="px-10 py-4 bg-gradient-to-r from-purple-700 to-pink-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75"
+            >
+              Explorar Colección
+            </router-link>
+            <router-link
+              to="/how-it-works"
+              class="px-10 py-4 bg-white/20 backdrop-blur-md border border-white/30 text-white font-semibold rounded-full hover:bg-white/30 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-75"
+            >
+              Cómo Funciona
+            </router-link>
+          </div>
+        </transition>
       </div>
     </div>
 
-    <!-- Controles del carrusel con animación -->
     <div class="absolute bottom-8 left-0 right-0 z-10">
       <div class="container mx-auto px-6">
         <div class="flex justify-center items-center space-x-3">
-          <button 
-            v-for="(slide, index) in slides" 
+          <button
+            v-for="(slide, index) in slides"
             :key="index"
             @click="goToSlide(index)"
-            class="w-3 h-3 rounded-full transition-all duration-300"
-            :class="{'bg-white w-6': currentSlide === index, 'bg-white/30 w-3': currentSlide !== index}"
-            aria-label="Ir a slide"
+            class="w-3 h-3 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            :class="{'bg-white w-7': currentSlide === index, 'bg-white/40 w-3': currentSlide !== index}"
+            :aria-label="`Ir a la diapositiva ${index + 1}`"
           ></button>
         </div>
       </div>
     </div>
 
-    <!-- Flechas de navegación con efecto hover -->
-    <button 
+    <button
       @click="prevSlide"
-      class="hidden md:block absolute left-6 top-1/2 z-10 -translate-y-1/2 p-3 text-white/70 hover:text-white transition-all"
-      aria-label="Slide anterior"
+      class="hidden md:block absolute left-8 top-1/2 z-20 -translate-y-1/2 p-4 text-white/80 hover:text-white transition-all duration-300 transform -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+      aria-label="Diapositiva anterior"
     >
-      <div class="relative">
-        <div class="absolute inset-0 bg-white/10 rounded-full scale-75 hover:scale-100 opacity-0 hover:opacity-100 transition-all duration-300"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="relative w-12 h-12 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </div>
     </button>
-    <button 
+    <button
       @click="nextSlide"
-      class="hidden md:block absolute right-6 top-1/2 z-10 -translate-y-1/2 p-3 text-white/70 hover:text-white transition-all"
-      aria-label="Siguiente slide"
+      class="hidden md:block absolute right-8 top-1/2 z-20 -translate-y-1/2 p-4 text-white/80 hover:text-white transition-all duration-300 transform translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+      aria-label="Siguiente diapositiva"
     >
-      <div class="relative">
-        <div class="absolute inset-0 bg-white/10 rounded-full scale-75 hover:scale-100 opacity-0 hover:opacity-100 transition-all duration-300"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 relative" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="relative w-12 h-12 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </div>
@@ -157,81 +135,100 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
+// Estado reactivo para el carrusel
 const currentSlide = ref(0);
-const currentDirection = ref('next');
-const isHovering = ref(false);
+const currentDirection = ref('next'); // 'next' o 'prev' para controlar la dirección de la transición
+const isHovering = ref(false); // Detecta si el ratón está sobre el carrusel para pausar el autoplay
 
+// Datos de las diapositivas
 const slides = [
   {
     title: "Alquila el",
     highlight: "Estilo que Deseas",
-    description: "Prendas exclusivas de diseñador para tus ocasiones especiales."
+    description: "Prendas exclusivas de diseñador para tus ocasiones especiales, con envíos y devoluciones sencillas."
   },
   {
     title: "Nueva",
     highlight: "Colección Verano",
-    description: "Descubre las últimas tendencias en moda premium para alquilar."
+    description: "Descubre las últimas tendencias en moda premium para alquilar. ¡Renueva tu armario sin límites!"
   },
   {
     title: "Viste como",
     highlight: "Nunca Antes",
-    description: "Cambia de look cada semana sin compromisos a largo plazo."
+    description: "Cambia de look cada semana sin compromisos a largo plazo. Siempre a la moda, siempre tú."
   }
 ];
 
-let slideInterval;
+let slideInterval; // Variable para almacenar el ID del intervalo de tiempo
 
+// Función para avanzar a la siguiente diapositiva
 const nextSlide = () => {
   currentDirection.value = 'next';
   currentSlide.value = (currentSlide.value + 1) % slides.length;
 };
 
+// Función para retroceder a la diapositiva anterior
 const prevSlide = () => {
   currentDirection.value = 'prev';
   currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length;
 };
 
+// Función para ir a una diapositiva específica
 const goToSlide = (index) => {
+  // Determina la dirección de la transición basada en la diferencia de índices
   currentDirection.value = index > currentSlide.value ? 'next' : 'prev';
   currentSlide.value = index;
 };
 
+// Inicia el carrusel automático
 const startCarousel = () => {
+  // Limpia cualquier intervalo existente para evitar duplicados y asegurar un solo intervalo activo
+  clearInterval(slideInterval);
   slideInterval = setInterval(() => {
+    // Solo avanza si el ratón no está sobre el carrusel
     if (!isHovering.value) {
       nextSlide();
     }
-  }, 5000);
+  }, 5000); // Cambia de diapositiva cada 5 segundos
 };
 
+// Lifecycle hook: se ejecuta cuando el componente se monta en el DOM
 onMounted(() => {
-  startCarousel();
+  startCarousel(); // Inicia el carrusel automático al montar el componente
 });
 
+// Lifecycle hook: se ejecuta cuando el componente se desmonta del DOM
 onUnmounted(() => {
-  clearInterval(slideInterval);
+  clearInterval(slideInterval); // Limpia el intervalo para evitar fugas de memoria al desmontar
 });
 </script>
 
 <style>
-/* Animaciones personalizadas para el carrusel */
-.enter-next {
-  animation: enterNext 1s ease-out forwards;
+/* Animaciones personalizadas para las transiciones de imagen del carrusel */
+
+/* Entra desde la derecha y se desvanece */
+.carousel-slide-enter-next {
+  animation: slideInFromRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Curva de velocidad optimizada */
 }
-.leave-next {
-  animation: leaveNext 1s ease-out forwards;
-}
-.enter-prev {
-  animation: enterPrev 1s ease-out forwards;
-}
-.leave-prev {
-  animation: leavePrev 1s ease-out forwards;
+/* Sale hacia la izquierda y se desvanece */
+.carousel-slide-leave-next {
+  animation: slideOutToLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-@keyframes enterNext {
+/* Entra desde la izquierda y se desvanece */
+.carousel-slide-enter-prev {
+  animation: slideInFromLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+/* Sale hacia la derecha y se desvanece */
+.carousel-slide-leave-prev {
+  animation: slideOutToRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Keyframes para el deslizamiento de entrada desde la derecha */
+@keyframes slideInFromRight {
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
@@ -239,21 +236,23 @@ onUnmounted(() => {
   }
 }
 
-@keyframes leaveNext {
+/* Keyframes para el deslizamiento de salida hacia la izquierda */
+@keyframes slideOutToLeft {
   from {
     opacity: 1;
     transform: translateX(0);
   }
   to {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-100%);
   }
 }
 
-@keyframes enterPrev {
+/* Keyframes para el deslizamiento de entrada desde la izquierda */
+@keyframes slideInFromLeft {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-100%);
   }
   to {
     opacity: 1;
@@ -261,19 +260,38 @@ onUnmounted(() => {
   }
 }
 
-@keyframes leavePrev {
+/* Keyframes para el deslizamiento de salida hacia la derecha */
+@keyframes slideOutToRight {
   from {
     opacity: 1;
     transform: translateX(0);
   }
   to {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(100%);
   }
 }
 
-/* Efecto parallax para imágenes */
-.transform {
-  transition: transform 1.2s cubic-bezier(0.25, 0.45, 0.45, 0.95);
+/* Animación de entrada de contenido de texto (fade-in-up) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Ligeramente desde abajo */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
+/* Clases de utilidad de Tailwind para aplicar animaciones con retardos */
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+.animate-fade-in-up.delay-150 { animation-delay: 0.15s; }
+.animate-fade-in-up.delay-300 { animation-delay: 0.3s; }
+
+/* Nota: El efecto parallax en las imágenes es manejado directamente por las clases de Tailwind
+   `scale-105` y `scale-100` junto con la lógica de `isHovering` y la transición `transition-transform`.
+   No se requiere CSS adicional para la clase `.transform` si solo es un marcador. */
 </style>

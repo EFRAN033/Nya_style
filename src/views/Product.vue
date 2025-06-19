@@ -1,11 +1,10 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <!-- Filtros mejorados -->
-    <div class="bg-pink-50 rounded-xl shadow-md p-6 mb-8 border border-pink-100">
+    <div ref="filterContainer" class="bg-pink-50 rounded-xl shadow-lg p-6 mb-8 border border-pink-100">
       <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4 items-end">
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-rose-900">Categoría</label>
-          <select v-model="filters.category" class="w-full px-3 py-2 border border-pink-200 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+          <label class="block text-sm font-medium text-rose-800">Categoría</label>
+          <select v-model="filters.category" class="w-full px-3 py-2 border border-pink-300 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-shadow duration-200 hover:shadow-sm">
             <option value="">Todas</option>
             <option value="vestidos">Vestidos</option>
             <option value="trajes">Trajes</option>
@@ -18,16 +17,16 @@
         </div>
         
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-rose-900">Talla</label>
-          <select v-model="filters.size" class="w-full px-3 py-2 border border-pink-200 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+          <label class="block text-sm font-medium text-rose-800">Talla</label>
+          <select v-model="filters.size" class="w-full px-3 py-2 border border-pink-300 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-shadow duration-200 hover:shadow-sm">
             <option value="">Todas</option>
-            <option v-for="size in sizeOptions" :value="size">{{ size }}</option>
+            <option v-for="size in sizeOptions" :value="size" :key="size">{{ size }}</option>
           </select>
         </div>
         
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-rose-900">Tipo</label>
-          <select v-model="filters.availability" class="w-full px-3 py-2 border border-pink-200 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+          <label class="block text-sm font-medium text-rose-800">Tipo</label>
+          <select v-model="filters.availability" class="w-full px-3 py-2 border border-pink-300 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-shadow duration-200 hover:shadow-sm">
             <option value="">Todos</option>
             <option value="rent">Solo alquiler</option>
             <option value="buy">Solo compra</option>
@@ -36,8 +35,8 @@
         </div>
         
         <div class="space-y-2">
-          <label class="block text-sm font-medium text-rose-900">Ordenar por</label>
-          <select v-model="filters.sort" class="w-full px-3 py-2 border border-pink-200 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500">
+          <label class="block text-sm font-medium text-rose-800">Ordenar por</label>
+          <select v-model="filters.sort" class="w-full px-3 py-2 border border-pink-300 rounded-lg bg-white text-rose-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-shadow duration-200 hover:shadow-sm">
             <option value="popular">Más populares</option>
             <option value="price_asc">Precio: menor a mayor</option>
             <option value="price_desc">Precio: mayor a menor</option>
@@ -45,7 +44,7 @@
           </select>
         </div>
         
-        <button @click="clearFilters" class="flex items-center justify-center gap-2 px-4 py-2 bg-pink-100 text-rose-900 rounded-lg font-medium hover:bg-pink-200 transition-colors">
+        <button @click="clearFilters" class="flex items-center justify-center gap-2 px-4 py-2 bg-pink-100 text-rose-800 rounded-lg font-medium hover:bg-pink-200 transition-colors shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
@@ -54,120 +53,126 @@
       </div>
     </div>
 
-    <!-- Estado de carga -->
+    <div v-if="!loading && totalItems === 0" class="text-center py-12">
+        <p class="text-xl text-gray-600 mb-4">No se encontraron productos que coincidan con los filtros.</p>
+        <button @click="clearFilters" class="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+            Limpiar filtros
+        </button>
+    </div>
+    
     <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <div v-for="i in 8" :key="i" class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="animate-pulse">
-          <div class="bg-pink-100 h-64 w-full"></div>
-          <div class="p-4 space-y-3">
-            <div class="h-4 bg-pink-100 rounded w-3/4"></div>
-            <div class="h-3 bg-pink-100 rounded w-1/2"></div>
-            <div class="h-6 bg-pink-100 rounded w-1/3 mt-2"></div>
-            <div class="h-10 bg-pink-100 rounded mt-4"></div>
-          </div>
+      <div v-for="i in 8" :key="i" class="bg-white rounded-xl shadow-md overflow-hidden border border-pink-100 animate-pulse">
+        <div class="h-56 bg-pink-100 w-full"></div>
+        <div class="p-3 space-y-2">
+          <div class="h-4 bg-pink-100 rounded w-3/4"></div>
+          <div class="h-3 bg-pink-100 rounded w-1/2"></div>
+          <div class="h-5 bg-pink-100 rounded w-1/3 mt-2"></div>
+          <div class="h-9 bg-pink-100 rounded mt-3"></div>
         </div>
       </div>
     </div>
 
-    <!-- Grid de productos con tarjetas uniformes -->
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <!-- Producto 1 -->
-      <div v-for="item in filteredItems" :key="item.id" class="bg-white rounded-xl shadow-md overflow-hidden border border-pink-100 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
-        <!-- Badges superpuestos -->
-        <div class="absolute top-3 left-3 z-10 flex flex-wrap gap-2">
-          <span v-if="item.isNew" class="px-2 py-1 text-xs font-bold rounded bg-rose-500 text-white">Nuevo</span>
-          <span v-if="item.discount" class="px-2 py-1 text-xs font-bold rounded bg-pink-600 text-white">-{{ item.discount }}%</span>
-          <span v-if="item.canRent && item.canBuy" class="px-2 py-1 text-xs font-bold rounded bg-rose-700 text-white">Alquiler/Compra</span>
-          <span v-else-if="item.canRent" class="px-2 py-1 text-xs font-bold rounded bg-rose-700 text-white">Solo Alquiler</span>
-          <span v-else-if="item.canBuy" class="px-2 py-1 text-xs font-bold rounded bg-rose-700 text-white">Solo Compra</span>
+      <div v-for="item in paginatedItems" :key="item.id"
+           class="relative bg-white rounded-xl shadow-md overflow-hidden border border-pink-100 hover:shadow-lg transition-shadow duration-300 flex flex-col group">
+        <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+          <span v-if="item.isNew" class="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-500 text-white">Nuevo</span>
+          <span v-if="item.discount" class="px-2 py-0.5 text-xs font-bold rounded-full bg-pink-600 text-white">-{{ item.discount }}%</span>
+          <span v-if="item.canRent && item.canBuy" class="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-700 text-white">Alq./Comp.</span>
+          <span v-else-if="item.canRent" class="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-700 text-white">Alquiler</span>
+          <span v-else-if="item.canBuy" class="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-700 text-white">Compra</span>
         </div>
 
-        <!-- Imagen con efecto hover -->
-        <div class="relative overflow-hidden aspect-square cursor-pointer" @click="openProductDetail(item)">
-          <img :src="item.images[0]" :alt="item.name" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy">
-          <div :class="['absolute bottom-0 left-0 right-0 py-2 px-3 text-center text-xs font-bold text-white', 
-                       getAvailabilityClass(item) === 'in-stock' ? 'bg-green-600' : 'bg-rose-600']">
+        <div class="relative overflow-hidden h-56 cursor-pointer" @click="openProductDetail(item)">
+          <img :src="item.images[0]" :alt="item.name"
+               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div :class="['absolute bottom-0 left-0 right-0 py-1.5 px-3 text-center text-xs font-bold text-white',
+                       (item.canRent && item.rentAvailability > 0) || (item.canBuy && item.buyAvailability > 0) ? 'bg-green-600' : 'bg-rose-600']">
             {{ getAvailabilityText(item) }}
           </div>
         </div>
 
-        <!-- Contenido de la tarjeta -->
-        <div class="p-4 flex-grow flex flex-col">
-          <div class="flex justify-between items-center mb-3">
-            <div class="flex items-center space-x-2">
-              <img :src="item.owner.avatar" :alt="item.owner.name" class="w-6 h-6 rounded-full border border-pink-200">
-              <span class="text-sm text-rose-900 font-medium">{{ item.owner.name }}</span>
+        <div class="p-3 flex-grow flex flex-col">
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center space-x-1.5">
+              <img :src="item.owner.avatar" :alt="item.owner.name" class="w-5 h-5 rounded-full border border-pink-200">
+              <span class="text-xs text-rose-900 font-medium truncate">{{ item.owner.name }}</span>
             </div>
-            <div class="text-yellow-500 text-sm font-semibold">★ {{ item.owner.rating.toFixed(1) }}</div>
+            <div class="text-yellow-500 text-xs font-semibold flex items-center">
+                <svg class="h-3.5 w-3.5 mr-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                {{ item.owner.rating.toFixed(1) }}
+            </div>
           </div>
-          
-          <h3 class="text-lg font-bold text-rose-900 mb-2 line-clamp-2">{{ item.name }}</h3>
-          <p class="text-sm text-rose-800 mb-4 line-clamp-2">{{ truncateDescription(item.description, 60) }}</p>
-          
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="flex items-center text-xs text-rose-800">
+
+          <h3 class="text-base font-semibold text-rose-900 mb-1 line-clamp-2">{{ item.name }}</h3>
+          <p class="text-xs text-rose-700 mb-2 line-clamp-2">{{ truncateDescription(item.description, 50) }}</p>
+
+          <div class="flex flex-wrap gap-1 mb-3">
+            <span class="inline-flex items-center text-xs text-rose-600 bg-pink-50 rounded-full px-2 py-0.5">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4z" clip-rule="evenodd" />
               </svg>
               {{ item.size }}
             </span>
-            <span class="flex items-center text-xs text-rose-800">
+            <span class="inline-flex items-center text-xs text-rose-600 bg-pink-50 rounded-full px-2 py-0.5">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd" />
               </svg>
               {{ item.color }}
             </span>
           </div>
-          
-          <!-- Pie de tarjeta con precios y botones -->
-          <div class="mt-auto">
-            <div class="space-y-2 mb-4">
+
+          <div class="mt-auto pt-2">
+            <div class="space-y-1 mb-3">
               <template v-if="item.canRent">
-                <div>
-                  <div class="text-xs text-rose-800 font-medium">Alquiler:</div>
-                  <div class="flex items-baseline gap-1">
-                    <span class="text-lg font-extrabold text-rose-900">S/{{ item.rentPrice.toFixed(2) }}</span>
-                    <span class="text-xs text-rose-700">/{{ item.rentalType === 'daily' ? 'día' : 'sem' }}</span>
-                    <span v-if="item.originalRentPrice" class="text-xs text-rose-500 line-through ml-1">S/{{ item.originalRentPrice.toFixed(2) }}</span>
-                  </div>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-lg font-bold text-rose-900">S/{{ item.rentPrice.toFixed(2) }}</span>
+                  <span class="text-xs text-rose-700">/{{ item.rentalType === 'daily' ? 'día' : 'sem' }}</span>
+                  <span v-if="item.originalRentPrice" class="text-xs text-rose-500 line-through ml-1">S/{{ item.originalRentPrice.toFixed(2) }}</span>
                 </div>
+                <div class="text-xs text-rose-700 font-medium uppercase tracking-wider">Alquiler</div>
               </template>
-              
+
               <template v-if="item.canBuy">
                 <div :class="{'mt-2': item.canRent}">
-                  <div class="text-xs text-rose-800 font-medium">Compra:</div>
                   <div class="flex items-baseline gap-1">
-                    <span class="text-lg font-extrabold text-rose-900">S/{{ item.buyPrice.toFixed(2) }}</span>
+                    <span class="text-lg font-bold text-rose-900">S/{{ item.buyPrice.toFixed(2) }}</span>
                     <span v-if="item.originalBuyPrice" class="text-xs text-rose-500 line-through ml-1">S/{{ item.originalBuyPrice.toFixed(2) }}</span>
                   </div>
+                  <div class="text-xs text-rose-700 font-medium uppercase tracking-wider">Compra</div>
                 </div>
               </template>
             </div>
-            
-            <div class="flex justify-between items-end">
-              <div class="flex gap-2 flex-grow">
-                <button v-if="item.canRent && item.rentAvailability > 0" 
+
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex flex-grow gap-2">
+                <button v-if="item.canRent && item.rentAvailability > 0"
                   @click.stop="startRentalProcess(item)"
-                  class="flex-grow py-2 px-3 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                  class="flex-grow py-2 px-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
                   Alquilar
                 </button>
-                <button v-if="item.canBuy && item.buyAvailability > 0" 
+                <button v-if="item.canBuy && item.buyAvailability > 0"
                   @click.stop="startBuyProcess(item)"
-                  class="flex-grow py-2 px-3 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                  class="flex-grow py-2 px-2 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
                   Comprar
                 </button>
-                <button v-if="(item.canRent && item.rentAvailability <= 0) || (item.canBuy && item.buyAvailability <= 0)"
+                <button v-if="(!item.canRent || item.rentAvailability <= 0) && (!item.canBuy || item.buyAvailability <= 0)"
                   disabled
-                  class="flex-grow py-2 px-3 bg-pink-100 text-rose-800 text-sm font-semibold rounded-lg cursor-not-allowed">
+                  class="flex-grow py-2 px-2 bg-pink-100 text-rose-800 text-sm font-semibold rounded-lg cursor-not-allowed">
                   Agotado
                 </button>
               </div>
-              
-              <button @click.stop="toggleWishlist(item.id)" 
-                :class="['w-10 h-10 flex items-center justify-center rounded-full transition-colors', 
+
+              <button @click.stop="toggleWishlist(item.id)"
+                :class="['flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full transition-colors shadow-sm',
                         isInWishlist(item.id) ? 'bg-rose-100 text-rose-500' : 'bg-pink-50 text-rose-400 hover:bg-pink-100']"
                 aria-label="Añadir a favoritos">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                 </svg>
               </button>
@@ -177,24 +182,23 @@
       </div>
     </div>
 
-    <!-- Paginación -->
-    <div v-if="!loading && filteredItems.length > 0" class="flex justify-center items-center gap-6 mt-12">
-      <button @click="prevPage" :disabled="currentPage === 1" 
-        :class="['flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
-                 currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-rose-900 border border-pink-200 hover:bg-pink-50']">
+    <div v-if="!loading && totalItems > 0" class="flex justify-center items-center gap-4 mt-10">
+      <button @click="prevPage" :disabled="currentPage === 1"
+        :class="['flex items-center gap-2 px-3 py-1.5 rounded-md font-medium transition-colors shadow-sm',
+                 currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none' : 'bg-white text-rose-900 border border-pink-200 hover:bg-pink-50']">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
         </svg>
         Anterior
       </button>
-      
-      <div class="text-sm font-medium text-rose-900">
+
+      <div class="text-sm font-medium text-rose-700">
         Página {{ currentPage }} de {{ totalPages }}
       </div>
-      
-      <button @click="nextPage" :disabled="currentPage === totalPages" 
-        :class="['flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
-                 currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-rose-900 border border-pink-200 hover:bg-pink-50']">
+
+      <button @click="nextPage" :disabled="currentPage === totalPages"
+        :class="['flex items-center gap-2 px-3 py-1.5 rounded-md font-medium transition-colors shadow-sm',
+                 currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none' : 'bg-white text-rose-900 border border-pink-200 hover:bg-pink-50']">
         Siguiente
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -202,155 +206,140 @@
       </button>
     </div>
 
-    <!-- Modal de detalle del producto -->
-    <div v-if="selectedProduct" class="fixed inset-0 z-50 overflow-y-auto">
-      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <!-- Fondo oscuro -->
-        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-          <div class="absolute inset-0 bg-gray-500 opacity-75" @click="closeProductDetail"></div>
-        </div>
 
-        <!-- Contenido del modal -->
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
-          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div class="sm:flex sm:items-start">
-              <!-- Galería de imágenes -->
-              <div class="w-full sm:w-1/2 pr-6">
-                <div class="relative h-96 w-full mb-4 rounded-lg overflow-hidden">
-                  <img :src="selectedProduct.images[0]" :alt="selectedProduct.name" class="w-full h-full object-cover">
+    <div v-if="selectedProduct" class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-4xl sm:w-full my-8">
+        <div class="bg-white p-4 sm:p-6">
+          <div class="sm:flex">
+            <div class="w-full sm:w-1/2 pr-0 sm:pr-4 mb-4 sm:mb-0">
+              <div class="relative h-72 sm:h-80 w-full mb-3 rounded-lg overflow-hidden shadow-md border border-gray-200">
+                <img :src="currentImage || (selectedProduct.images ? selectedProduct.images[0] : '')" :alt="selectedProduct.name" class="w-full h-full object-cover">
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <div v-for="(image, index) in selectedProduct.images" :key="index"
+                     class="h-16 sm:h-20 cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:border-rose-500 transition-colors"
+                     :class="{'border-2 border-rose-500 shadow-lg': image === currentImage || (!currentImage && index === 0)}"
+                     @click="changeMainImage(image)">
+                  <img :src="image" :alt="'Imagen ' + (index + 1)" class="w-full h-full object-cover">
                 </div>
-                <div class="grid grid-cols-3 gap-2">
-                  <div v-for="(image, index) in selectedProduct.images" :key="index" 
-                       class="h-24 cursor-pointer border-2 rounded-lg overflow-hidden"
-                       :class="{'border-rose-500': index === 0}"
-                       @click="changeMainImage(image)">
-                    <img :src="image" :alt="'Imagen ' + (index + 1)" class="w-full h-full object-cover">
+              </div>
+            </div>
+
+            <div class="w-full sm:w-1/2 mt-4 sm:mt-0 flex flex-col">
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <h3 class="text-2xl font-bold text-rose-900 mb-1">{{ selectedProduct.name }}</h3>
+                  <div class="flex items-center text-sm text-gray-500">
+                    <div class="flex items-center text-yellow-500 mr-1.5">
+                      <svg v-for="i in 5" :key="i" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="{'text-gray-300': i > Math.round(selectedProduct.owner.rating)}" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </div>
+                    <span>({{ selectedProduct.rentalCount }} alquileres)</span>
+                  </div>
+                </div>
+                <button @click="closeProductDetail" class="text-gray-400 hover:text-gray-600 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="mb-4 flex-grow">
+                <p class="text-gray-700 mb-3 text-sm leading-relaxed">{{ selectedProduct.description }}</p>
+
+                <div class="flex flex-wrap gap-x-3 gap-y-1 mb-4 text-xs">
+                  <div class="inline-flex items-center text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4z" clip-rule="evenodd" />
+                    </svg>
+                    Talla: {{ selectedProduct.size }}
+                  </div>
+                  <div class="inline-flex items-center text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd" />
+                    </svg>
+                    Color: {{ selectedProduct.color }}
+                  </div>
+                  <div class="inline-flex items-center text-gray-600 bg-gray-100 rounded-full px-2 py-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                    </svg>
+                    Añadido: {{ formatDate(selectedProduct.dateAdded) }}
+                  </div>
+                </div>
+
+                <div class="bg-pink-50 rounded-lg p-3 mb-4 border border-pink-100">
+                  <div class="flex items-center mb-2">
+                    <img :src="selectedProduct.owner.avatar" :alt="selectedProduct.owner.name" class="w-8 h-8 rounded-full border border-pink-200 mr-2">
+                    <div>
+                      <p class="font-medium text-rose-900">Ofrecido por {{ selectedProduct.owner.name }}</p>
+                      <div class="flex items-center text-yellow-500 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                        <span class="ml-1">{{ selectedProduct.owner.rating.toFixed(1) }}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Detalles del producto -->
-              <div class="w-full sm:w-1/2 mt-4 sm:mt-0">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="text-2xl font-bold text-rose-900 mb-2">{{ selectedProduct.name }}</h3>
-                    <div class="flex items-center mb-4">
-                      <div class="flex items-center text-yellow-500 mr-2">
-                        <svg v-for="i in 5" :key="i" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{'text-gray-300': i > Math.round(selectedProduct.owner.rating)}" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      </div>
-                      <span class="text-sm text-gray-500">({{ selectedProduct.rentalCount }} alquileres)</span>
+              <div class="bg-gray-50 rounded-lg p-3 mb-4 border border-gray-200">
+                <div class="space-y-2">
+                  <div v-if="selectedProduct.canRent" class="flex justify-between items-center py-1">
+                    <div>
+                      <p class="text-sm font-medium text-gray-700 uppercase tracking-wider">Alquiler:</p>
+                      <p class="text-xs text-gray-500">{{ selectedProduct.rentalType === 'daily' ? 'Por día' : 'Por semana' }}</p>
                     </div>
-                  </div>
-                  <button @click="closeProductDetail" class="text-gray-400 hover:text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                <div class="mb-6">
-                  <p class="text-gray-700 mb-4">{{ selectedProduct.description }}</p>
-                  
-                  <div class="flex flex-wrap gap-4 mb-4">
-                    <div class="flex items-center text-sm text-gray-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5L9 4H4z" clip-rule="evenodd" />
-                      </svg>
-                      Talla: {{ selectedProduct.size }}
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd" />
-                      </svg>
-                      Color: {{ selectedProduct.color }}
-                    </div>
-                    <div class="flex items-center text-sm text-gray-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                      </svg>
-                      Añadido: {{ formatDate(selectedProduct.dateAdded) }}
+                    <div class="text-right">
+                      <p class="text-xl font-bold text-rose-900">S/{{ selectedProduct.rentPrice.toFixed(2) }}</p>
+                      <p v-if="selectedProduct.originalRentPrice" class="text-xs text-gray-500 line-through">S/{{ selectedProduct.originalRentPrice.toFixed(2) }}</p>
+                      <p class="text-xs text-green-600 mt-0.5">{{ selectedProduct.rentAvailability }} disponibles</p>
                     </div>
                   </div>
 
-                  <div class="bg-pink-50 rounded-lg p-4 mb-4">
-                    <div class="flex items-center mb-3">
-                      <img :src="selectedProduct.owner.avatar" :alt="selectedProduct.owner.name" class="w-8 h-8 rounded-full border border-pink-200 mr-2">
-                      <div>
-                        <p class="font-medium text-rose-900">{{ selectedProduct.owner.name }}</p>
-                        <div class="flex items-center">
-                          <div class="flex items-center text-yellow-500 mr-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span class="text-sm text-gray-600 ml-1">{{ selectedProduct.owner.rating.toFixed(1) }}</span>
-                          </div>
-                        </div>
-                      </div>
+                  <div v-if="selectedProduct.canBuy" class="flex justify-between items-center py-1">
+                    <div>
+                      <p class="text-sm font-medium text-gray-700 uppercase tracking-wider">Compra:</p>
+                      <p class="text-xs text-gray-500">Precio final</p>
                     </div>
-                    <p class="text-sm text-gray-600">Este artículo es ofrecido por {{ selectedProduct.owner.name }}. Puedes contactar al propietario para más detalles sobre el producto.</p>
-                  </div>
-                </div>
-
-                <!-- Precios y disponibilidad -->
-                <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                  <div class="space-y-4">
-                    <div v-if="selectedProduct.canRent" class="flex justify-between items-center">
-                      <div>
-                        <p class="text-sm font-medium text-gray-700">Alquiler:</p>
-                        <p class="text-xs text-gray-500">{{ selectedProduct.rentalType === 'daily' ? 'Por día' : 'Por semana' }}</p>
-                      </div>
-                      <div class="text-right">
-                        <p class="text-xl font-bold text-rose-900">S/{{ selectedProduct.rentPrice.toFixed(2) }}</p>
-                        <p v-if="selectedProduct.originalRentPrice" class="text-xs text-gray-500 line-through">S/{{ selectedProduct.originalRentPrice.toFixed(2) }}</p>
-                        <p class="text-xs text-green-600 mt-1">{{ selectedProduct.rentAvailability }} disponibles</p>
-                      </div>
-                    </div>
-
-                    <div v-if="selectedProduct.canBuy" class="flex justify-between items-center">
-                      <div>
-                        <p class="text-sm font-medium text-gray-700">Compra:</p>
-                        <p class="text-xs text-gray-500">Precio final</p>
-                      </div>
-                      <div class="text-right">
-                        <p class="text-xl font-bold text-rose-900">S/{{ selectedProduct.buyPrice.toFixed(2) }}</p>
-                        <p v-if="selectedProduct.originalBuyPrice" class="text-xs text-gray-500 line-through">S/{{ selectedProduct.originalBuyPrice.toFixed(2) }}</p>
-                        <p class="text-xs text-green-600 mt-1">{{ selectedProduct.buyAvailability }} disponibles</p>
-                      </div>
+                    <div class="text-right">
+                      <p class="text-xl font-bold text-rose-900">S/{{ selectedProduct.buyPrice.toFixed(2) }}</p>
+                      <p v-if="selectedProduct.originalBuyPrice" class="text-xs text-gray-500 line-through">S/{{ selectedProduct.originalBuyPrice.toFixed(2) }}</p>
+                      <p class="text-xs text-green-600 mt-0.5">{{ selectedProduct.buyAvailability }} disponibles</p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <!-- Botones de acción -->
-                <div class="flex flex-col space-y-3">
-                  <button v-if="selectedProduct.canRent && selectedProduct.rentAvailability > 0" 
-                    @click="startRentalProcess(selectedProduct)"
-                    class="w-full py-3 px-4 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg transition-colors flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                    </svg>
-                    Alquilar ahora
-                  </button>
-                  
-                  <button v-if="selectedProduct.canBuy && selectedProduct.buyAvailability > 0" 
-                    @click="startBuyProcess(selectedProduct)"
-                    class="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
-                    </svg>
-                    Comprar ahora
-                  </button>
+              <div class="flex flex-col space-y-3">
+                <button v-if="selectedProduct.canRent && selectedProduct.rentAvailability > 0"
+                  @click="startRentalProcess(selectedProduct)"
+                  class="w-full py-2.5 px-4 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg transition-colors flex items-center justify-center shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+                  </svg>
+                  Alquilar ahora
+                </button>
 
-                  <button @click="toggleWishlist(selectedProduct.id)" 
-                    :class="['w-full py-2 px-4 border rounded-lg font-medium transition-colors flex items-center justify-center',
-                            isInWishlist(selectedProduct.id) ? 'border-rose-500 bg-rose-50 text-rose-600' : 'border-gray-300 text-gray-700 hover:bg-gray-50']">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" :class="{'text-rose-500': isInWishlist(selectedProduct.id)}" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
-                    </svg>
-                    {{ isInWishlist(selectedProduct.id) ? 'En tu lista de deseos' : 'Añadir a lista de deseos' }}
-                  </button>
-                </div>
+                <button v-if="selectedProduct.canBuy && selectedProduct.buyAvailability > 0"
+                  @click="startBuyProcess(selectedProduct)"
+                  class="w-full py-2.5 px-4 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
+                  </svg>
+                  Comprar ahora
+                </button>
+
+                <button @click="toggleWishlist(selectedProduct.id)"
+                  :class="['w-full py-2.5 px-4 border rounded-lg font-medium transition-colors flex items-center justify-center shadow-sm',
+                          isInWishlist(selectedProduct.id) ? 'border-rose-500 bg-rose-50 text-rose-600 hover:bg-rose-100' : 'border-gray-300 text-gray-700 hover:bg-gray-50']">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" :class="{'text-rose-500': isInWishlist(selectedProduct.id)}" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                  </svg>
+                  {{ isInWishlist(selectedProduct.id) ? 'En tu lista de deseos' : 'Añadir a lista de deseos' }}
+                </button>
               </div>
             </div>
           </div>
@@ -361,8 +350,15 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
-  name: 'FashionRentalGrid',
+  // Mantengo el nombre del componente como Product, según tu App.vue
+  name: 'Product', 
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
   data() {
     return {
       loading: true,
@@ -382,18 +378,18 @@ export default {
     }
   },
   computed: {
-    filteredItems() {
+    filteredAndSortedItems() {
       let filtered = [...this.items];
-      
+
       // Aplicar filtros
       if (this.filters.category) {
         filtered = filtered.filter(item => item.category === this.filters.category);
       }
-      
+
       if (this.filters.size) {
         filtered = filtered.filter(item => item.size === this.filters.size);
       }
-      
+
       if (this.filters.availability) {
         switch(this.filters.availability) {
           case 'rent':
@@ -407,7 +403,7 @@ export default {
             break;
         }
       }
-      
+
       // Aplicar ordenamiento
       switch (this.filters.sort) {
         case 'price_asc':
@@ -430,14 +426,18 @@ export default {
         default: // popular
           filtered.sort((a, b) => b.rentalCount - a.rentalCount);
       }
-      
-      // Paginación
+      return filtered;
+    },
+    paginatedItems() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return filtered.slice(start, end);
+      return this.filteredAndSortedItems.slice(start, end);
+    },
+    totalItems() {
+        return this.filteredAndSortedItems.length;
     },
     totalPages() {
-      return Math.ceil(this.items.length / this.itemsPerPage);
+      return Math.ceil(this.totalItems / this.itemsPerPage);
     }
   },
   watch: {
@@ -453,18 +453,25 @@ export default {
         // Resetear a la primera página cuando cambia la categoría
         this.currentPage = 1;
       }
+    },
+    // Watch filters for changes to reset current page
+    'filters': {
+      handler() {
+        this.currentPage = 1;
+      },
+      deep: true
     }
   },
   methods: {
     async loadItems() {
       this.loading = true;
       try {
-        // Simulación de datos de API con 4 productos variados
+        // Simulación de datos de API con 8 productos variados
         this.items = [
           {
             id: 1,
-            name: 'Vestido de noche elegante',
-            description: 'Vestido largo de gala para ocasiones especiales, color negro con detalles en dorado. Fabricado en seda y chiffon de alta calidad, con forro interior suave. Perfecto para bodas, galas y eventos formales. Incluye cinturón ajustable para mejor ajuste.',
+            name: 'Vestido de noche elegante con detalles en dorado',
+            description: 'Un vestido largo de gala que irradia sofisticación. Su diseño en seda y chiffon de alta calidad, con un sutil brillo dorado, lo hace ideal para eventos de etiqueta. Incorpora un forro suave para máxima comodidad y un cinturón ajustable que realza la figura.',
             category: 'vestidos',
             size: 'M',
             color: 'Negro',
@@ -479,9 +486,9 @@ export default {
             rentAvailability: 2,
             buyAvailability: 1,
             images: [
-              'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80',
-              'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80',
-              'https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80'
+              'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 101,
@@ -495,8 +502,8 @@ export default {
           },
           {
             id: 2,
-            name: 'Traje formal de negocios',
-            description: 'Traje de dos piezas en lana premium, ideal para reuniones importantes. Chaqueta con corte moderno y pantalón con ajuste perfecto. Incluye bolsillos interiores y botones de alta calidad. Disponible en talla L para un look profesional impecable.',
+            name: 'Traje ejecutivo moderno',
+            description: 'Traje de dos piezas en lana de primera calidad, diseñado para el profesional contemporáneo. Su chaqueta de corte slim y pantalón de ajuste perfecto te brindarán un look pulcro y autoritario para cualquier encuentro de negocios. Destacan sus acabados internos y botones artesanales.',
             category: 'trajes',
             size: 'L',
             color: 'Azul marino',
@@ -506,8 +513,9 @@ export default {
             rentalType: 'daily',
             rentAvailability: 1,
             images: [
-              'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80',
-              'https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80'
+              'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1542841381-12f5e34707db?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 102,
@@ -520,8 +528,8 @@ export default {
           },
           {
             id: 3,
-            name: 'Zapatos de tacón premium',
-            description: 'Zapatos de tacón medio con diseño elegante y cómodo para todo el día. Tacón de 7 cm con base ancha para mayor estabilidad. Plantilla acolchada y suela antideslizante. Disponible en color beige, ideal para combinar con cualquier outfit formal.',
+            name: 'Zapatos de tacón elegantes y cómodos',
+            description: 'Un par de zapatos de tacón que combinan a la perfección estilo y confort. Con un tacón de 7 cm y una base ancha para máxima estabilidad, te permitirán moverte con confianza. Su plantilla acolchada y suela antideslizante los hacen ideales para largas jornadas.',
             category: 'zapatos',
             size: '38',
             color: 'Beige',
@@ -535,8 +543,9 @@ export default {
             rentAvailability: 3,
             buyAvailability: 0,
             images: [
-              'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80',
-              'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80'
+              'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1584982631574-d4b8f041203b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 103,
@@ -550,8 +559,8 @@ export default {
           },
           {
             id: 4,
-            name: 'Disfraz de superhéroe para niño',
-            description: 'Disfraz completo de superhéroe para niños de 6-8 años. Incluye capa, máscara y cinturón. Fabricado en poliéster resistente y cómodo. Perfecto para fiestas de cumpleaños, Halloween o eventos temáticos. Lavable a máquina.',
+            name: 'Disfraz de superhéroe para niños',
+            description: 'Transforma a tu pequeño en su héroe favorito con este vibrante disfraz. Incluye capa fluida, máscara protectora y un cinturón con detalles icónicos. Fabricado en poliéster resistente y suave, es perfecto para horas de juego imaginativo y lavable a máquina para fácil cuidado.',
             category: 'disfraces',
             size: '6-8 años',
             color: 'Rojo/Azul',
@@ -563,18 +572,126 @@ export default {
             rentAvailability: 4,
             buyAvailability: 2,
             images: [
-              'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80',
-              'https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=600&q=80'
+              'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1527581177699-27ef64a38cc4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 104,
               name: 'Laura T.',
-              avatar: 'https://randomuser.me/api/portraits/women/28.jpg',
+              avatar: 'https://randomuser.me/api/portraits/women/71.jpg',
               rating: 4.5
             },
-            isNew: false,
+            rentalCount: 9,
+            dateAdded: '2023-03-01'
+          },
+          {
+            id: 5,
+            name: 'Bolso de mano de cuero genuino',
+            description: 'Un elegante bolso de mano fabricado con cuero genuino de alta calidad. Su diseño compacto y sofisticado lo hace perfecto para eventos nocturnos o como un accesorio diario. Incluye un pequeño compartimento interno con cremallera para objetos de valor.',
+            category: 'accesorios',
+            size: 'Única',
+            color: 'Marrón',
+            canRent: true,
+            canBuy: true,
+            rentPrice: 18.00,
+            buyPrice: 89.99,
+            rentalType: 'weekly',
+            rentAvailability: 1,
+            buyAvailability: 1,
+            images: [
+              'https://images.unsplash.com/photo-1566150937600-ed0f7dce3040?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1594939226177-3e06180a969b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 105,
+              name: 'Sofía R.',
+              avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
+              rating: 4.6
+            },
             rentalCount: 7,
-            dateAdded: '2023-03-18'
+            dateAdded: '2023-05-20'
+          },
+          {
+            id: 6,
+            name: 'Vestido casual de verano',
+            description: 'Vestido ligero y fresco, ideal para los días soleados de verano. Confeccionado en algodón transpirable, presenta un estampado floral alegre y un corte holgado que favorece a todas las figuras. Perfecto para paseos por la playa o almuerzos al aire libre.',
+            category: 'vestidos',
+            size: 'S',
+            color: 'Floral',
+            canRent: true,
+            canBuy: false,
+            rentPrice: 20.00,
+            originalRentPrice: 25.00,
+            discount: 20,
+            rentalType: 'daily',
+            rentAvailability: 3,
+            images: [
+              'https://images.unsplash.com/photo-1502646274212-ef2f9a466627?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1507727103233-0443e0d8b4c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 106,
+              name: 'Elena F.',
+              avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+              rating: 4.4
+            },
+            isNew: true,
+            rentalCount: 10,
+            dateAdded: '2024-06-15'
+          },
+          {
+            id: 7,
+            name: 'Corbata de seda de diseñador',
+            description: 'Corbata de seda pura, un accesorio imprescindible para el hombre elegante. Con un patrón sutil y un brillo natural, complementa a la perfección cualquier traje formal. Ideal para ocasiones de negocios o eventos sociales donde el detalle marca la diferencia.',
+            category: 'accesorios',
+            size: 'Única',
+            color: 'Gris Plata',
+            canRent: false,
+            canBuy: true,
+            buyPrice: 65.00,
+            originalBuyPrice: 80.00,
+            discount: 18,
+            buyAvailability: 5,
+            images: [
+              'https://images.unsplash.com/photo-1594939226177-3e06180a969b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1594939226177-3e06180a969b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 107,
+              name: 'Roberto V.',
+              avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+              rating: 4.8
+            },
+            rentalCount: 0,
+            dateAdded: '2023-01-20'
+          },
+          {
+            id: 8,
+            name: 'Chaqueta de cuero vintage',
+            description: 'Chaqueta de cuero genuino con un estilo vintage atemporal. Perfecta para un look casual y sofisticado, ofrece durabilidad y un ajuste cómodo. Cuenta con cremalleras metálicas de alta calidad y un forro interior suave.',
+            category: 'trajes',
+            size: 'M',
+            color: 'Marrón Oscuro',
+            canRent: true,
+            canBuy: true,
+            rentPrice: 30.00,
+            buyPrice: 180.00,
+            rentalType: 'weekly',
+            rentAvailability: 1,
+            buyAvailability: 1,
+            images: [
+              'https://images.unsplash.com/photo-1579298245158-b852906de67b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1587565507742-839352e6900f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 108,
+              name: 'Miguel A.',
+              avatar: 'https://randomuser.me/api/portraits/men/15.jpg',
+              rating: 4.7
+            },
+            rentalCount: 6,
+            dateAdded: '2023-02-10'
           }
         ];
       } catch (error) {
@@ -583,111 +700,94 @@ export default {
         this.loading = false;
       }
     },
-    getAvailabilityClass(item) {
-      if ((item.canRent && item.rentAvailability > 0) || (item.canBuy && item.buyAvailability > 0)) {
-        return 'in-stock';
+    truncateDescription(description, maxLength) {
+      if (description.length <= maxLength) {
+        return description;
       }
-      return 'out-of-stock';
+      return description.substring(0, maxLength) + '...';
     },
     getAvailabilityText(item) {
-      if (item.canRent && item.canBuy) {
-        const rentText = item.rentAvailability > 0 ? `Alquiler (${item.rentAvailability})` : 'Alquiler agotado';
-        const buyText = item.buyAvailability > 0 ? `Compra (${item.buyAvailability})` : 'Compra agotado';
-        return `${rentText} | ${buyText}`;
-      } else if (item.canRent) {
-        return item.rentAvailability > 0 ? `Disponible (${item.rentAvailability})` : 'Agotado';
-      } else if (item.canBuy) {
-        return item.buyAvailability > 0 ? `Disponible (${item.buyAvailability})` : 'Agotado';
-      }
-      return 'No disponible';
-    },
-    truncateDescription(text, maxLength) {
-      return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-    },
-    toggleWishlist(itemId) {
-      const index = this.wishlist.indexOf(itemId);
-      if (index === -1) {
-        this.wishlist.push(itemId);
-        this.$toast.success('Añadido a tu lista de deseos');
+      const rentAvailable = item.canRent && item.rentAvailability > 0;
+      const buyAvailable = item.canBuy && item.buyAvailability > 0;
+
+      if (rentAvailable && buyAvailable) {
+        return 'Disponible para Alquiler y Compra';
+      } else if (rentAvailable) {
+        return 'Disponible para Alquiler';
+      } else if (buyAvailable) {
+        return 'Disponible para Compra';
       } else {
-        this.wishlist.splice(index, 1);
-        this.$toast.info('Eliminado de tu lista de deseos');
+        return 'Agotado';
       }
     },
-    isInWishlist(itemId) {
-      return this.wishlist.includes(itemId);
-    },
-    openProductDetail(item) {
-      this.selectedProduct = item;
-      this.currentImage = item.images[0];
-      document.body.style.overflow = 'hidden';
-    },
-    closeProductDetail() {
-      this.selectedProduct = null;
-      document.body.style.overflow = 'auto';
-    },
-    changeMainImage(image) {
-      this.currentImage = image;
-    },
-    formatDate(dateString) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('es-ES', options);
-    },
-    startRentalProcess(item) {
-      this.closeProductDetail();
-      this.$router.push({
-        name: 'Rent',
-        params: { productId: item.id },
-        query: {
-          productName: encodeURIComponent(item.name),
-          rentPrice: item.rentPrice,
-          rentalType: item.rentalType
-        }
-      });
-    },
-    startBuyProcess(item) {
-      this.$emit('start-buy', item);
-      this.closeProductDetail();
-    },
-    clearFilters() {
-      this.filters = {
-        category: '',
-        size: '',
-        availability: '',
-        sort: 'popular'
-      };
+    async clearFilters() {
+      this.filters.category = '';
+      this.filters.size = '';
+      this.filters.availability = '';
+      this.filters.sort = 'popular';
       this.currentPage = 1;
-      // Limpiar también el query de la URL
-      this.$router.replace({ query: null });
+      this.router.replace({ query: {} });
+
+      // **La parte crucial: Emite un evento con el ref del contenedor de filtros**
+      this.$emit('filters-cleared');
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Mantén este scroll para la paginación
       }
     },
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Mantén este scroll para la paginación
       }
+    },
+    openProductDetail(item) {
+      this.selectedProduct = item;
+      this.currentImage = item.images[0];
+    },
+    closeProductDetail() {
+      this.selectedProduct = null;
+      this.currentImage = '';
+    },
+    changeMainImage(image) {
+      this.currentImage = image;
+    },
+    isInWishlist(id) {
+      return this.wishlist.includes(id);
+    },
+    toggleWishlist(id) {
+      const index = this.wishlist.indexOf(id);
+      if (index > -1) {
+        this.wishlist.splice(index, 1);
+        console.log(`Producto ${id} eliminado de la wishlist.`);
+      } else {
+        this.wishlist.push(id);
+        console.log(`Producto ${id} añadido a la wishlist.`);
+      }
+    },
+    startRentalProcess(product) {
+      this.router.push({
+        name: 'Rent',
+        params: { productId: product.id },
+        query: { rentalType: product.rentalType, productName: product.name }
+      });
+    },
+    startBuyProcess(product) {
+        console.log('Iniciar proceso de compra para:', product.name);
+    },
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('es-ES', options);
     }
   },
   mounted() {
     this.loadItems();
-    // Inicializar filtros desde la URL
-    if (this.$route.query.category) {
-      this.filters.category = this.$route.query.category;
-    }
   }
 }
 </script>
 
 <style scoped>
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+/* Estilos adicionales si fueran necesarios */
 </style>

@@ -6,13 +6,15 @@ import Register from '../views/Register.vue';
 import Wishlist from '../views/Wishlist.vue';
 import Rent from '../views/Rent.vue';
 import Designers from '../views/Designers.vue';
+import Occasions from '../views/Occasions.vue';
+import Discover from '../views/Discover.vue'; // <-- Nueva importación para Discover.vue
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: MainPage,
-    meta: { 
+    meta: {
       showProducts: true,
       title: 'Inicio | VisteteYA'
     }
@@ -21,8 +23,24 @@ const routes = [
     path: '/designers',
     name: 'designers',
     component: Designers,
-    meta: { 
+    meta: {
       title: 'Diseñadores | VisteteYA'
+    }
+  },
+  {
+    path: '/occasions',
+    name: 'occasions',
+    component: Occasions,
+    meta: {
+      title: 'Ocasiones | VisteteYA'
+    }
+  },
+  {
+    path: '/explore', // <-- Ruta existente para "Descubrir", ahora apunta a Discover.vue
+    name: 'explore',
+    component: Discover,
+    meta: {
+      title: 'Descubrir | VisteteYA'
     }
   },
   {
@@ -30,7 +48,7 @@ const routes = [
     name: 'product',
     component: Product,
     props: true,
-    meta: { 
+    meta: {
       requiresProductData: true,
       title: 'Detalle Producto | VisteteYA'
     }
@@ -43,7 +61,7 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-    meta: { 
+    meta: {
       title: 'Iniciar Sesión | VisteteYA',
       guestOnly: true
     }
@@ -52,7 +70,7 @@ const routes = [
     path: '/register',
     name: 'register',
     component: Register,
-    meta: { 
+    meta: {
       title: 'Registrarse | VisteteYA',
       guestOnly: true
     }
@@ -61,7 +79,7 @@ const routes = [
     path: '/wishlist',
     name: 'wishlist',
     component: Wishlist,
-    meta: { 
+    meta: {
       title: 'Mi Wishlist | VisteteYA',
       requiresAuth: true
     }
@@ -75,7 +93,7 @@ const routes = [
       rentalType: route.query.rentalType || 'daily',
       productName: route.query.productName || ''
     }),
-    meta: { 
+    meta: {
       title: 'Proceso de Alquiler | VisteteYA',
       requiresAuth: true
     }
@@ -113,7 +131,7 @@ router.beforeEach((to, from, next) => {
 
   // Verificación de autenticación
   const isAuthenticated = localStorage.getItem('authToken');
-  
+
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({
       name: 'login',
