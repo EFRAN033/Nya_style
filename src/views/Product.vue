@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div v-else id="products-section" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <div v-for="item in paginatedItems" :key="item.id"
            class="relative bg-white rounded-xl shadow-md overflow-hidden border border-pink-100 hover:shadow-lg transition-shadow duration-300 flex flex-col group">
         <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
@@ -350,14 +350,14 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 export default {
-  // Mantengo el nombre del componente como Product, según tu App.vue
   name: 'Product', 
   setup() {
     const router = useRouter();
-    return { router };
+    const route = useRoute();
+    return { router, route };
   },
   data() {
     return {
@@ -374,7 +374,8 @@ export default {
       items: [],
       wishlist: [],
       selectedProduct: null,
-      currentImage: ''
+      currentImage: '',
+      scrollOffset: 0 // Puedes ajustar esto. Si tienes una barra de navegación fija de 60px de alto, prueba con -60
     }
   },
   computed: {
@@ -441,7 +442,6 @@ export default {
     }
   },
   watch: {
-    // Observar cambios en el parámetro de categoría de la URL
     '$route.query.category': {
       immediate: true,
       handler(newCategory) {
@@ -450,16 +450,23 @@ export default {
         } else {
           this.filters.category = '';
         }
-        // Resetear a la primera página cuando cambia la categoría
-        this.currentPage = 1;
+        // No resetear a la primera página aquí para permitir que la navegación del Header maneje el scroll.
+        // Si necesitas que siempre se resetee la página cuando cambia la categoría por la URL, descomenta:
+        // this.currentPage = 1;
       }
     },
-    // Watch filters for changes to reset current page
     'filters': {
       handler() {
         this.currentPage = 1;
       },
       deep: true
+    }
+  },
+  mounted() {
+    this.loadItems();
+    this.loadWishlist();
+    if (this.route.query.category) {
+      this.filters.category = this.route.query.category;
     }
   },
   methods: {
@@ -479,9 +486,9 @@ export default {
             canBuy: true,
             rentPrice: 35.99,
             originalRentPrice: 45.99,
+            discount: 22,
             buyPrice: 199.99,
             originalBuyPrice: 249.99,
-            discount: 22,
             rentalType: 'daily',
             rentAvailability: 2,
             buyAvailability: 1,
@@ -503,7 +510,7 @@ export default {
           {
             id: 2,
             name: 'Traje ejecutivo moderno',
-            description: 'Traje de dos piezas en lana de primera calidad, diseñado para el profesional contemporáneo. Su chaqueta de corte slim y pantalón de ajuste perfecto te brindarán un look pulcro y autoritario para cualquier encuentro de negocios. Destacan sus acabados internos y botones artesanales.',
+            description: 'Traje de dos piezas en lana de primera calidad, diseñado para el profesional contemporáneo. Su chaqueta de corte slim y pantalón de ajuste perfecto te brindará un look pulcro y autoritario para cualquier encuentro de negocios. Destacan sus acabados internos y botones artesanales.',
             category: 'trajes',
             size: 'L',
             color: 'Azul marino',
@@ -541,7 +548,7 @@ export default {
             discount: 17,
             rentalType: 'weekly',
             rentAvailability: 3,
-            buyAvailability: 0,
+            buyAvailability: 0, // Simula que no hay stock para comprar
             images: [
               'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
               'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
@@ -559,139 +566,195 @@ export default {
           },
           {
             id: 4,
-            name: 'Disfraz de superhéroe para niños',
-            description: 'Transforma a tu pequeño en su héroe favorito con este vibrante disfraz. Incluye capa fluida, máscara protectora y un cinturón con detalles icónicos. Fabricado en poliéster resistente y suave, es perfecto para horas de juego imaginativo y lavable a máquina para fácil cuidado.',
+            name: 'Disfraz de superhéroe para fiesta infantil',
+            description: 'Disfraz completo y detallado de tu superhéroe favorito, perfecto para fiestas de cumpleaños o eventos temáticos. Fabricado con materiales cómodos y seguros para niños, incluye accesorios auténticos que lo harán sentir como un verdadero héroe. Fácil de poner y quitar.',
             category: 'disfraces',
-            size: '6-8 años',
+            size: 'S',
             color: 'Rojo/Azul',
             canRent: true,
-            canBuy: true,
-            rentPrice: 15.99,
-            buyPrice: 49.99,
+            canBuy: false,
+            rentPrice: 18.00,
             rentalType: 'daily',
-            rentAvailability: 4,
-            buyAvailability: 2,
+            rentAvailability: 5,
             images: [
-              'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
-              'https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
-              'https://images.unsplash.com/photo-1527581177699-27ef64a38cc4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+              'https://images.unsplash.com/photo-1622437648177-3e8f8a1d7c4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1620000049000-84b2e8d9c57d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1579782524419-f54f738092f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 104,
-              name: 'Laura T.',
-              avatar: 'https://randomuser.me/api/portraits/women/71.jpg',
+              name: 'Javier P.',
+              avatar: 'https://randomuser.me/api/portraits/men/78.jpg',
               rating: 4.5
+            },
+            rentalCount: 30,
+            dateAdded: '2022-11-01'
+          },
+          {
+            id: 5,
+            name: 'Aretes colgantes de perlas cultivadas',
+            description: 'Delicados aretes con perlas cultivadas de agua dulce, montadas en plata de ley. Su diseño clásico y elegante los convierte en el accesorio perfecto para cualquier ocasión, desde un evento formal hasta el uso diario. Son ligeros y cómodos de llevar.',
+            category: 'accesorios',
+            size: 'Única',
+            color: 'Blanco',
+            canRent: false,
+            canBuy: true,
+            buyPrice: 85.00,
+            originalBuyPrice: 95.00,
+            discount: 10,
+            buyAvailability: 4,
+            images: [
+              'https://images.unsplash.com/photo-1620726710431-709673966025?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1607590826978-4ecf556b2f4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1599427670984-902ee5c17d7b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 105,
+              name: 'Sofía R.',
+              avatar: 'https://randomuser.me/api/portraits/women/21.jpg',
+              rating: 4.9
+            },
+            isNew: true,
+            rentalCount: 0,
+            dateAdded: '2023-06-20'
+          },
+          {
+            id: 6,
+            name: 'Vestido de cóctel azul cielo',
+            description: 'Un vestido fresco y juvenil, perfecto para eventos de día o cócteles. Su tela ligera y color vibrante te harán destacar, mientras que su corte favorecedor se adapta a diversas siluetas. Es fácil de cuidar y no requiere planchado.',
+            category: 'vestidos',
+            size: 'S',
+            color: 'Azul cielo',
+            canRent: true,
+            canBuy: true,
+            rentPrice: 28.00,
+            buyPrice: 150.00,
+            rentalType: 'daily',
+            rentAvailability: 1,
+            buyAvailability: 1,
+            images: [
+              'https://images.unsplash.com/photo-1582142270383-a4f6a5b6f3a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1574870104856-bb617a232f0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1594953330694-81d36c84c4f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 106,
+              name: 'Laura V.',
+              avatar: 'https://randomuser.me/api/portraits/women/55.jpg',
+              rating: 4.6
             },
             rentalCount: 9,
             dateAdded: '2023-03-01'
           },
           {
-            id: 5,
-            name: 'Bolso de mano de cuero genuino',
-            description: 'Un elegante bolso de mano fabricado con cuero genuino de alta calidad. Su diseño compacto y sofisticado lo hace perfecto para eventos nocturnos o como un accesorio diario. Incluye un pequeño compartimento interno con cremallera para objetos de valor.',
-            category: 'accesorios',
-            size: 'Única',
-            color: 'Marrón',
+            id: 7,
+            name: 'Traje casual de lino para verano',
+            description: 'Ideal para climas cálidos, este traje de lino ofrece comodidad y estilo. Ligero y transpirable, es perfecto para eventos al aire libre o un look elegante pero relajado. La chaqueta y el pantalón se pueden usar juntos o por separado, ofreciendo gran versatilidad.',
+            category: 'trajes',
+            size: 'XL',
+            color: 'Beige',
             canRent: true,
             canBuy: true,
-            rentPrice: 18.00,
-            buyPrice: 89.99,
+            rentPrice: 38.00,
+            buyPrice: 180.00,
+            originalRentPrice: 48.00,
+            discount: 20,
             rentalType: 'weekly',
-            rentAvailability: 1,
+            rentAvailability: 2,
             buyAvailability: 1,
             images: [
-              'https://images.unsplash.com/photo-1566150937600-ed0f7dce3040?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
-              'https://images.unsplash.com/photo-1594939226177-3e06180a969b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
-            ],
-            owner: {
-              id: 105,
-              name: 'Sofía R.',
-              avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
-              rating: 4.6
-            },
-            rentalCount: 7,
-            dateAdded: '2023-05-20'
-          },
-          {
-            id: 6,
-            name: 'Vestido casual de verano',
-            description: 'Vestido ligero y fresco, ideal para los días soleados de verano. Confeccionado en algodón transpirable, presenta un estampado floral alegre y un corte holgado que favorece a todas las figuras. Perfecto para paseos por la playa o almuerzos al aire libre.',
-            category: 'vestidos',
-            size: 'S',
-            color: 'Floral',
-            canRent: true,
-            canBuy: false,
-            rentPrice: 20.00,
-            originalRentPrice: 25.00,
-            discount: 20,
-            rentalType: 'daily',
-            rentAvailability: 3,
-            images: [
-              'https://images.unsplash.com/photo-1502646274212-ef2f9a466627?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
-              'https://images.unsplash.com/photo-1507727103233-0443e0d8b4c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
-            ],
-            owner: {
-              id: 106,
-              name: 'Elena F.',
-              avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
-              rating: 4.4
-            },
-            isNew: true,
-            rentalCount: 10,
-            dateAdded: '2024-06-15'
-          },
-          {
-            id: 7,
-            name: 'Corbata de seda de diseñador',
-            description: 'Corbata de seda pura, un accesorio imprescindible para el hombre elegante. Con un patrón sutil y un brillo natural, complementa a la perfección cualquier traje formal. Ideal para ocasiones de negocios o eventos sociales donde el detalle marca la diferencia.',
-            category: 'accesorios',
-            size: 'Única',
-            color: 'Gris Plata',
-            canRent: false,
-            canBuy: true,
-            buyPrice: 65.00,
-            originalBuyPrice: 80.00,
-            discount: 18,
-            buyAvailability: 5,
-            images: [
-              'https://images.unsplash.com/photo-1594939226177-3e06180a969b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
-              'https://images.unsplash.com/photo-1594939226177-3e06180a969b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+              'https://images.unsplash.com/photo-1533842186780-60b54378f773?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1548043640-5e36e654f46a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1579783900350-f8444f2b1d3d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 107,
-              name: 'Roberto V.',
-              avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-              rating: 4.8
+              name: 'Roberto D.',
+              avatar: 'https://randomuser.me/api/portraits/men/19.jpg',
+              rating: 4.7
             },
-            rentalCount: 0,
-            dateAdded: '2023-01-20'
+            isNew: true,
+            rentalCount: 7,
+            dateAdded: '2023-06-25' // Más reciente
           },
           {
             id: 8,
-            name: 'Chaqueta de cuero vintage',
-            description: 'Chaqueta de cuero genuino con un estilo vintage atemporal. Perfecta para un look casual y sofisticado, ofrece durabilidad y un ajuste cómodo. Cuenta con cremalleras metálicas de alta calidad y un forro interior suave.',
-            category: 'trajes',
-            size: 'M',
-            color: 'Marrón Oscuro',
-            canRent: true,
+            name: 'Botas de piel estilo Chelsea',
+            description: 'Botas clásicas Chelsea de piel genuina, con elástico lateral para un ajuste cómodo. Duraderas y versátiles, ideales para combinar con jeans o pantalones de vestir. Su suela robusta y diseño atemporal las hacen un básico de armario.',
+            category: 'zapatos',
+            size: '42',
+            color: 'Marrón',
+            canRent: false,
             canBuy: true,
-            rentPrice: 30.00,
-            buyPrice: 180.00,
-            rentalType: 'weekly',
-            rentAvailability: 1,
-            buyAvailability: 1,
+            buyPrice: 220.00,
+            buyAvailability: 3,
             images: [
-              'https://images.unsplash.com/photo-1579298245158-b852906de67b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
-              'https://images.unsplash.com/photo-1587565507742-839352e6900f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+              'https://images.unsplash.com/photo-1606891398553-61921a97d197?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1594953330694-81d36c84c4f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
             ],
             owner: {
               id: 108,
-              name: 'Miguel A.',
-              avatar: 'https://randomuser.me/api/portraits/men/15.jpg',
-              rating: 4.7
+              name: 'Ricardo N.',
+              avatar: 'https://randomuser.me/api/portraits/men/88.jpg',
+              rating: 4.8
             },
-            rentalCount: 6,
-            dateAdded: '2023-02-10'
+            rentalCount: 0,
+            dateAdded: '2023-01-10'
+          },
+          {
+            id: 9,
+            name: 'Collar de plata con dije de corazón',
+            description: 'Un delicado collar de plata de ley con un pequeño dije en forma de corazón. Perfecto para un regalo significativo o para añadir un toque sutil de elegancia a tu atuendo diario. Es hipoalergénico y resistente al deslustre.',
+            category: 'accesorios',
+            size: 'Única',
+            color: 'Plata',
+            canRent: false,
+            canBuy: true,
+            buyPrice: 55.00,
+            buyAvailability: 10,
+            images: [
+              'https://images.unsplash.com/photo-1612712128140-e2239d2e1467?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1612712128140-e2239d2e1467?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1588691523456-4c465b8d23d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 109,
+              name: 'Elena C.',
+              avatar: 'https://randomuser.me/api/portraits/women/12.jpg',
+              rating: 4.9
+            },
+            rentalCount: 0,
+            dateAdded: '2023-04-01'
+          },
+          {
+            id: 10,
+            name: 'Vestido floral de verano',
+            description: 'Vestido ligero y fluido con un estampado floral vibrante, perfecto para los días soleados de verano. Su tejido transpirable y corte relajado aseguran máxima comodidad. Ideal para paseos por la playa o reuniones informales.',
+            category: 'verano-2025',
+            size: 'M',
+            color: 'Multicolor',
+            canRent: true,
+            canBuy: true,
+            rentPrice: 20.00,
+            buyPrice: 90.00,
+            rentalType: 'daily',
+            rentAvailability: 3,
+            buyAvailability: 2,
+            images: [
+              'https://images.unsplash.com/photo-1579782483108-98e3532c2560?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1579782483108-98e3532c2560?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80',
+              'https://images.unsplash.com/photo-1579782483108-98e3532c2560?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&h=625&q=80'
+            ],
+            owner: {
+              id: 110,
+              name: 'Julia F.',
+              avatar: 'https://randomuser.me/api/portraits/women/77.jpg',
+              rating: 4.5
+            },
+            isNew: true,
+            rentalCount: 15,
+            dateAdded: '2023-07-01' // Más reciente
           }
         ];
       } catch (error) {
@@ -700,94 +763,146 @@ export default {
         this.loading = false;
       }
     },
+    loadWishlist() {
+      const storedWishlist = localStorage.getItem('wishlist');
+      if (storedWishlist) {
+        this.wishlist = JSON.parse(storedWishlist);
+      }
+    },
+    saveWishlist() {
+      localStorage.setItem('wishlist', JSON.stringify(this.wishlist));
+    },
+    isInWishlist(itemId) {
+      return this.wishlist.includes(itemId);
+    },
+    toggleWishlist(itemId) {
+      if (this.isInWishlist(itemId)) {
+        this.wishlist = this.wishlist.filter(id => id !== itemId);
+      } else {
+        this.wishlist.push(itemId);
+      }
+      this.saveWishlist();
+    },
+    getAvailabilityText(item) {
+      const canRent = item.canRent && item.rentAvailability > 0;
+      const canBuy = item.canBuy && item.buyAvailability > 0;
+
+      if (canRent && canBuy) {
+        return `Alquiler (${item.rentAvailability}) / Compra (${item.buyAvailability})`;
+      } else if (canRent) {
+        return `${item.rentAvailability} disponibles para alquiler`;
+      } else if (canBuy) {
+        return `${item.buyAvailability} disponibles para compra`;
+      } else {
+        return 'Agotado';
+      }
+    },
     truncateDescription(description, maxLength) {
       if (description.length <= maxLength) {
         return description;
       }
       return description.substring(0, maxLength) + '...';
     },
-    getAvailabilityText(item) {
-      const rentAvailable = item.canRent && item.rentAvailability > 0;
-      const buyAvailable = item.canBuy && item.buyAvailability > 0;
-
-      if (rentAvailable && buyAvailable) {
-        return 'Disponible para Alquiler y Compra';
-      } else if (rentAvailable) {
-        return 'Disponible para Alquiler';
-      } else if (buyAvailable) {
-        return 'Disponible para Compra';
-      } else {
-        return 'Agotado';
-      }
+    isElementInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      // Ajusta este umbral si necesitas que el elemento sea visible en un porcentaje específico
+      const threshold = 0.8; // Considera visible si el 80% del elemento está en el viewport
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight * threshold || document.documentElement.clientHeight * threshold) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
     },
-    async clearFilters() {
-      this.filters.category = '';
-      this.filters.size = '';
-      this.filters.availability = '';
-      this.filters.sort = 'popular';
-      this.currentPage = 1;
-      this.router.replace({ query: {} });
+    scrollToFilterContainer() {
+      if (this.$refs.filterContainer) {
+        const element = this.$refs.filterContainer;
+        if (!this.isElementInViewport(element)) {
+          // Obtén la posición actual del elemento
+          const elementRect = element.getBoundingClientRect();
+          const absoluteElementTop = elementRect.top + window.scrollY;
+          
+          // Calcula la posición de scroll deseada con el offset
+          // Restamos el offset para que el scroll se detenga más arriba
+          const targetScrollPosition = absoluteElementTop + this.scrollOffset;
 
-      // **La parte crucial: Emite un evento con el ref del contenedor de filtros**
-      this.$emit('filters-cleared');
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Mantén este scroll para la paginación
+          window.scrollTo({
+            top: targetScrollPosition,
+            behavior: 'smooth'
+          });
+        }
       }
     },
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Mantén este scroll para la paginación
+        this.scrollToFilterContainer();
       }
     },
-    openProductDetail(item) {
-      this.selectedProduct = item;
-      this.currentImage = item.images[0];
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.scrollToFilterContainer();
+      }
+    },
+    clearFilters() {
+      const scrollY = window.scrollY; // Guardar la posición actual del scroll
+      this.filters.category = '';
+      this.filters.size = '';
+      this.filters.availability = '';
+      this.filters.sort = 'popular';
+      this.currentPage = 1;
+
+      this.router.replace({ query: {} }).then(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY); // Restaurar el scroll
+        });
+      }).catch(err => {
+        if (err.name !== 'NavigationDuplicated') {
+          console.error(err);
+        }
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY); // Asegurar el scroll incluso en error
+        });
+      });
+    },
+    openProductDetail(product) {
+      this.selectedProduct = product;
+      this.currentImage = product.images[0];
+      document.body.style.overflow = 'hidden'; // Bloquear el scroll del body
     },
     closeProductDetail() {
       this.selectedProduct = null;
       this.currentImage = '';
+      document.body.style.overflow = ''; // Restaurar el scroll del body
     },
     changeMainImage(image) {
       this.currentImage = image;
     },
-    isInWishlist(id) {
-      return this.wishlist.includes(id);
-    },
-    toggleWishlist(id) {
-      const index = this.wishlist.indexOf(id);
-      if (index > -1) {
-        this.wishlist.splice(index, 1);
-        console.log(`Producto ${id} eliminado de la wishlist.`);
-      } else {
-        this.wishlist.push(id);
-        console.log(`Producto ${id} añadido a la wishlist.`);
-      }
-    },
-    startRentalProcess(product) {
-      this.router.push({
-        name: 'Rent',
-        params: { productId: product.id },
-        query: { rentalType: product.rentalType, productName: product.name }
-      });
-    },
-    startBuyProcess(product) {
-        console.log('Iniciar proceso de compra para:', product.name);
-    },
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString('es-ES', options);
+    },
+    startRentalProcess(product) {
+      alert(`Iniciando proceso de alquiler para: ${product.name}`);
+      // Lógica para redirigir o abrir modal
+    },
+    startBuyProcess(product) {
+      alert(`Iniciando proceso de compra para: ${product.name}`);
+      // Lógica para redirigir o añadir al carrito
     }
-  },
-  mounted() {
-    this.loadItems();
   }
 }
 </script>
 
 <style scoped>
-/* Estilos adicionales si fueran necesarios */
+/* Estilos para el scrollbar en Firefox */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Ocultar scrollbar en Webkit (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 </style>

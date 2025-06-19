@@ -43,6 +43,7 @@
 
             <button
               @click="goToLogin"
+              type="button"
               class="hidden md:block bg-gradient-to-r from-pink-500 to-rose-600 text-white px-5 py-2.5 rounded-full font-semibold
                      hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-out"
             >
@@ -74,10 +75,10 @@
           <router-link
             v-for="category in categories"
             :key="category.value"
-            :to="{ path: '/explore', query: { category: category.value } }"
+            :to="{ path: '/descubrir', query: { category: category.value } }"
             class="whitespace-nowrap px-4 py-1.5 text-sm font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-full transition-all duration-200"
             :class="{ 'bg-pink-100 text-pink-700 font-semibold shadow-sm': activeCategory === category.value }"
-            @click="setActiveCategory(category.value)"
+            @click="handleCategoryClick(category.value)"
           >
             {{ category.name }}
           </router-link>
@@ -123,10 +124,11 @@
             </router-link>
             <button
               @click="goToLogin"
+              type="button"
               class="w-full text-left py-3 px-3 mt-2 rounded-md bg-pink-500 text-white font-semibold
                      hover:bg-pink-600 transition-colors duration-200 flex items-center justify-center gap-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
               {{ user ? 'Mi Cuenta' : 'Unirse / Iniciar Sesión' }}
@@ -147,7 +149,7 @@ const route = useRoute();
 
 const menuItems = [
   { name: 'Inicio', path: '/' },
-  { name: 'Descubrir', path: '/explore' },
+  { name: 'Descubrir', path: '/descubrir' },
   { name: 'Diseñadores', path: '/designers' },
   { name: 'Ocasiones', path: '/occasions' },
 ];
@@ -170,8 +172,9 @@ const user = ref(null); // Simula el estado de autenticación del usuario
 // Observar cambios en la ruta para resaltar la categoría activa
 watch(() => route.query.category, (newCategory) => {
   activeCategory.value = newCategory;
-  // Opcional: Desplazarse a la sección de productos si se cambia la categoría
-  // setTimeout(scrollToProducts, 100);
+  if (route.path === '/descubrir') {
+    setTimeout(scrollToProducts, 0);
+  }
 });
 
 // Observar la ruta principal para cerrar el menú móvil al navegar
@@ -179,49 +182,57 @@ watch(() => route.path, () => {
   isMobileMenuOpen.value = false;
 });
 
-
 // Inicializar categoría activa al montar el componente
 onMounted(() => {
   if (route.query.category) {
     activeCategory.value = route.query.category;
   }
   // Simular carga de usuario (esto se reemplazaría con tu lógica de autenticación real)
-  user.value = localStorage.getItem('userToken') ? { name: 'Usuario' } : null;
+  user.value = localStorage.getItem('authToken') ? { name: 'Usuario' } : null;
 });
 
 const handleMenuItemClick = (item) => {
-  // Asegura que al hacer clic en 'Descubrir' se mantenga el filtro de categoría si existe
-  if (item.path === '/explore' && activeCategory.value) {
-    router.push({ path: item.path, query: { category: activeCategory.value } });
+  if (item.path === '/descubrir') {
+    router.push({ path: '/descubrir' });
   } else {
-    router.push(item.path); // Navega directamente si no es 'Descubrir' o no hay categoría activa
+    router.push(item.path);
   }
-  isMobileMenuOpen.value = false; // Cerrar menú móvil al seleccionar un ítem
+  isMobileMenuOpen.value = false;
 };
 
-const setActiveCategory = (category) => {
-  activeCategory.value = category;
-  // Opcional: Forzar el scroll a la sección de productos si estás en la página de exploración
-  if (route.path === '/explore') {
-    setTimeout(scrollToProducts, 100);
+const handleCategoryClick = (category) => {
+  if (route.path === '/descubrir') {
+    router.replace({ query: { ...route.query, category: category } }).then(() => {
+      setTimeout(scrollToProducts, 0);
+    });
+  } else {
+    router.push({ path: '/descubrir', query: { category: category } }).then(() => {
+      setTimeout(scrollToProducts, 0);
+    });
   }
+  activeCategory.value = category;
 };
 
 const scrollToProducts = () => {
   const productsSection = document.getElementById('products-section');
   if (productsSection) {
-    productsSection.scrollIntoView({ behavior: 'smooth' });
+    productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    console.warn("Element with ID 'products-section' not found. Ensure it exists in Discover.vue or relevant product listing component.");
   }
 };
 
+// Función original para el botón 'Unirse'
 const goToLogin = () => {
-  if (user.value) {
-    // Aquí puedes redirigir a un perfil de usuario o dashboard
-    router.push('/mi-cuenta');
-  } else {
-    router.push('/login');
-  }
-  isMobileMenuOpen.value = false; // Asegurar que el menú móvil se cierre
+  console.log('Botón "Unirse" clickeado. Redirigiendo a /login...');
+  router.push('/login')
+    .then(() => {
+      console.log('Redirección a /login exitosa.');
+    })
+    .catch((error) => {
+      console.error('Error al intentar redirigir a /login:', error);
+    });
+  isMobileMenuOpen.value = false;
 };
 </script>
 
