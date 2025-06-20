@@ -7,7 +7,8 @@ import Wishlist from '../views/Wishlist.vue';
 import Rent from '../views/Rent.vue';
 import Designers from '../views/Designers.vue';
 import Occasions from '../views/Occasions.vue';
-import Discover from '../views/Discover.vue'; // 
+import Discover from '../views/Discover.vue';
+import AddProductForm from '../views/AddProductForm.vue'; // <-- Importamos el nuevo componente
 
 const routes = [
   {
@@ -36,7 +37,7 @@ const routes = [
     }
   },
   {
-    path: '/discover', 
+    path: '/discover',
     name: 'discover',
     component: Discover,
     meta: {
@@ -102,6 +103,17 @@ const routes = [
     path: '/rent',
     redirect: '/'
   },
+  // NUEVA RUTA PARA EL FORMULARIO DE AÑADIR PRODUCTOS
+  {
+    path: '/dashboard-vendedor/add-product',
+    name: 'AddProduct',
+    component: AddProductForm,
+    meta: {
+      title: 'Añadir Producto | Panel Vendedor',
+      requiresAuth: true,
+      role: 'vendedor' // Esta ruta es solo para vendedores
+    }
+  },
   {
     path: '/:pathMatch(.*)*',
     redirect: '/'
@@ -127,42 +139,45 @@ const router = createRouter({
 
 // --- MODIFICACIONES EN router.beforeEach ---
 router.beforeEach((to, from, next) => {
-  // Opcional: console.log para ver el flujo (puedes quitarlos después)
-  console.log('--- router.beforeEach INICIADO ---');
-  console.log('Navegando DE:', from.fullPath, 'HACIA:', to.fullPath);
   document.title = to.meta.title || 'VisteteYA';
 
-  // Si el destino es la página de login o registro, SIEMPRE permitir la navegación
-  // Esto es útil cuando no tienes un backend de autenticación activo
+  const isAuthenticated = localStorage.getItem('authToken');
+  const userRole = localStorage.getItem('user_role'); // Obtenemos el rol del usuario
+
+  // 1. Si el destino es la página de login o registro, SIEMPRE permitir la navegación
   if (to.name === 'login' || to.name === 'register') {
-    console.log('Permitido: Navegando a login/register (ignoring auth state for frontend dev).');
     next();
-    console.log('--- router.beforeEach FINALIZADO (permitido a login/register) ---');
     return;
   }
 
-  // Lógica de autenticación original (solo si no es login/register)
-  const isAuthenticated = localStorage.getItem('authToken');
-  console.log('¿Hay authToken en localStorage? (isAuthenticated):', !!isAuthenticated);
-  console.log('Meta de la ruta de destino (to.meta):', to.meta);
-
-
-  // Si la ruta requiere autenticación Y el usuario NO está autenticado
+  // 2. Si la ruta requiere autenticación Y el usuario NO está autenticado
   if (to.meta.requiresAuth && !isAuthenticated) {
-    console.warn('GUARD: Bloqueado. Ruta requiere autenticación y usuario NO autenticado.');
-    console.log('Redirigiendo a login con query param "redirect".');
     next({
       name: 'login',
       query: { redirect: to.fullPath }
     });
-    console.log('--- router.beforeEach FINALIZADO (redirección por requiresAuth) ---');
     return;
   }
 
-  // Si llegamos aquí, se permite la navegación para el resto de rutas
-  console.log('Permitido: Continuando navegación (otras rutas).');
+  // 3. Si la ruta requiere un rol específico Y el rol del usuario NO COINCIDE
+  if (to.meta.role && userRole !== to.meta.role) {
+    // Si el usuario está autenticado pero no tiene el rol correcto
+    if (isAuthenticated) {
+      // Podrías redirigir a una página de "Acceso Denegado" o a la página principal
+      alert('Acceso denegado. No tienes los permisos necesarios para esta sección.');
+      next('/');
+    } else {
+      // Si no está autenticado, simplemente lo enviamos al login
+      next({
+        name: 'login',
+        query: { redirect: to.fullPath }
+      });
+    }
+    return;
+  }
+
+  // 4. Si todas las verificaciones pasan, permitir la navegación
   next();
-  console.log('--- router.beforeEach FINALIZADO (continuado normalmente) ---');
 });
 // --- FIN DE LAS MODIFICACIONES router.beforeEach ---
 

@@ -141,19 +141,21 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 const router = useRouter()
-const route = useRoute()
 const loading = ref(false)
-const errorMessage = ref(null) // Nuevo estado para mensajes de error en la UI
+const errorMessage = ref(null) // Estado para mensajes de error en la UI
 
 const loginForm = reactive({
   email: '',
   password: ''
 })
+
+// --- Configuración de la API (DEBE COINCIDIR CON TU BACKEND) ---
+const API_BASE_URL = 'http://127.0.0.1:8000'; // Tu backend FastAPI se ejecuta en 127.0.0.1:8000
 
 const goToHome = () => {
   router.push('/'); // Redirige a la ruta principal
@@ -165,7 +167,7 @@ const handleLogin = async () => {
 
   try {
     const response = await axios.post(
-      'http://localhost:5000/login',
+      `${API_BASE_URL}/login`, // Usar la URL base configurada
       {
         email: loginForm.email,
         password: loginForm.password
@@ -177,36 +179,66 @@ const handleLogin = async () => {
       }
     )
 
-    if (response.data.usuario_id) {
-      localStorage.setItem('usuario_id', response.data.usuario_id)
-      router.push('/dashboard')
+    // FastAPI devuelve el user_id y role directamente en `response.data`
+    if (response.data.user_id) {
+      // Guardar información del usuario en localStorage
+      localStorage.setItem('user_id', response.data.user_id);
+      localStorage.setItem('user_email', response.data.email);
+      localStorage.setItem('user_role', response.data.role);
+      // ¡ESTA ES LA LÍNEA CRÍTICA AÑADIDA!
+      if (response.data.first_name) {
+        localStorage.setItem('user_first_name', response.data.first_name);
+      }
+
+      alert(`¡Bienvenido, ${response.data.first_name || response.data.email}! Has iniciado sesión como ${response.data.role}.`);
+
+      // Redirigir según el rol
+      if (response.data.role === 'cliente') {
+        router.push('/'); // Redirige al cliente al inicio
+      } else if (response.data.role === 'vendedor') {
+        router.push('/dashboard-vendedor'); // Redirige al vendedor a su dashboard
+      } else {
+        // Para roles no definidos explícitamente, podrías enviar a una página genérica o al inicio
+        router.push('/');
+      }
+
     } else {
-      // Esto podría ocurrir si la API devuelve un 200 pero sin usuario_id por alguna razón
-      errorMessage.value = 'Respuesta inesperada del servidor. Inténtalo de nuevo.'
+      // Esto podría ocurrir si la API devuelve un 200 pero sin los datos esperados
+      errorMessage.value = 'Respuesta inesperada del servidor. Inténtalo de nuevo.';
     }
   } catch (error) {
     if (error.response) {
+      // El servidor respondió con un código de estado fuera del rango 2xx
+      console.error('Error de respuesta de la API:', error.response.data);
+      console.error('Código de estado:', error.response.status);
+
       switch (error.response.status) {
         case 401:
-          errorMessage.value = 'Credenciales incorrectas. Por favor, verifica tu correo y contraseña.'
-          break
-        case 400: // Para errores de validación de entrada, si tu API los maneja
-          errorMessage.value = error.response.data.message || 'Datos de entrada inválidos.'
+          errorMessage.value = error.response.data.detail || 'Credenciales incorrectas. Por favor, verifica tu correo y contraseña.';
+          break;
+        case 403:
+          errorMessage.value = error.response.data.detail || 'Tu cuenta está inactiva. Contacta al soporte.';
+          break;
+        case 422: // Errores de validación de Pydantic
+          errorMessage.value = 'Datos de entrada inválidos. Por favor, verifica los campos.';
+          // Puedes parsear `error.response.data.detail` para mostrar errores específicos de validación
           break;
         case 500:
-          errorMessage.value = 'Ocurrió un error en el servidor. Por favor, inténtalo más tarde.'
-          break
+          errorMessage.value = 'Ocurrió un error en el servidor. Por favor, inténtalo más tarde.';
+          break;
         default:
-          errorMessage.value = `Un error inesperado ocurrió: ${error.response.status}.`
+          errorMessage.value = `Un error inesperado ocurrió: ${error.response.status}.`;
       }
     } else if (error.request) {
-      // La solicitud fue hecha pero no se recibió respuesta
-      errorMessage.value = 'No se pudo conectar al servidor. Por favor, verifica tu conexión a internet.'
+      // La solicitud fue hecha pero no se recibió respuesta (ej. servidor caído, CORS no configurado)
+      console.error('No se recibió respuesta del servidor:', error.request);
+      errorMessage.value = 'No se pudo conectar al servidor. Asegúrate de que el backend esté ejecutándose y los CORS estén configurados correctamente.';
     } else {
-      // Algo pasó al configurar la petición
-      errorMessage.value = 'Error al procesar tu solicitud. Inténtalo de nuevo.'
+      // Algo pasó al configurar la petición (ej. error en la URL, problema de Axios)
+      console.error('Error al configurar la solicitud:', error.message);
+      errorMessage.value = 'Error al procesar tu solicitud. Inténtalo de nuevo.';
     }
-    console.error('Error durante el login:', error);
+    console.error('Error completo durante el login:', error);
   } finally {
     loading.value = false
   }

@@ -21,7 +21,15 @@
             >
               {{ item.name }}
             </router-link>
-          </nav>
+
+            <router-link
+              v-if="isLoggedIn && userRole === 'vendedor'"
+              to="/dashboard-vendedor/add-product" class="text-pink-600 hover:text-pink-700 font-semibold transition-all duration-200 py-2 px-3 rounded-md hover:bg-pink-50 border border-pink-300"
+              active-class="text-pink-600 border-b-2 border-pink-600 pb-2 -mb-2"
+            >
+              Panel Vendedor
+            </router-link>
+            </nav>
 
           <div class="flex items-center space-x-4">
             <button class="p-2 text-gray-600 hover:text-pink-600 transition-colors duration-200" aria-label="Buscar">
@@ -41,14 +49,50 @@
               </span>
             </router-link>
 
+            <div v-if="isLoggedIn && (userRole === 'cliente' || userRole === 'vendedor')" class="relative hidden md:flex items-center space-x-2 cursor-pointer group" @click="toggleProfileMenu">
+                <div class="h-9 w-9 rounded-full bg-pink-100 flex items-center justify-center border-2 border-pink-500 transition-transform duration-300 group-hover:scale-105">
+                    <svg class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800 group-hover:text-pink-600 transition-colors duration-200">
+                    {{ userFirstName || 'Mi Perfil' }}
+                </span>
+
+                <transition
+                  enter-active-class="transition ease-out duration-100"
+                  enter-from-class="transform opacity-0 scale-95"
+                  enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100"
+                  leave-to-class="transform opacity-0 scale-95"
+                >
+                  <div v-if="isProfileMenuOpen" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none top-full">
+                    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                      <router-link v-if="userRole === 'cliente'" to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600" role="menuitem" tabindex="-1" id="user-menu-item-0" @click="isProfileMenuOpen = false">
+                        Mi Perfil
+                      </router-link>
+                      <router-link v-else-if="userRole === 'vendedor'" to="/dashboard-vendedor/add-product" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600" role="menuitem" tabindex="-1" id="user-menu-item-1" @click="isProfileMenuOpen = false">
+                        Panel Vendedor
+                      </router-link>
+                      <a href="#" @click.prevent="handleLogout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700" role="menuitem" tabindex="-1" id="user-menu-item-2">
+                        Cerrar sesión
+                      </a>
+                    </div>
+                  </div>
+                </transition>
+            </div>
+
             <button
+              v-else
               @click="goToLogin"
               type="button"
               class="hidden md:block bg-gradient-to-r from-pink-500 to-rose-600 text-white px-5 py-2.5 rounded-full font-semibold
                      hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-out"
             >
-              {{ user ? 'Mi Cuenta' : 'Unirse' }}
+              Unirse
             </button>
+
 
             <button
               @click="isMobileMenuOpen = !isMobileMenuOpen"
@@ -72,16 +116,15 @@
     <div class="bg-white hidden md:block border-t border-gray-50">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex overflow-x-auto py-3 space-x-6 hide-scrollbar">
-          <router-link
+          <button
             v-for="category in categories"
             :key="category.value"
-            :to="{ path: '/descubrir', query: { category: category.value } }"
+            @click="handleCategoryClick(category.value)"
             class="whitespace-nowrap px-4 py-1.5 text-sm font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-full transition-all duration-200"
             :class="{ 'bg-pink-100 text-pink-700 font-semibold shadow-sm': activeCategory === category.value }"
-            @click="handleCategoryClick(category.value)"
           >
             {{ category.name }}
-          </router-link>
+          </button>
         </div>
       </div>
     </div>
@@ -122,7 +165,54 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
               </svg>
             </router-link>
+
+            <router-link
+              v-if="isLoggedIn && userRole === 'vendedor'"
+              to="/dashboard-vendedor/add-product" class="flex items-center justify-between py-3 px-3 transition-colors duration-200 rounded-md"
+              :class="{
+                'bg-pink-50 text-pink-600 font-semibold': route.path === '/dashboard-vendedor/add-product', 'text-gray-800 hover:bg-gray-50 hover:text-pink-600': route.path !== '/dashboard-vendedor/add-product' }"
+              @click="isMobileMenuOpen = false"
+            >
+              <span class="text-base">Panel Vendedor</span>
+              <svg
+                v-if="route.path === '/dashboard-vendedor/add-product'" class="h-5 w-5 text-pink-500 animate-fade-in-right"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </router-link>
             <button
+              v-if="isLoggedIn && (userRole === 'cliente' || userRole === 'vendedor')"
+              @click="userRole === 'cliente' ? goToProfile() : goToDashboardVendedor()"
+              type="button"
+              class="w-full text-left py-3 px-3 mt-2 rounded-md bg-pink-50 text-pink-600 font-semibold
+                     hover:bg-pink-100 transition-colors duration-200 flex items-center justify-start gap-2"
+            >
+              <div class="h-6 w-6 rounded-full bg-pink-100 flex items-center justify-center border border-pink-400">
+                    <svg class="h-4 w-4 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+              <span>{{ userFirstName || 'Mi Perfil' }}</span>
+            </button>
+
+            <button
+              v-if="isLoggedIn"
+              @click="handleLogout"
+              type="button"
+              class="w-full text-left py-3 px-3 mt-2 rounded-md bg-red-500 text-white font-semibold
+                     hover:bg-red-600 transition-colors duration-200 flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Cerrar sesión
+            </button>
+
+            <button
+              v-else
               @click="goToLogin"
               type="button"
               class="w-full text-left py-3 px-3 mt-2 rounded-md bg-pink-500 text-white font-semibold
@@ -131,7 +221,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
-              {{ user ? 'Mi Cuenta' : 'Unirse / Iniciar Sesión' }}
+              Unirse / Iniciar Sesión
             </button>
           </nav>
         </div>
@@ -141,7 +231,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
@@ -149,7 +239,6 @@ const route = useRoute();
 
 const menuItems = [
   { name: 'Inicio', path: '/' },
-  { name: 'Descubrir', path: '/descubrir' },
   { name: 'Diseñadores', path: '/designers' },
   { name: 'Ocasiones', path: '/occasions' },
 ];
@@ -166,65 +255,71 @@ const categories = [
 
 const favoritesCount = ref(3);
 const isMobileMenuOpen = ref(false);
+const isProfileMenuOpen = ref(false); // Nuevo estado para el menú desplegable del perfil
 const activeCategory = ref(null);
-const user = ref(null); // Simula el estado de autenticación del usuario
 
-// Observar cambios en la ruta para resaltar la categoría activa
-watch(() => route.query.category, (newCategory) => {
-  activeCategory.value = newCategory;
-  if (route.path === '/descubrir') {
-    setTimeout(scrollToProducts, 0);
-  }
+const userFirstName = ref(null);
+const userRole = ref(null);
+
+const isLoggedIn = computed(() => {
+  return localStorage.getItem('user_id') !== null;
 });
 
-// Observar la ruta principal para cerrar el menú móvil al navegar
+const loadUserDataFromLocalStorage = () => {
+  userFirstName.value = localStorage.getItem('user_first_name');
+  userRole.value = localStorage.getItem('user_role');
+};
+
 watch(() => route.path, () => {
   isMobileMenuOpen.value = false;
+  isProfileMenuOpen.value = false; // Cerrar el menú del perfil al navegar
 });
 
-// Inicializar categoría activa al montar el componente
+// Cerrar el menú del perfil si se hace clic fuera de él
 onMounted(() => {
-  if (route.query.category) {
-    activeCategory.value = route.query.category;
-  }
-  // Simular carga de usuario (esto se reemplazaría con tu lógica de autenticación real)
-  user.value = localStorage.getItem('authToken') ? { name: 'Usuario' } : null;
+  loadUserDataFromLocalStorage();
+  window.addEventListener('storage', loadUserDataFromLocalStorage);
+  document.addEventListener('click', closeProfileMenuOnClickOutside);
 });
+
+onUnmounted(() => {
+  window.removeEventListener('storage', loadUserDataFromLocalStorage);
+  document.removeEventListener('click', closeProfileMenuOnClickOutside);
+});
+
+const closeProfileMenuOnClickOutside = (event) => {
+  // Solo cerrar si el clic no fue dentro del contenedor del menú del perfil
+  if (isProfileMenuOpen.value && !event.target.closest('.group.relative')) {
+    isProfileMenuOpen.value = false;
+  }
+};
+
+const toggleProfileMenu = () => {
+  isProfileMenuOpen.value = !isProfileMenuOpen.value;
+};
+
+const handleLogout = () => {
+  localStorage.removeItem('user_id');
+  localStorage.removeItem('user_email');
+  localStorage.removeItem('user_role');
+  localStorage.removeItem('user_first_name');
+  userFirstName.value = null; // Limpiar los datos reactivos
+  userRole.value = null;     // Limpiar los datos reactivos
+  isProfileMenuOpen.value = false; // Cerrar el menú
+  router.push('/login'); // Redirigir a la página de login
+};
 
 const handleMenuItemClick = (item) => {
-  if (item.path === '/descubrir') {
-    router.push({ path: '/descubrir' });
-  } else {
-    router.push(item.path);
-  }
+  router.push(item.path);
   isMobileMenuOpen.value = false;
 };
 
 const handleCategoryClick = (category) => {
-  if (route.path === '/descubrir') {
-    router.replace({ query: { ...route.query, category: category } }).then(() => {
-      setTimeout(scrollToProducts, 0);
-    });
-  } else {
-    router.push({ path: '/descubrir', query: { category: category } }).then(() => {
-      setTimeout(scrollToProducts, 0);
-    });
-  }
   activeCategory.value = category;
+  console.log(`Categoría "${category}" clickeada.`);
 };
 
-const scrollToProducts = () => {
-  const productsSection = document.getElementById('products-section');
-  if (productsSection) {
-    productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } else {
-    console.warn("Element with ID 'products-section' not found. Ensure it exists in Discover.vue or relevant product listing component.");
-  }
-};
-
-// Función original para el botón 'Unirse'
 const goToLogin = () => {
-  console.log('Botón "Unirse" clickeado. Redirigiendo a /login...');
   router.push('/login')
     .then(() => {
       console.log('Redirección a /login exitosa.');
@@ -234,10 +329,23 @@ const goToLogin = () => {
     });
   isMobileMenuOpen.value = false;
 };
+
+const goToProfile = () => {
+  router.push('/profile'); // Ejemplo: Ruta a la página de perfil del cliente
+  isProfileMenuOpen.value = false; // Asegurarse de cerrar el menú
+  isMobileMenuOpen.value = false;
+};
+
+const goToDashboardVendedor = () => {
+  // Ahora, el botón "Panel Vendedor" redirige directamente a AddProductForm
+  router.push('/dashboard-vendedor/add-product'); 
+  isProfileMenuOpen.value = false; // Asegurarse de cerrar el menú
+  isMobileMenuOpen.value = false;
+};
 </script>
 
 <style scoped>
-/* Oculta la barra de desplazamiento para elementos con overflow-x-auto */
+/* Estilos existentes */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -245,8 +353,6 @@ const goToLogin = () => {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-
-/* Animación para el icono activo del menú móvil (simulando bounce en x) */
 @keyframes fade-in-right {
   from {
     opacity: 0;
@@ -260,8 +366,6 @@ const goToLogin = () => {
 .animate-fade-in-right {
   animation: fade-in-right 0.3s ease-out forwards;
 }
-
-/* Animación para el badge de favoritos (un pequeño pulso al aparecer/actualizar) */
 @keyframes ping-once {
   0% {
     transform: scale(0.8);
@@ -279,13 +383,9 @@ const goToLogin = () => {
 .animate-ping-once {
   animation: ping-once 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* Sombra más pronunciada para el menú móvil abierto */
 .shadow-xl {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-
-/* Transiciones personalizadas para el menú móvil */
 .transition-all {
   transition-property: all;
   transition-duration: var(--transition-duration, 0.3s);

@@ -281,8 +281,7 @@
                       <label for="phone" class="block text-sm font-medium text-gray-700 mb-1.5">Teléfono <span class="text-red-500">*</span></label>
                       <input
                         id="phone"
-                        v-model="customerForm.phone"
-                        type="tel"
+                        v-model="customerForm.phone_number" type="tel"
                         required
                         class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200"
                         placeholder="Ej: 987654321"
@@ -294,8 +293,7 @@
                       <label for="birthDate" class="block text-sm font-medium text-gray-700 mb-1.5">Fecha de nacimiento</label>
                       <input
                         id="birthDate"
-                        v-model="customerForm.birthDate"
-                        type="date"
+                        v-model="customerForm.date_of_birth" type="date"
                         class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200"
                         aria-label="Fecha de nacimiento"
                       >
@@ -320,8 +318,7 @@
                       <div v-for="preference in preferences" :key="preference" class="flex items-center">
                         <input
                           :id="`preference-${preference}`"
-                          v-model="customerForm.preferences"
-                          type="checkbox"
+                          v-model="customerForm.shopping_preferences" type="checkbox"
                           :value="preference"
                           class="h-5 w-5 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
                           :aria-label="`Preferencia: ${preference}`"
@@ -350,8 +347,7 @@
                     <label for="storeDescription" class="block text-sm font-medium text-gray-700 mb-1.5">Descripción de la tienda</label>
                     <textarea
                       id="storeDescription"
-                      v-model="sellerForm.storeDescription"
-                      rows="3"
+                      v-model="sellerForm.description" rows="3"
                       class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200 resize-y"
                       placeholder="Describe los productos que ofreces, tu estilo, etc."
                       aria-label="Descripción de la tienda"
@@ -364,8 +360,7 @@
                       <div v-for="category in productCategories" :key="category" class="flex items-center">
                         <input
                           :id="`category-${category}`"
-                          v-model="sellerForm.productCategories"
-                          type="checkbox"
+                          v-model="sellerForm.product_categories" type="checkbox"
                           :value="category"
                           class="h-5 w-5 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
                           :aria-label="`Categoría: ${category}`"
@@ -383,8 +378,7 @@
                     <label for="idNumber" class="block text-sm font-medium text-gray-700 mb-1.5">DNI o RUC <span class="text-red-500">*</span></label>
                     <input
                       id="idNumber"
-                      v-model="sellerForm.idNumber"
-                      type="text"
+                      v-model="sellerForm.document_id_number" type="text"
                       required
                       class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200"
                       placeholder="Ej: 87654321"
@@ -396,8 +390,7 @@
                     <label for="bankName" class="block text-sm font-medium text-gray-700 mb-1.5">Banco <span class="text-red-500">*</span></label>
                     <select
                       id="bankName"
-                      v-model="sellerForm.bankName"
-                      required
+                      v-model="sellerForm.bank_name" required
                       class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200 bg-white"
                       aria-required="true"
                     >
@@ -412,8 +405,7 @@
                     <label for="accountNumber" class="block text-sm font-medium text-gray-700 mb-1.5">Número de cuenta <span class="text-red-500">*</span></label>
                     <input
                       id="accountNumber"
-                      v-model="sellerForm.accountNumber"
-                      type="text"
+                      v-model="sellerForm.account_number" type="text"
                       required
                       class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200"
                       placeholder="Ej: 193-45678901-0-78"
@@ -425,8 +417,7 @@
                     <label for="accountType" class="block text-sm font-medium text-gray-700 mb-1.5">Tipo de cuenta <span class="text-red-500">*</span></label>
                     <select
                       id="accountType"
-                      v-model="sellerForm.accountType"
-                      required
+                      v-model="sellerForm.account_type" required
                       class="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 sm:text-base transition-colors duration-200 bg-white"
                       aria-required="true"
                     >
@@ -440,26 +431,20 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-3.5">Documentos requeridos <span class="text-red-500">*</span></label>
                   <div class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <FileUpload
-                        label="DNI/RUC (Frente)"
-                        :required="true"
-                        @file-changed="(file) => sellerForm.idFront = file"
-                        :initial-file="sellerForm.idFront"
-                      />
-                      <FileUpload
-                        label="DNI/RUC (Reverso)"
-                        :required="true"
-                        @file-changed="(file) => sellerForm.idBack = file"
-                        :initial-file="sellerForm.idBack"
-                      />
-                    </div>
-
+                    <FileUpload
+                      label="DNI/RUC (Frente)"
+                      :required="true"
+                      @file-changed="(file) => sellerForm.dni_ruc_front_file = file" :initial-file="sellerForm.dni_ruc_front_file"
+                    />
+                    <FileUpload
+                      label="DNI/RUC (Reverso)"
+                      :required="true"
+                      @file-changed="(file) => sellerForm.dni_ruc_back_file = file" :initial-file="sellerForm.dni_ruc_back_file"
+                    />
                     <FileUpload
                       label="Selfie con DNI/RUC"
                       :required="true"
-                      @file-changed="(file) => sellerForm.selfieWithId = file"
-                      :initial-file="sellerForm.selfieWithId"
+                      @file-changed="(file) => sellerForm.selfie_with_dni_file = file" :initial-file="sellerForm.selfie_with_dni_file"
                     />
                   </div>
                 </div>
@@ -469,8 +454,7 @@
                 <div class="flex items-center h-5">
                   <input
                     id="customerTerms"
-                    v-model="customerForm.acceptedTerms"
-                    v-if="userType === 'customer'"
+                    v-model="customerForm.accepts_terms" v-if="userType === 'customer'"
                     type="checkbox"
                     required
                     class="focus:ring-pink-500 h-5 w-5 text-pink-600 border-gray-300 rounded"
@@ -478,8 +462,7 @@
                   >
                   <input
                     id="sellerTerms"
-                    v-model="sellerForm.acceptedTerms"
-                    v-if="userType === 'seller'"
+                    v-model="sellerForm.accepts_terms" v-if="userType === 'seller'"
                     type="checkbox"
                     required
                     class="focus:ring-pink-500 h-5 w-5 text-pink-600 border-gray-300 rounded"
@@ -552,276 +535,331 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-// Asume que FileUpload está en '@/components/FileUpload.vue'
-import FileUpload from '@/components/FileUpload.vue';
+import axios from 'axios';
+import FileUpload from '@/components/FileUpload.vue'; // Asegúrate de que esta ruta sea correcta
 
-const router = useRouter();
+// --- Configuración de la API ---
+const API_BASE_URL = 'http://127.0.0.1:8000'; // Asegúrate de que esto coincida con tu backend FastAPI
 
 // --- Estados Reactivos ---
-const userType = ref(null); // 'customer' o 'seller'
 const currentStep = ref(1);
-const loading = ref(false); // Para el estado de carga de los botones
-const formError = ref(null); // Para mostrar errores de validación en la UI
+const userType = ref(null); // 'customer' o 'seller'
+const loading = ref(false); // Para el estado de carga del botón
+const formError = ref(''); // Para mostrar errores del formulario/API
 
-// --- Títulos de los Pasos ---
-const stepTitles = {
-  customer: ['Información Personal', 'Preferencias y Contacto'],
-  seller: ['Información Personal', 'Datos de la Tienda', 'Verificación y Pagos']
-};
-
-// --- Cálculos Computados ---
-const totalSteps = computed(() => userType.value === 'seller' ? 4 : 3);
-const progress = computed(() => (currentStep.value / totalSteps.value) * 100);
-
-// --- Datos del Formulario para Clientes ---
+// Formulario de Cliente
 const customerForm = ref({
   firstName: '',
   lastName: '',
   email: '',
   password: '',
   confirmPassword: '',
-  phone: '',
-  birthDate: '',
+  phone_number: '',
+  date_of_birth: '',
   address: '',
-  preferences: [],
-  acceptedTerms: false
+  shopping_preferences: [],
+  accepts_terms: false,
 });
 
-// --- Datos del Formulario para Vendedores ---
+// Formulario de Vendedor
 const sellerForm = ref({
   firstName: '',
   lastName: '',
   email: '',
   password: '',
   confirmPassword: '',
-  phone: '',
+  phone: '', // Contact phone for seller
   storeName: '',
-  storeDescription: '',
-  productCategories: [],
-  idNumber: '',
-  bankName: '',
-  accountNumber: '',
-  accountType: '',
-  idFront: null, // Guardará el objeto File
-  idBack: null,  // Guardará el objeto File
-  selfieWithId: null, // Guardará el objeto File
-  acceptedTerms: false
+  description: '',
+  product_categories: [],
+  document_id_number: '', // DNI o RUC
+  bank_name: '',
+  account_number: '',
+  account_type: '',
+  dni_ruc_front_file: null, // Guardará el objeto File
+  dni_ruc_back_file: null,  // Guardará el objeto File
+  selfie_with_dni_file: null, // Guardará el objeto File
+  accepts_terms: false,
 });
 
-// --- Opciones para Selects y Checkboxes ---
-const preferences = [
-  'Ropa de mujer', 'Ropa de hombre', 'Accesorios', 'Calzado',
-  'Electrónica', 'Hogar', 'Belleza', 'Deportes', 'Juguetes', 'Libros'
-];
+// --- Datos para Selects y Checkboxes ---
+const preferences = ['Casual', 'Formal', 'Deportivo', 'Vintage', 'Moda rápida', 'Eco-friendly', 'Lujo'];
+const productCategories = ['Ropa', 'Accesorios', 'Calzado', 'Joyas', 'Belleza', 'Hogar y Decoración'];
+const banks = ['BCP', 'Interbank', 'BBVA Continental', 'ScotiaBank', 'Banco de la Nación', 'Caja Arequipa', 'Otros'];
 
-const productCategories = [
-  'Ropa de mujer', 'Ropa de hombre', 'Accesorios', 'Zapatos', 'Bolsos',
-  'Joyería', 'Ropa infantil', 'Deportes', 'Trajes de baño', 'Ropa formal'
-];
+// --- Títulos de los Pasos ---
+const stepTitles = {
+  customer: [
+    'Información Personal',
+    'Detalles Adicionales',
+  ],
+  seller: [
+    'Información Personal',
+    'Detalles de la Tienda',
+    'Información Bancaria y Documentos',
+  ],
+};
 
-const banks = [
-  'BCP', 'BBVA', 'Interbank', 'Scotiabank', 'Banco de la Nación',
-  'Banco Pichincha', 'MiBanco', 'Banco GNB', 'Banco Falabella', 'Banco Ripley'
-];
+// --- Computados ---
+const totalSteps = computed(() => {
+  if (userType.value === 'customer') {
+    return 3; // Paso 1 (selección) + 2 pasos de formulario
+  } else if (userType.value === 'seller') {
+    return 4; // Paso 1 (selección) + 3 pasos de formulario
+  }
+  return 1; // Solo el primer paso si no se ha seleccionado tipo
+});
 
-// --- Métodos de Navegación y Lógica del Formulario ---
+const progress = computed(() => {
+  return (currentStep.value / totalSteps.value) * 100;
+});
+
+// --- Funciones de Navegación y Lógica ---
+
+const goToHome = () => {
+  router.push('/');
+};
 
 const selectUserType = (type) => {
   userType.value = type;
-  formError.value = null; // Limpiar errores al cambiar de tipo
-  nextStep();
-};
-
-const nextStep = () => {
-  if (currentStep.value < totalSteps.value) {
-    currentStep.value++;
-    formError.value = null; // Limpiar errores al avanzar de paso
-  }
+  currentStep.value = 2; // Avanza al primer paso del formulario específico
+  formError.value = ''; // Limpia errores al cambiar de tipo
 };
 
 const prevStep = () => {
   if (currentStep.value > 1) {
     currentStep.value--;
-    formError.value = null; // Limpiar errores al retroceder
-    // Si retrocedes al paso 1, resetea userType para volver a la selección
-    if (currentStep.value === 1) {
-      userType.value = null;
-    }
+    formError.value = ''; // Limpia errores al retroceder
   }
 };
 
-// Función para validar el paso actual antes de avanzar
-const validateAndNextStep = () => {
-  formError.value = null; // Resetear error
-  let isValid = true;
-  const currentFormData = userType.value === 'customer' ? customerForm.value : sellerForm.value;
+const validateCurrentStep = () => {
+  formError.value = ''; // Resetear errores antes de validar
 
   if (userType.value === 'customer') {
+    const form = customerForm.value;
     if (currentStep.value === 2) {
-      if (!currentFormData.firstName || !currentFormData.lastName || !currentFormData.email || !currentFormData.password || !currentFormData.confirmPassword) {
-        isValid = false;
-        formError.value = 'Por favor, completa todos los campos obligatorios del Paso 1 (Cliente).';
-      } else if (currentFormData.password !== currentFormData.confirmPassword) {
-        isValid = false;
+      if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword) {
+        formError.value = 'Por favor, completa todos los campos obligatorios.';
+        return false;
+      }
+      if (form.password !== form.confirmPassword) {
         formError.value = 'Las contraseñas no coinciden.';
-      } else if (currentFormData.password.length < 8) {
-        isValid = false;
+        return false;
+      }
+      if (form.password.length < 8) {
         formError.value = 'La contraseña debe tener al menos 8 caracteres.';
+        return false;
+      }
+      // Basic email regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email)) {
+        formError.value = 'Por favor, introduce un correo electrónico válido.';
+        return false;
       }
     } else if (currentStep.value === 3) {
-      if (!currentFormData.phone) {
-        isValid = false;
-        formError.value = 'Por favor, ingresa tu número de teléfono (Paso 2 Cliente).';
+      if (!form.phone_number) {
+        formError.value = 'Por favor, introduce tu número de teléfono.';
+        return false;
       }
-      if (!currentFormData.acceptedTerms) {
-        isValid = false;
-        formError.value = 'Debes aceptar los Términos y Condiciones y la Política de Privacidad para continuar.';
+      if (!form.accepts_terms) {
+        formError.value = 'Debes aceptar los Términos y Condiciones y la Política de Privacidad.';
+        return false;
       }
     }
   } else if (userType.value === 'seller') {
+    const form = sellerForm.value;
     if (currentStep.value === 2) {
-      if (!currentFormData.firstName || !currentFormData.lastName || !currentFormData.email || !currentFormData.phone || !currentFormData.password || !currentFormData.confirmPassword) {
-        isValid = false;
-        formError.value = 'Por favor, completa todos los campos obligatorios del Paso 1 (Vendedor).';
-      } else if (currentFormData.password !== currentFormData.confirmPassword) {
-        isValid = false;
+      if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword || !form.phone) {
+        formError.value = 'Por favor, completa todos los campos obligatorios.';
+        return false;
+      }
+      if (form.password !== form.confirmPassword) {
         formError.value = 'Las contraseñas no coinciden.';
-      } else if (currentFormData.password.length < 8) {
-        isValid = false;
+        return false;
+      }
+      if (form.password.length < 8) {
         formError.value = 'La contraseña debe tener al menos 8 caracteres.';
+        return false;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(form.email)) {
+        formError.value = 'Por favor, introduce un correo electrónico válido.';
+        return false;
       }
     } else if (currentStep.value === 3) {
-      if (!currentFormData.storeName || !currentFormData.storeDescription || currentFormData.productCategories.length === 0) {
-        isValid = false;
-        formError.value = 'Por favor, completa la información de tu tienda y selecciona al menos una categoría (Paso 2 Vendedor).';
+      if (!form.storeName) {
+        formError.value = 'Por favor, introduce el nombre de tu tienda.';
+        return false;
       }
+      // Puedes añadir más validaciones para descripción o categorías si son obligatorias
     } else if (currentStep.value === 4) {
-      if (!currentFormData.idNumber || !currentFormData.bankName || !currentFormData.accountNumber || !currentFormData.accountType) {
-        isValid = false;
-        formError.value = 'Por favor, completa toda la información bancaria (Paso 3 Vendedor).';
-      } else if (!currentFormData.idFront || !currentFormData.idBack || !currentFormData.selfieWithId) {
-        isValid = false;
-        formError.value = 'Debes subir todos los documentos requeridos (DNI/RUC frente, DNI/RUC reverso y selfie con DNI/RUC).';
+      if (!form.document_id_number || !form.bank_name || !form.account_number || !form.account_type) {
+        formError.value = 'Por favor, completa toda la información bancaria y de documentos.';
+        return false;
       }
-      if (!currentFormData.acceptedTerms) {
-        isValid = false;
-        formError.value = 'Debes aceptar los Términos y Condiciones y la Política de Privacidad para finalizar.';
+      if (!form.dni_ruc_front_file || !form.dni_ruc_back_file || !form.selfie_with_dni_file) {
+        formError.value = 'Debes subir todos los documentos requeridos (DNI/RUC frente, DNI/RUC reverso, Selfie con DNI/RUC).';
+        return false;
+      }
+      if (!form.accepts_terms) {
+        formError.value = 'Debes aceptar los Términos y Condiciones y la Política de Privacidad.';
+        return false;
       }
     }
   }
-
-  // Si isValid es true, entonces avanza al siguiente paso
-  if (isValid) {
-    nextStep();
-  }
-  return isValid; // Devolver el estado de validación
+  return true;
 };
 
+const validateAndNextStep = () => {
+  if (validateCurrentStep()) {
+    if (currentStep.value < totalSteps.value) {
+      currentStep.value++;
+    } else {
+      // Esto no debería ser alcanzado por el botón "Continuar", pero por seguridad
+      if (userType.value === 'customer') {
+        handleCustomerRegister();
+      } else if (userType.value === 'seller') {
+        handleSellerRegister();
+      }
+    }
+  }
+};
 
-// --- Funciones de Registro Final ---
+// --- Manejo de Registro de Cliente ---
 const handleCustomerRegister = async () => {
-  loading.value = true;
-  formError.value = null; // Limpiar errores previos
-
-  // Aquí llamamos a validateAndNextStep() para asegurar que la validación final del último paso sea correcta
-  if (!validateAndNextStep()) { // Solo valida, no avanza si ya estamos en el último paso
-    loading.value = false;
+  if (!validateCurrentStep()) {
     return;
   }
 
-  try {
-    console.log('Customer registration data:', customerForm.value);
-    // Simula una llamada a la API
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 2 segundos
-
-    // Aquí iría la lógica para enviar los datos al backend
-    // Ejemplo: const response = await axios.post('/api/register/customer', customerForm.value);
-
-    // Si todo es exitoso
-    alert('¡Registro de Cliente completado con éxito!');
-    router.push('/dashboard-cliente'); // Redirigir a un dashboard específico para clientes
-
-  } catch (error) {
-    console.error('Error en el registro de cliente:', error);
-    formError.value = 'Error al registrarte. Intenta de nuevo más tarde.';
-    // Si la API devuelve un mensaje de error específico, puedes usarlo:
-    // formError.value = error.response?.data?.message || 'Error al registrarte. Intenta de nuevo más tarde.';
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handleSellerRegister = async () => {
   loading.value = true;
-  formError.value = null; // Limpiar errores previos
-
-  // Aquí llamamos a validateAndNextStep() para asegurar que la validación final del último paso sea correcta
-  if (!validateAndNextStep()) { // Solo valida, no avanza si ya estamos en el último paso
-    loading.value = false;
-    return;
-  }
+  formError.value = '';
 
   try {
-    console.log('Seller registration data:', sellerForm.value);
-    // Simula una llamada a la API
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Espera 2 segundos
+    const payload = {
+      first_name: customerForm.value.firstName,
+      last_name: customerForm.value.lastName,
+      email: customerForm.value.email,
+      password: customerForm.value.password,
+      phone_number: customerForm.value.phone_number,
+      date_of_birth: customerForm.value.date_of_birth || null, // Puede ser opcional
+      address: customerForm.value.address || null, // Puede ser opcional
+      shopping_preferences: customerForm.value.shopping_preferences,
+    };
 
-    // Aquí iría la lógica para enviar los datos al backend
-    // Si tienes que enviar archivos (idFront, idBack, selfieWithId), usarías FormData:
-    /*
-    const formData = new FormData();
-    for (const key in sellerForm.value) {
-      if (sellerForm.value[key] !== null) { // Evitar añadir nulls
-        formData.append(key, sellerForm.value[key]);
-      }
-    }
-    const response = await axios.post('/api/register/seller', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+    const response = await axios.post(`${API_BASE_URL}/register/customer`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-    */
 
-    // Si todo es exitoso
-    alert('¡Registro de Vendedor completado con éxito! Tu cuenta está bajo revisión.');
-    router.push('/dashboard-vendedor'); // Redirigir a un dashboard específico para vendedores
-
+    if (response.data.user_id) {
+      alert('¡Registro de cliente exitoso! Ahora puedes iniciar sesión.');
+      router.push('/login'); // Redirigir al login después de un registro exitoso
+    } else {
+      formError.value = 'Error al registrar el cliente. Inténtalo de nuevo.';
+    }
   } catch (error) {
-    console.error('Error en el registro de vendedor:', error);
-    formError.value = 'Error al registrarte como vendedor. Intenta de nuevo más tarde.';
+    console.error('Error durante el registro del cliente:', error);
+    if (error.response) {
+      formError.value = error.response.data.detail || 'Ocurrió un error al intentar registrarte como cliente.';
+    } else {
+      formError.value = 'No se pudo conectar con el servidor. Por favor, inténtalo más tarde.';
+    }
   } finally {
     loading.value = false;
   }
 };
+
+// --- Manejo de Registro de Vendedor ---
+const handleSellerRegister = async () => {
+  if (!validateCurrentStep()) {
+    return;
+  }
+
+  loading.value = true;
+  formError.value = '';
+
+  try {
+    const formData = new FormData();
+
+    // Añadir campos de texto al FormData
+    formData.append('first_name', sellerForm.value.firstName);
+    formData.append('last_name', sellerForm.value.lastName);
+    formData.append('email', sellerForm.value.email);
+    formData.append('password', sellerForm.value.password);
+    formData.append('confirm_password', sellerForm.value.confirmPassword); // ¡LÍNEA AÑADIDA/CORREGIDA!
+    formData.append('phone', sellerForm.value.phone);
+    formData.append('store_name', sellerForm.value.storeName);
+    formData.append('description', sellerForm.value.description || ''); // Opcional
+    formData.append('document_id_number', sellerForm.value.document_id_number);
+    formData.append('bank_name', sellerForm.value.bank_name);
+    formData.append('account_number', sellerForm.value.account_number);
+    formData.append('account_type', sellerForm.value.account_type);
+    
+    // Añadir listas (como categorías de productos)
+    sellerForm.value.product_categories.forEach(category => {
+      formData.append('product_categories', category);
+    });
+
+    // Añadir archivos
+    if (sellerForm.value.dni_ruc_front_file) {
+      formData.append('dni_ruc_front_file', sellerForm.value.dni_ruc_front_file);
+    }
+    if (sellerForm.value.dni_ruc_back_file) {
+      formData.append('dni_ruc_back_file', sellerForm.value.dni_ruc_back_file);
+    }
+    if (sellerForm.value.selfie_with_dni_file) {
+      formData.append('selfie_with_dni_file', sellerForm.value.selfie_with_dni_file);
+    }
+    
+    // Envía los términos y condiciones como un booleano (FastAPI espera un bool)
+    formData.append('accepts_terms', sellerForm.value.accepts_terms ? 'true' : 'false');
+
+
+    const response = await axios.post(`${API_BASE_URL}/register/seller`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Importante para enviar archivos
+      },
+    });
+
+    if (response.data.user_id) {
+      alert('¡Registro de vendedor exitoso! Tu cuenta está pendiente de aprobación. Te notificaremos cuando esté activa.');
+      router.push('/login'); // Redirigir al login o a una página de confirmación
+    } else {
+      formError.value = 'Error al registrar el vendedor. Inténtalo de nuevo.';
+    }
+  } catch (error) {
+    console.error('Error durante el registro del vendedor:', error);
+    if (error.response) {
+      // Manejar errores específicos del backend (validación, email duplicado, etc.)
+      const errorData = error.response.data;
+      if (errorData.detail) {
+        if (Array.isArray(errorData.detail)) {
+          // Errores de validación de Pydantic
+          // Mapea los errores para una visualización más amigable
+          formError.value = errorData.detail.map(e => {
+            const field = e.loc.length > 1 ? e.loc[1] : e.loc[0]; // Intenta obtener el nombre del campo
+            return `Campo '${field}': ${e.msg}`;
+          }).join('; ');
+        } else {
+          formError.value = errorData.detail;
+        }
+      } else {
+        formError.value = 'Ocurrió un error al intentar registrarte como vendedor.';
+      }
+    } else {
+      formError.value = 'No se pudo conectar con el servidor. Por favor, inténtalo más tarde.';
+    }
+  } finally {
+    loading.value = false;
+  }
+};
+
 </script>
 
 <style scoped>
-/*
-  He añadido algunas animaciones CSS personalizadas para un toque más profesional,
-  ya que Tailwind no tiene todas las animaciones predefinidas.
-*/
-
-/* Importa una fuente más moderna si no lo has hecho globalmente */
-/* Por ejemplo, en tu main.css o en el <head> de index.html: */
-/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'); */
-.font-sans {
-  font-family: 'Inter', sans-serif;
-}
-
-/* Animación de entrada para los pasos del formulario */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out forwards;
-}
-
-/* Animación para el mensaje de error */
+/* Animaciones CSS (mantener las que ya tenías) */
 @keyframes fade-in-down {
   from {
     opacity: 0;
@@ -832,12 +870,37 @@ const handleSellerRegister = async () => {
     transform: translateY(0);
   }
 }
+
 .animate-fade-in-down {
   animation: fade-in-down 0.4s ease-out forwards;
 }
 
-/* Sombra más pronunciada para hover en la tarjeta principal */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* Sombra más pronunciada para hover en la tarjeta del formulario */
 .shadow-3xl {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 15px 30px -8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+}
+
+/* Ocultar scrollbar en algunos navegadores */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
 }
 </style>
