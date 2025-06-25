@@ -8,7 +8,13 @@ import Rent from '../views/Rent.vue';
 import Designers from '../views/Designers.vue';
 import Occasions from '../views/Occasions.vue';
 import Discover from '../views/Discover.vue';
-import AddProductForm from '../views/AddProductForm.vue'; // <-- Importamos el nuevo componente
+import AddProductForm from '../views/AddProductForm.vue';
+// ¡IMPORTA Orders.vue desde la carpeta 'seller' aquí!
+import Orders from '../views/seller/Orders.vue'; 
+// Importa Articles.vue para la sección "Mis Artículos"
+import Articles from '../views/seller/Articles.vue'; 
+// Importa Configuration.vue para la sección de Configuración
+import Configuration from '../views/seller/Configuration.vue'; 
 
 const routes = [
   {
@@ -64,7 +70,7 @@ const routes = [
     component: Login,
     meta: {
       title: 'Iniciar Sesión | VisteteYA',
-      guestOnly: true // Mantener para futuras implementaciones
+      guestOnly: true
     }
   },
   {
@@ -73,7 +79,7 @@ const routes = [
     component: Register,
     meta: {
       title: 'Registrarse | VisteteYA',
-      guestOnly: true // Mantener para futuras implementaciones
+      guestOnly: true
     }
   },
   {
@@ -103,7 +109,6 @@ const routes = [
     path: '/rent',
     redirect: '/'
   },
-  // NUEVA RUTA PARA EL FORMULARIO DE AÑADIR PRODUCTOS
   {
     path: '/dashboard-vendedor/add-product',
     name: 'AddProduct',
@@ -111,7 +116,40 @@ const routes = [
     meta: {
       title: 'Añadir Producto | Panel Vendedor',
       requiresAuth: true,
-      role: 'vendedor' // Esta ruta es solo para vendedores
+      role: 'vendedor'
+    }
+  },
+  // RUTA PARA LOS PEDIDOS, apuntando al componente en la carpeta 'seller'
+  {
+    path: '/dashboard-vendedor/pedidos', 
+    name: 'SellerOrders', 
+    component: Orders, // ¡Aquí se usa el componente importado de views/seller!
+    meta: {
+      title: 'Mis Pedidos | Panel Vendedor',
+      requiresAuth: true,
+      role: 'vendedor'
+    }
+  },
+  // Nueva ruta para "Mis Artículos"
+  {
+    path: '/dashboard-vendedor/mis-articulos',
+    name: 'MyArticles', 
+    component: Articles,
+    meta: {
+      title: 'Mis Artículos | Panel Vendedor',
+      requiresAuth: true,
+      role: 'vendedor'
+    }
+  },
+  // Nueva ruta para "Configuración"
+  {
+    path: '/dashboard-vendedor/configuracion',
+    name: 'SellerConfiguration', 
+    component: Configuration, 
+    meta: {
+      title: 'Configuración | Panel Vendedor',
+      requiresAuth: true,
+      role: 'vendedor'
     }
   },
   {
@@ -137,20 +175,17 @@ const router = createRouter({
   }
 });
 
-// --- MODIFICACIONES EN router.beforeEach ---
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || 'VisteteYA';
 
   const isAuthenticated = localStorage.getItem('authToken');
-  const userRole = localStorage.getItem('user_role'); // Obtenemos el rol del usuario
+  const userRole = localStorage.getItem('user_role');
 
-  // 1. Si el destino es la página de login o registro, SIEMPRE permitir la navegación
   if (to.name === 'login' || to.name === 'register') {
     next();
     return;
   }
 
-  // 2. Si la ruta requiere autenticación Y el usuario NO está autenticado
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({
       name: 'login',
@@ -159,15 +194,11 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // 3. Si la ruta requiere un rol específico Y el rol del usuario NO COINCIDE
   if (to.meta.role && userRole !== to.meta.role) {
-    // Si el usuario está autenticado pero no tiene el rol correcto
     if (isAuthenticated) {
-      // Podrías redirigir a una página de "Acceso Denegado" o a la página principal
       alert('Acceso denegado. No tienes los permisos necesarios para esta sección.');
       next('/');
     } else {
-      // Si no está autenticado, simplemente lo enviamos al login
       next({
         name: 'login',
         query: { redirect: to.fullPath }
@@ -176,9 +207,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // 4. Si todas las verificaciones pasan, permitir la navegación
   next();
 });
-// --- FIN DE LAS MODIFICACIONES router.beforeEach ---
 
 export default router;

@@ -1,10 +1,8 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6">
     <div class="max-w-3xl mx-auto">
-      <!-- Header compacto -->
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center">
-          <!-- Botón para regresar -->
           <button 
             @click="$router.go(-1)"
             class="mr-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
@@ -45,8 +43,6 @@
         </div>
       </div>
 
-      <!-- Resto del template permanece igual -->
-      <!-- Estado vacío mejorado -->
       <div v-if="wishlistItems.length === 0" class="text-center pt-16">
         <div class="mx-auto h-32 w-32 text-gray-200">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,7 +59,6 @@
         </router-link>
       </div>
 
-      <!-- Lista compacta de productos -->
       <ul v-else class="space-y-4">
         <li 
           v-for="item in sortedWishlist" 
@@ -71,7 +66,6 @@
           class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 border border-gray-100"
         >
           <div class="flex p-4">
-            <!-- Imagen compacta -->
             <router-link 
               :to="`/product/${item.id}`" 
               class="flex-shrink-0 h-20 w-20 rounded-md overflow-hidden border border-gray-200"
@@ -83,7 +77,6 @@
               />
             </router-link>
 
-            <!-- Contenido principal -->
             <div class="ml-4 flex-1 min-w-0">
               <div class="flex items-start justify-between">
                 <div class="min-w-0">
@@ -109,7 +102,6 @@
                 </button>
               </div>
 
-              <!-- Precios y acciones -->
               <div class="mt-3 flex items-center justify-between">
                 <div class="space-y-1">
                   <template v-if="item.canBuy">
@@ -152,7 +144,6 @@
         </li>
       </ul>
 
-      <!-- Footer compacto -->
       <div v-if="wishlistItems.length > 0" class="mt-6 flex justify-between items-center">
         <p class="text-sm text-gray-500">
           {{ wishlistItems.length }} artículo{{ wishlistItems.length !== 1 ? 's' : '' }}
@@ -166,7 +157,6 @@
       </div>
     </div>
 
-    <!-- Modal de confirmación minimalista -->
     <div v-if="showClearConfirmation" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg shadow-xl overflow-hidden max-w-sm w-full">
         <div class="p-6">
@@ -202,78 +192,70 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useWishlist } from '@/components/useWishlist'; // ¡IMPORTA EL COMPOSABLE AQUÍ!
 
-const router = useRouter()
+const router = useRouter();
 
-// Estado local para la lista de deseos
-const wishlistItems = ref([
-  {
-    id: 1,
-    name: 'Vestido de noche elegante',
-    description: '',
-    images: ['https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'],
-    size: 'M',
-    color: 'Negro',
-    isNew: true,
-    canRent: true,
-    rentPrice: 25.5,
-    originalRentPrice: 30,
-    canBuy: true,
-    buyPrice: 120,
-    originalBuyPrice: 150,
-    addedDate: new Date('2023-05-15')
-  },
-  {
-    id: 2,
-    name: 'Zapatos de tacón piel',
-    description: '',
-    images: ['https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'],
-    size: '38',
-    color: 'Beige',
-    isNew: false,
-    canRent: false,
-    canBuy: true,
-    buyPrice: 89.99,
-    originalBuyPrice: 120,
-    addedDate: new Date('2023-05-10')
-  }
-])
+// Obtiene la lista de deseos y las funciones del composable
+const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
 
-const defaultImage = 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80'
-const showClearConfirmation = ref(false)
-const sortOption = ref('recent')
+const defaultImage = 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80';
+const showClearConfirmation = ref(false);
+const sortOption = ref('recent');
 
 const sortedWishlist = computed(() => {
-  const items = [...wishlistItems.value]
+  // Asegúrate de que 'items' sea una copia para no mutar directamente la ref del composable
+  const items = [...wishlistItems.value];
   switch (sortOption.value) {
-    case 'price-asc': return items.sort((a, b) => (a.buyPrice || 0) - (b.buyPrice || 0))
-    case 'price-desc': return items.sort((a, b) => (b.buyPrice || 0) - (a.buyPrice || 0))
+    case 'price-asc': 
+        return items.sort((a, b) => {
+            const priceA = a.buyPrice || a.rentPrice || 0;
+            const priceB = b.buyPrice || b.rentPrice || 0;
+            return priceA - priceB;
+        });
+    case 'price-desc': 
+        return items.sort((a, b) => {
+            const priceA = a.buyPrice || a.rentPrice || 0;
+            const priceB = b.buyPrice || b.rentPrice || 0;
+            return priceB - priceA;
+        });
     case 'recent':
-    default: return items.sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate))
+    default: 
+        return items.sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate));
   }
-})
-
-function removeFromWishlist(id) {
-  wishlistItems.value = wishlistItems.value.filter(item => item.id !== id)
-}
+});
 
 function confirmClearWishlist() {
-  showClearConfirmation.value = true
+  showClearConfirmation.value = true;
 }
 
-function clearWishlist() {
-  wishlistItems.value = []
-  showClearConfirmation.value = false
-}
+// Las funciones de eliminación ya vienen del composable, así que solo las llamamos
+// function removeFromWishlist(id) { // REMUEVE ESTA FUNCIÓN LOCAL
+//   wishlistItems.value = wishlistItems.value.filter(item => item.id !== id);
+// }
+
+// function clearWishlist() { // REMUEVE ESTA FUNCIÓN LOCAL
+//   wishlistItems.value = [];
+//   showClearConfirmation.value = false;
+// }
 
 function startRentalProcess(item) {
-  router.push({ path: `/checkout/rent/${item.id}` })
+  // Asegúrate de que la ruta sea correcta, basada en tu router/index.js
+  router.push({ 
+    name: 'Rent', // Nombre de la ruta para el alquiler
+    params: { productId: item.id },
+    query: {
+        rentalType: 'daily', // O el tipo de alquiler que aplique
+        productName: item.name // Pasa el nombre para la página de alquiler
+    }
+  });
 }
 
 function startBuyProcess(item) {
-  router.push({ path: `/checkout/buy/${item.id}` })
+  // La ruta para comprar puede ser diferente, ajusta según tu router
+  router.push({ path: `/checkout/buy/${item.id}` });
 }
 </script>
 
