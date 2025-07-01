@@ -115,7 +115,7 @@
 import { ref, onMounted, reactive } from 'vue';
 import SellerDashboardLayout from './SellerDashboardLayout.vue';
 
-const API_BASE_URL = 'http://localhost:8000'; // Asegúrate de que esta URL sea correcta para tu backend
+const API_BASE_URL = 'https://back-visteteya.onrender.com'; // Asegúrate de que esta URL sea correcta para tu backend
 
 const isLoading = ref(true);
 const userId = ref(null);

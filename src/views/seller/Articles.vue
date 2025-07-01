@@ -183,7 +183,7 @@ import SellerDashboardLayout from './SellerDashboardLayout.vue';
 
 const isLoading = ref(true);
 const articles = ref([]);
-const API_BASE_URL = 'http://localhost:8000'; // Asegúrate de que esta URL sea correcta para tu backend
+const API_BASE_URL = 'https://back-visteteya.onrender.com'; // Asegúrate de que esta URL sea correcta para tu backend
 
 const getStatusText = (status) => {
   switch (status) {

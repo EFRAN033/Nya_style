@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 
 const WISHLIST_STORAGE_KEY = 'wishlist-items';
 // Asegúrate de que esta URL base sea correcta para tu backend
-const BASE_URL_BACKEND = 'http://localhost:8000';
+const BASE_URL_BACKEND = 'https://back-visteteya.onrender.com';
 
 // Función auxiliar para convertir rutas relativas a URLs absolutas
 const getFullImageUrl = (relativePath) => {

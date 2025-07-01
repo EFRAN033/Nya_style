@@ -521,7 +521,7 @@ const submitProduct = async () => {
   });
 
   try {
-    const response = await fetch('http://localhost:8000/products', { // <<<--- CRITICAL CHANGE HERE
+    const response = await fetch('https://back-visteteya.onrender.com/products', { // <<<--- CRITICAL CHANGE HERE
       method: 'POST',
       body: formData,
     });

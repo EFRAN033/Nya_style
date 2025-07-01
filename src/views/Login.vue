@@ -29,7 +29,7 @@
               aria-label="Ir a la página de inicio"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 0 001 1h3m10-11l2 2m-2-2v10a1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
               Inicio
             </router-link>
@@ -147,27 +147,26 @@ import axios from 'axios'
 
 const router = useRouter()
 const loading = ref(false)
-const errorMessage = ref(null) // Estado para mensajes de error en la UI
+const errorMessage = ref(null)
 
 const loginForm = reactive({
   email: '',
   password: ''
 })
 
-// --- Configuración de la API (DEBE COINCIDIR CON TU BACKEND) ---
-const API_BASE_URL = 'http://127.0.0.1:8000'; // Tu backend FastAPI se ejecuta en 127.0.0.1:8000
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 const goToHome = () => {
-  router.push('/'); // Redirige a la ruta principal
+  router.push('/');
 };
 
 const handleLogin = async () => {
   loading.value = true
-  errorMessage.value = null // Limpiar cualquier error previo
+  errorMessage.value = null
 
   try {
     const response = await axios.post(
-      `${API_BASE_URL}/login`, // Usar la URL base configurada
+      `${API_BASE_URL}/login`,
       {
         email: loginForm.email,
         password: loginForm.password
@@ -179,36 +178,33 @@ const handleLogin = async () => {
       }
     )
 
-    // FastAPI devuelve el user_id y role directamente en `response.data`
     if (response.data.user_id) {
-      // Guardar información del usuario en localStorage
       localStorage.setItem('user_id', response.data.user_id);
       localStorage.setItem('user_email', response.data.email);
       localStorage.setItem('user_role', response.data.role);
-      // ¡ESTA ES LA LÍNEA CRÍTICA AÑADIDA!
       if (response.data.first_name) {
         localStorage.setItem('user_first_name', response.data.first_name);
       }
 
       alert(`¡Bienvenido, ${response.data.first_name || response.data.email}! Has iniciado sesión como ${response.data.role}.`);
 
-      // Redirigir según el rol
-      if (response.data.role === 'cliente') {
-        router.push('/'); // Redirige al cliente al inicio
+      // --- ¡MODIFICACIÓN CLAVE AÑADIDA PARA ADMIN! ---
+      if (response.data.role === 'admin') {
+        router.push({ name: 'admin-dashboard' }); // Redirige al administrador
+      } else if (response.data.role === 'cliente') {
+        router.push('/'); // Redirige al cliente
       } else if (response.data.role === 'vendedor') {
-        router.push('/dashboard-vendedor'); // Redirige al vendedor a su dashboard
+        router.push('/dashboard-vendedor/mis-articulos'); // Redirige al vendedor
       } else {
-        // Para roles no definidos explícitamente, podrías enviar a una página genérica o al inicio
-        router.push('/');
+        router.push('/'); // Fallback para otros roles no definidos
       }
+      // --- FIN MODIFICACIÓN ---
 
     } else {
-      // Esto podría ocurrir si la API devuelve un 200 pero sin los datos esperados
       errorMessage.value = 'Respuesta inesperada del servidor. Inténtalo de nuevo.';
     }
   } catch (error) {
     if (error.response) {
-      // El servidor respondió con un código de estado fuera del rango 2xx
       console.error('Error de respuesta de la API:', error.response.data);
       console.error('Código de estado:', error.response.status);
 
@@ -219,9 +215,8 @@ const handleLogin = async () => {
         case 403:
           errorMessage.value = error.response.data.detail || 'Tu cuenta está inactiva. Contacta al soporte.';
           break;
-        case 422: // Errores de validación de Pydantic
+        case 422:
           errorMessage.value = 'Datos de entrada inválidos. Por favor, verifica los campos.';
-          // Puedes parsear `error.response.data.detail` para mostrar errores específicos de validación
           break;
         case 500:
           errorMessage.value = 'Ocurrió un error en el servidor. Por favor, inténtalo más tarde.';
@@ -230,11 +225,9 @@ const handleLogin = async () => {
           errorMessage.value = `Un error inesperado ocurrió: ${error.response.status}.`;
       }
     } else if (error.request) {
-      // La solicitud fue hecha pero no se recibió respuesta (ej. servidor caído, CORS no configurado)
       console.error('No se recibió respuesta del servidor:', error.request);
       errorMessage.value = 'No se pudo conectar al servidor. Asegúrate de que el backend esté ejecutándose y los CORS estén configurados correctamente.';
     } else {
-      // Algo pasó al configurar la petición (ej. error en la URL, problema de Axios)
       console.error('Error al configurar la solicitud:', error.message);
       errorMessage.value = 'Error al procesar tu solicitud. Inténtalo de nuevo.';
     }

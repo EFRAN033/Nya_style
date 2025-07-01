@@ -9,12 +9,16 @@ import Designers from '../views/Designers.vue';
 import Occasions from '../views/Occasions.vue';
 import Discover from '../views/Discover.vue';
 import AddProductForm from '../views/AddProductForm.vue';
-// ¡IMPORTA Orders.vue desde la carpeta 'seller' aquí!
 import Orders from '../views/seller/Orders.vue'; 
-// Importa Articles.vue para la sección "Mis Artículos"
 import Articles from '../views/seller/Articles.vue'; 
-// Importa Configuration.vue para la sección de Configuración
 import Configuration from '../views/seller/Configuration.vue'; 
+
+// --- ¡Nuevas Importaciones para el Panel de Administración! ---
+import AdminDashboardLayout from '../views/admin/AdminDashboardLayout.vue';
+import ImageManagement from '../views/admin/ImageManagement.vue';
+import Settings from '../views/admin/Settings.vue';
+import SupplierApprovals from '../views/admin/SupplierApprovals.vue';
+// --- Fin Nuevas Importaciones ---
 
 const routes = [
   {
@@ -119,18 +123,16 @@ const routes = [
       role: 'vendedor'
     }
   },
-  // RUTA PARA LOS PEDIDOS, apuntando al componente en la carpeta 'seller'
   {
     path: '/dashboard-vendedor/pedidos', 
     name: 'SellerOrders', 
-    component: Orders, // ¡Aquí se usa el componente importado de views/seller!
+    component: Orders, 
     meta: {
       title: 'Mis Pedidos | Panel Vendedor',
       requiresAuth: true,
       role: 'vendedor'
     }
   },
-  // Nueva ruta para "Mis Artículos"
   {
     path: '/dashboard-vendedor/mis-articulos',
     name: 'MyArticles', 
@@ -141,7 +143,6 @@ const routes = [
       role: 'vendedor'
     }
   },
-  // Nueva ruta para "Configuración"
   {
     path: '/dashboard-vendedor/configuracion',
     name: 'SellerConfiguration', 
@@ -152,6 +153,39 @@ const routes = [
       role: 'vendedor'
     }
   },
+  // --- ¡Nuevas Rutas para el Panel de Administración! ---
+  {
+    path: '/admin',
+    name: 'admin-dashboard', // Nombre de la ruta principal del panel admin
+    component: AdminDashboardLayout,
+    meta: { requiresAuth: true, role: 'admin', title: 'Panel Admin | VisteteYA' },
+    children: [
+      {
+        path: 'images', // Ruta completa sería /admin/images
+        name: 'admin-images',
+        component: ImageManagement,
+        meta: { requiresAuth: true, role: 'admin', title: 'Gestión de Imágenes | Admin' },
+      },
+      {
+        path: 'settings', // Ruta completa sería /admin/settings
+        name: 'admin-settings',
+        component: Settings,
+        meta: { requiresAuth: true, role: 'admin', title: 'Configuraciones | Admin' },
+      },
+      {
+        path: 'suppliers', // Ruta completa sería /admin/suppliers
+        name: 'admin-suppliers',
+        component: SupplierApprovals,
+        meta: { requiresAuth: true, role: 'admin', title: 'Aprobaciones de Proveedores | Admin' },
+      },
+      // Opcional: una sub-ruta por defecto para /admin/
+      {
+        path: '', // Si alguien va a /admin sin sub-ruta, redirige a una por defecto
+        redirect: { name: 'admin-images' } // Puedes cambiar esto a la que quieras que sea la página de inicio del admin
+      }
+    ]
+  },
+  // --- Fin Nuevas Rutas ---
   {
     path: '/:pathMatch(.*)*',
     redirect: '/'
@@ -179,13 +213,15 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title || 'VisteteYA';
 
   const isAuthenticated = localStorage.getItem('authToken');
-  const userRole = localStorage.getItem('user_role');
+  const userRole = localStorage.getItem('user_role'); // Asegúrate de que este valor esté presente en localStorage después del login
 
+  // Si se va a la página de login o registro, permite el acceso
   if (to.name === 'login' || to.name === 'register') {
     next();
     return;
   }
 
+  // Verifica si la ruta requiere autenticación y si el usuario no está autenticado
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({
       name: 'login',
@@ -194,10 +230,12 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
+  // Verifica si la ruta requiere un rol específico y si el usuario no tiene ese rol
+  // Esta parte ya está bastante bien en tu código, solo asegúrate de que 'user_role' se guarde correctamente.
   if (to.meta.role && userRole !== to.meta.role) {
     if (isAuthenticated) {
       alert('Acceso denegado. No tienes los permisos necesarios para esta sección.');
-      next('/');
+      next('/'); // Redirige a la página de inicio o a una de "Acceso Denegado"
     } else {
       next({
         name: 'login',
@@ -207,7 +245,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  next();
+  next(); // Permite la navegación
 });
 
 export default router;

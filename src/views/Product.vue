@@ -391,7 +391,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useWishlist } from '@/components/useWishlist'; // ¡IMPORTA EL COMPOSABLE AQUÍ!
 
-const BASE_URL_BACKEND = 'http://localhost:8000';
+const BASE_URL_BACKEND = 'https://back-visteteya.onrender.com';
 
 const products = ref([]);
 const isLoading = ref(true);
