@@ -12,13 +12,20 @@ import AddProductForm from '../views/AddProductForm.vue';
 import Orders from '../views/seller/Orders.vue'; 
 import Articles from '../views/seller/Articles.vue'; 
 import Configuration from '../views/seller/Configuration.vue'; 
+// --- NUEVA IMPORTACIÓN PARA EL PERFIL DEL CLIENTE ---
+import MyProfile from '../views/myprofile.vue'; // Asegúrate de que esta ruta sea correcta
+// --- FIN NUEVA IMPORTACIÓN ---
 
 // --- ¡Nuevas Importaciones para el Panel de Administración! ---
 import AdminDashboardLayout from '../views/admin/AdminDashboardLayout.vue';
-import ImageManagement from '../views/admin/ImageManagement.vue';
+import ImageManagement from '../views/admin/ImageManagement.vue'; 
 import Settings from '../views/admin/Settings.vue';
 import SupplierApprovals from '../views/admin/SupplierApprovals.vue';
 // --- Fin Nuevas Importaciones ---
+
+// --- NUEVA IMPORTACIÓN PARA Buy.vue ---
+import Buy from '../views/Buy.vue'; 
+// --- FIN NUEVA IMPORTACIÓN ---
 
 const routes = [
   {
@@ -113,6 +120,17 @@ const routes = [
     path: '/rent',
     redirect: '/'
   },
+  // --- NUEVA RUTA PARA Buy.vue ---
+  {
+    path: '/buy/:productId',
+    name: 'Buy',
+    component: Buy,
+    props: true, // Esto permite que el productId se pase como una prop al componente Buy.vue
+    meta: {
+      title: 'Comprar/Alquilar Producto | VisteteYA',
+      requiresAuth: true // Asume que la compra/alquiler requiere autenticación
+    }
+  },
   {
     path: '/dashboard-vendedor/add-product',
     name: 'AddProduct',
@@ -153,6 +171,18 @@ const routes = [
       role: 'vendedor'
     }
   },
+  // --- NUEVA RUTA PARA EL PERFIL DEL CLIENTE ---
+  {
+    path: '/myprofile',
+    name: 'MyProfile',
+    component: MyProfile,
+    meta: {
+      title: 'Mi Perfil | VisteteYA',
+      requiresAuth: true,
+      role: 'cliente' // Asegura que solo los clientes puedan acceder a esta ruta
+    }
+  },
+  // --- FIN NUEVA RUTA ---
   // --- ¡Nuevas Rutas para el Panel de Administración! ---
   {
     path: '/admin',

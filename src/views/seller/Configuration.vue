@@ -45,6 +45,11 @@
               <p v-if="errors.storeName" class="text-red-500 text-xs mt-1">{{ errors.storeName }}</p>
             </div>
             <div class="md:col-span-2">
+              <label for="address" class="block text-sm font-medium text-gray-700">Dirección:</label>
+              <input type="text" id="address" v-model="profileForm.address" @input="clearError('address')" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-pink-500 focus:border-pink-500">
+              <p v-if="errors.address" class="text-red-500 text-xs mt-1">{{ errors.address }}</p>
+            </div>
+            <div class="md:col-span-2">
               <label for="bankAccount" class="block text-sm font-medium text-gray-700">Número de Cuenta Bancaria:</label>
               <input type="text" id="bankAccount" v-model="profileForm.bankAccount" @input="clearError('bankAccount')" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-pink-500 focus:border-pink-500">
               <p v-if="errors.bankAccount" class="text-red-500 text-xs mt-1">{{ errors.bankAccount }}</p>
@@ -115,7 +120,8 @@
 import { ref, onMounted, reactive } from 'vue';
 import SellerDashboardLayout from './SellerDashboardLayout.vue';
 
-const API_BASE_URL = 'https://back-visteteya.onrender.com'; // Asegúrate de que esta URL sea correcta para tu backend
+// --- CAMBIO 1: Corregir API_BASE_URL (era 'hhttp') ---
+const API_BASE_URL = 'http://localhost:8000'; // Asegúrate de que esta URL sea correcta para tu backend o la URL de Render
 
 const isLoading = ref(true);
 const userId = ref(null);
@@ -127,6 +133,7 @@ const profileForm = reactive({
   storeName: '', // Mapeado a business_name en la DB
   bankAccount: '',
   email: '',
+  address: '', // --- CAMBIO 2: Añadir el campo 'address' que está en tu backend ---
 });
 
 const passwordForm = reactive({
@@ -144,7 +151,7 @@ const clearError = (field) => {
     delete errors.value[field];
   }
   // Clear overall submission error if a specific field error is cleared
-  if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'storeName', 'bankAccount', 'email'].includes(field)) {
+  if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'storeName', 'bankAccount', 'email', 'address'].includes(field)) { // --- CAMBIO 3: Añadir 'address' aquí también ---
     delete errors.value.profile;
   }
   if (errors.value.password && ['currentPassword', 'newPassword', 'confirmPassword'].includes(field)) {
@@ -177,6 +184,11 @@ const validateProfileForm = () => {
   }
   if (!profileForm.bankAccount.trim()) {
     errors.value.bankAccount = 'La cuenta bancaria es obligatoria.';
+    isValid = false;
+  }
+  // --- CAMBIO 4: Validación para 'address' si es obligatoria ---
+  if (!profileForm.address.trim()) {
+    errors.value.address = 'La dirección es obligatoria.';
     isValid = false;
   }
   if (!profileForm.email.trim()) {
@@ -215,19 +227,19 @@ const validatePasswordForm = () => {
 
 const fetchSellerProfile = async () => {
   isLoading.value = true;
-  userId.value = localStorage.getItem('user_id');
+  userId.value = localStorage.getItem('user_id'); // Asegúrate de que 'user_id' esté guardado en localStorage al iniciar sesión
 
   if (!userId.value) {
     console.error("User ID no encontrado en localStorage.");
     isLoading.value = false;
+    errors.value.profile = 'No se pudo cargar el perfil: ID de usuario no encontrado.';
     return;
   }
 
   try {
-    // Fetch seller details
-    const sellerResponse = await fetch(`${API_BASE_URL}/sellers/${userId.value}`);
+    // --- CAMBIO 5: Llamar al endpoint correcto para obtener los datos del vendedor ---
+    const sellerResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`);
     if (!sellerResponse.ok) {
-      // Intenta parsear el error del servidor
       const errorData = await sellerResponse.json();
       throw new Error(errorData.detail || `Error al cargar datos del vendedor: ${sellerResponse.statusText}`);
     }
@@ -237,20 +249,29 @@ const fetchSellerProfile = async () => {
     profileForm.phoneNumber = sellerData.phone_number || '';
     profileForm.storeName = sellerData.business_name || ''; // Mapeado de business_name
     profileForm.bankAccount = sellerData.bank_account || '';
+    profileForm.address = sellerData.address || ''; // --- CAMBIO 6: Cargar la dirección ---
 
-    // Fetch user details (for email)
+    // --- CAMBIO 7: Obtener el email del usuario.
+    // Tu backend no tiene un GET /users/{user_id} para solo el email.
+    // Opción A (Recomendado si ya lo tienes): Obtenerlo de localStorage si se guardó en el login.
+    profileForm.email = localStorage.getItem('user_email') || ''; // Asumiendo que el email se guarda como 'user_email'
+
+    // Opción B (Si necesitas traerlo de la DB y no está en localStorage y no quieres modificar el login):
+    // Tendrías que crear un endpoint GET /users/{user_id} en tu main.py que devuelva al menos el email.
+    // Ejemplo de cómo llamarías si existiera un endpoint GET /users/{user_id}:
+    /*
     const userResponse = await fetch(`${API_BASE_URL}/users/${userId.value}`);
     if (!userResponse.ok) {
-      // Intenta parsear el error del servidor
-      const errorData = await userResponse.json();
-      throw new Error(errorData.detail || `Error al cargar datos de usuario: ${userResponse.statusText}`);
+        const errorData = await userResponse.json();
+        throw new Error(errorData.detail || `Error al cargar datos de usuario: ${userResponse.statusText}`);
     }
     const userData = await userResponse.json();
     profileForm.email = userData.email || '';
+    */
 
   } catch (error) {
     console.error('Error al cargar la configuración del vendedor:', error);
-    submissionStatus.value = 'error'; // Set a general error for profile loading
+    submissionStatus.value = 'error';
     errors.value.profile = error.message || 'No se pudieron cargar los datos del perfil.';
   } finally {
     isLoading.value = false;
@@ -258,25 +279,26 @@ const fetchSellerProfile = async () => {
 };
 
 const saveProfile = async () => {
-  submissionStatus.value = null; // Clear previous status
+  submissionStatus.value = null;
   if (!validateProfileForm()) {
     submissionStatus.value = 'error';
-    errors.value.profile = 'Por favor, corrige los errores en el formulario.'; // Set a general error for submission
+    errors.value.profile = 'Por favor, corrige los errores en el formulario.';
     return;
   }
 
   submissionStatus.value = 'submitting';
   try {
-    // Update seller details
-    const sellerUpdateResponse = await fetch(`${API_BASE_URL}/sellers/${userId.value}`, {
+    // --- CAMBIO 8: Actualizar datos del Vendedor (PUT /profile/seller/{user_id}) ---
+    const sellerUpdateResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         first_name: profileForm.firstName,
         last_name: profileForm.lastName,
         phone_number: profileForm.phoneNumber,
-        business_name: profileForm.storeName,
+        business_name: profileForm.storeName, // Mapeo de storeName a business_name
         bank_account: profileForm.bankAccount,
+        address: profileForm.address, // --- CAMBIO 9: Enviar la dirección en la actualización ---
       }),
     });
 
@@ -285,13 +307,11 @@ const saveProfile = async () => {
       throw new Error(errorData.detail || 'Error al actualizar los datos del vendedor.');
     }
 
-    // Update user email
-    // Assuming backend endpoint /users/{user_id}/email accepts a raw string or { "email": "new@example.com" }
-    // Based on common FastAPI patterns, often expects JSON object for PUT, so I'll send it as { "email": value }
-    const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/email`, {
+    // --- CAMBIO 10: Actualizar Email del Usuario (PUT /users/{user_id}/change-email) ---
+    const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/change-email`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: profileForm.email }), // Sending as JSON object
+      body: JSON.stringify({ email: profileForm.email }),
     });
 
     if (!emailUpdateResponse.ok) {
@@ -300,7 +320,7 @@ const saveProfile = async () => {
     }
 
     submissionStatus.value = 'success';
-    setTimeout(() => { submissionStatus.value = null; }, 3000); // Clear status after 3 seconds
+    setTimeout(() => { submissionStatus.value = null; }, 3000);
 
   } catch (error) {
     console.error('Error al guardar el perfil:', error);
@@ -310,16 +330,17 @@ const saveProfile = async () => {
 };
 
 const changePassword = async () => {
-  passwordChangeStatus.value = null; // Clear previous status
+  passwordChangeStatus.value = null;
   if (!validatePasswordForm()) {
     passwordChangeStatus.value = 'error';
-    errors.value.password = 'Por favor, corrige los errores en el formulario de contraseña.'; // Set general error
+    errors.value.password = 'Por favor, corrige los errores en el formulario de contraseña.';
     return;
   }
 
   passwordChangeStatus.value = 'submitting';
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId.value}/password`, {
+    // --- CAMBIO 11: Llamar al endpoint correcto para cambiar la contraseña ---
+    const response = await fetch(`${API_BASE_URL}/users/${userId.value}/change-password`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -338,7 +359,7 @@ const changePassword = async () => {
     passwordForm.currentPassword = '';
     passwordForm.newPassword = '';
     passwordForm.confirmPassword = '';
-    setTimeout(() => { passwordChangeStatus.value = null; }, 3000); // Clear status after 3 seconds
+    setTimeout(() => { passwordChangeStatus.value = null; }, 3000);
 
   } catch (error) {
     console.error('Error al cambiar la contraseña:', error);

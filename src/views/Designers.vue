@@ -48,6 +48,9 @@
           <p class="text-base text-gray-700 max-w-2xl">
             Explora el talento y la calidad excepcional de los creadores de moda más influyentes del Perú.
           </p>
+          <p class="text-pink-600 font-semibold mt-2 text-sm md:text-base animate-pulse">
+            ¡Pronto se unirán muchos más diseñadores!
+          </p>
         </div>
         <div class="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-5 w-full md:w-auto">
           <div class="relative w-full sm:w-auto min-w-[180px]">
@@ -227,7 +230,7 @@
                 <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22H12c5.523 0 10-4.477 10-10Z" clip-rule="evenodd" /></svg>
               </a>
               <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.002 3.797.048 1.05.056 1.62.232 2.06.447.54.272.964.606 1.298.939.333.333.757.667.939 1.298-.215.44-.391.99-.447 2.06-.046 1.013-.048 1.371.048 3.797s-.002 2.784-.048 3.797c-.056 1.05-.232 1.62-.447 2.06-.272.54-.606.964-.939 1.298-.333.333-.757.667-.939 1.298-.215.44-.391.99-.447 2.06-.046 1.013-.048 1.371-.048-3.797S9.57 2 12.315 2Zm0 0c-2.43 0-2.784.002-3.797.048-1.05.056-1.62.232-2.06.447-.54.272-.964.606-1.298.939-.333.333-.757.667-.939 1.298-.215.44-.391.99-.447 2.06-.046 1.013-.048 1.371-.048-3.797Z" />
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.002 3.797.048 1.05.056 1.62.232 2.06.447.54.272.964.606 1.298.939.333.333.757.667.939 1.298-.215.44-.391.99-.447 2.06-.046 1.013-.048 1.371.048 3.797s-.002 2.784-.048 3.797c-.056 1.05-.232 1.62-.447 2.06-.272.54-.606.964-.939 1.298-.333.333-.757.667-.939 1.298-.215.44-.391.99-.447 2.06-.046 1.013-.048 1.371-.048-3.797S9.57 2 12.315 2Zm0 0c-2.43 0-2.784.002-3.797.048-1.05.056-1.62.232-2.06.447-.54.272-.606.964-.939 1.298-.333.333-.757.667-.939 1.298-.215.44-.391.99-.447 2.06-.046 1.013-.048 1.371-.048-3.797Z" />
               </svg>
               </a>
               <a href="#" class="text-gray-400 hover:text-pink-500 transition-colors">
@@ -301,111 +304,54 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import Header from './Header.vue';
 
 const router = useRouter();
 
-// Datos de ejemplo de diseñadores
-const designers = ref([
-  {
-    id: 1,
-    name: 'María Fernández',
-    slug: 'maria-fernandez',
-    brand: 'MF Couture',
-    specialty: 'Moda Andina Contemporánea',
-    description: 'Reinterpretación innovadora de textiles y siluetas andinas, fusionando tradición y vanguardia en cada diseño. Cada pieza cuenta una historia.',
-    location: 'Cusco',
-    yearsActive: 8,
-    rating: 4,
-    reviews: 45,
-    collections: 12,
-    verified: true,
-    coverImage: 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg'
-  },
-  {
-    id: 2,
-    name: 'Carlos Rivera',
-    slug: 'carlos-rivera',
-    brand: 'Rivera Atelier',
-    specialty: 'Sastrería Masculina de Lujo',
-    description: 'Diseños a medida que combinan la elegancia clásica con toques modernos, utilizando los mejores tejidos peruanos e internacionales.',
-    location: 'Lima',
-    yearsActive: 10,
-    rating: 5,
-    reviews: 78,
-    collections: 15,
-    verified: true,
-    coverImage: 'https://images.unsplash.com/photo-1621217030805-4f3693e506e7?q=80&w=2940&auto=format&fit=fit&crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg'
-  },
-  {
-    id: 3,
-    name: 'Sofía Vargas',
-    slug: 'sofia-vargas',
-    brand: 'SV Accesorios',
-    specialty: 'Joyería Artesanal y Accesorios',
-    description: 'Creaciones únicas inspiradas en la naturaleza y la cultura peruana, utilizando materiales sostenibles y técnicas artesanales ancestrales.',
-    location: 'Arequipa',
-    yearsActive: 5,
-    rating: 4,
-    reviews: 30,
-    collections: 8,
-    verified: false,
-    coverImage: 'https://images.unsplash.com/photo-1601004245638-348e3e4a9e9a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    avatar: 'https://randomuser.me/api/portraits/women/68.jpg'
-  },
-  {
-    id: 4,
-    name: 'Diego Castro',
-    slug: 'diego-castro',
-    brand: 'Castro Urbano',
-    specialty: 'Streetwear de Vanguardia',
-    description: 'Moda urbana que redefine el estilo con diseños audaces, confort inigualable y una fuerte conciencia social en cada prenda.',
-    location: 'Lima',
-    yearsActive: 7,
-    rating: 5,
-    reviews: 60,
-    collections: 10,
-    verified: true,
-    coverImage: 'https://images.unsplash.com/photo-1549887552-cb1071f652e2?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    avatar: 'https://randomuser.me/api/portraits/men/77.jpg'
-  },
-  {
-    id: 5,
-    name: 'Elena Rojas',
-    slug: 'elena-rojas',
-    brand: 'Rojas Bridal',
-    specialty: 'Diseños de Novia Exclusivos',
-    description: 'Creación de vestidos de novia a medida que capturan la esencia y los sueños de cada mujer, combinando elegancia y detalles únicos.',
-    location: 'Trujillo',
-    yearsActive: 12,
-    rating: 5,
-    reviews: 90,
-    collections: 20,
-    verified: true,
-    coverImage: 'https://images.unsplash.com/photo-1582719266738-90059c256073?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    avatar: 'https://randomuser.me/api/portraits/women/23.jpg'
-  },
-  {
-    id: 6,
-    name: 'Pedro Gonzales',
-    slug: 'pedro-gonzales',
-    brand: 'Texturas del Sol',
-    specialty: 'Moda Sostenible y Étnica',
-    description: 'Prendas con alma, tejidas con fibras naturales y teñidas con tintes orgánicos, reflejando la riqueza cultural y el compromiso ambiental.',
-    location: 'Cusco',
-    yearsActive: 6,
-    rating: 4,
-    reviews: 38,
-    collections: 9,
-    verified: false,
-    coverImage: 'https://images.unsplash.com/photo-1620857319760-b6c8f49a888c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    avatar: 'https://randomuser.me/api/portraits/men/4.jpg'
+// Datos de diseñadores. Inicialmente vacío, se llenará con la API.
+const designers = ref([]);
+
+// Función para obtener los diseñadores de una API
+const fetchDesigners = async () => {
+  try {
+    // Aquí es donde harías la llamada a tu API backend.
+    // Reemplaza '/api/designers' con la URL real de tu endpoint que devuelve los datos de la tabla 'sellers'.
+    const response = await fetch('/api/designers'); 
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    
+    // Mapea los datos de tu tabla 'sellers' a la estructura que tu componente Vue espera.
+    designers.value = data.map(seller => ({
+      id: seller.seller_id, 
+      name: `${seller.first_name || ''} ${seller.last_name || ''}`.trim() || 'Diseñador Desconocido',
+      slug: seller.seller_id, // Puedes generar un slug más amigable si tienes un campo de nombre de tienda único
+      brand: seller.business_name || 'Marca Genérica', 
+      specialty: 'Moda General', // Placeholder, ya que no hay una columna directa en 'sellers'
+      description: 'Sin descripción disponible.', // Placeholder, ya que no hay una columna directa en 'sellers'
+      location: seller.address ? seller.address.split(',')[0].trim() : 'Perú', // Extrae la ciudad de la dirección
+      yearsActive: 0, // Placeholder
+      rating: 0, // Placeholder
+      reviews: 0, // Placeholder
+      collections: 0, // Placeholder (Necesitarías una consulta separada o un join para esto)
+      verified: false, // Placeholder (Añade un campo booleano para verificación si lo implementas)
+      coverImage: 'https://via.placeholder.com/600x400/FFD1DC/FF69B4?text=Portada+Dise%C3%B1ador', // URL de imagen de portada (placeholder)
+      avatar: 'https://randomuser.me/api/portraits/lego/1.jpg' // URL de imagen de avatar (placeholder)
+    }));
+  } catch (error) {
+    console.error("Error al obtener los diseñadores:", error);
+    // Puedes implementar una lógica para mostrar un mensaje de error al usuario aquí
   }
-]);
+};
+
+// Llama a la función para obtener los diseñadores cuando el componente se monta
+onMounted(() => {
+  fetchDesigners();
+});
 
 // Estado para acordeón móvil del footer
 const openSections = ref([false, false, false]);
@@ -525,5 +471,19 @@ const navigateToRegister = () => {
 /* Estilos para el select personalizado */
 select {
   background-image: none; /* Elimina la flecha predeterminada del select */
+}
+
+/* Animación para el mensaje de "Pronto se unirán..." */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s infinite;
 }
 </style>

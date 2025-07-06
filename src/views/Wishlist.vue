@@ -43,7 +43,16 @@
         </div>
       </div>
 
-      <div v-if="wishlistItems.length === 0" class="text-center pt-16">
+      <div v-if="isLoading" class="text-center pt-16">
+        <p class="text-gray-500">Cargando lista de deseos...</p>
+        </div>
+
+      <div v-else-if="error" class="text-center pt-16 text-red-500">
+        <p>Error: {{ error }}</p>
+        <p class="mt-2 text-sm text-gray-600">Por favor, inténtalo de nuevo más tarde o verifica tu sesión.</p>
+      </div>
+
+      <div v-else-if="wishlistItems.length === 0" class="text-center pt-16">
         <div class="mx-auto h-32 w-32 text-gray-200">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -194,22 +203,22 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useWishlist } from '@/components/useWishlist'; // ¡IMPORTA EL COMPOSABLE AQUÍ!
+import { useWishlist } from '@/components/useWishlist'; // ¡Ruta corregida si usas 'src/composables'!
 
 const router = useRouter();
 
 // Obtiene la lista de deseos y las funciones del composable
-const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
+const { wishlistItems, isLoading, error, removeFromWishlist, clearWishlist } = useWishlist();
 
 const defaultImage = 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80';
 const showClearConfirmation = ref(false);
 const sortOption = ref('recent');
 
 const sortedWishlist = computed(() => {
-  // Asegúrate de que 'items' sea una copia para no mutar directamente la ref del composable
-  const items = [...wishlistItems.value];
+  const items = [...wishlistItems.value]; // Asegúrate de que 'items' sea una copia para no mutar directamente la ref del composable
   switch (sortOption.value) {
     case 'price-asc': 
+        // Acceder a price o rentPrice (price_per_day) desde el objeto 'item' que ya está aplanado
         return items.sort((a, b) => {
             const priceA = a.buyPrice || a.rentPrice || 0;
             const priceB = b.buyPrice || b.rentPrice || 0;
@@ -223,7 +232,8 @@ const sortedWishlist = computed(() => {
         });
     case 'recent':
     default: 
-        return items.sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate));
+        // La fecha de añadido es 'added_at' en el item de la wishlist, no 'addedDate'
+        return items.sort((a, b) => new Date(b.added_at) - new Date(a.added_at));
   }
 });
 
@@ -231,21 +241,10 @@ function confirmClearWishlist() {
   showClearConfirmation.value = true;
 }
 
-// Las funciones de eliminación ya vienen del composable, así que solo las llamamos
-// function removeFromWishlist(id) { // REMUEVE ESTA FUNCIÓN LOCAL
-//   wishlistItems.value = wishlistItems.value.filter(item => item.id !== id);
-// }
-
-// function clearWishlist() { // REMUEVE ESTA FUNCIÓN LOCAL
-//   wishlistItems.value = [];
-//   showClearConfirmation.value = false;
-// }
-
 function startRentalProcess(item) {
-  // Asegúrate de que la ruta sea correcta, basada en tu router/index.js
   router.push({ 
-    name: 'Rent', // Nombre de la ruta para el alquiler
-    params: { productId: item.id },
+    name: 'Rent', // Asegúrate de que este sea el nombre correcto de tu ruta de alquiler
+    params: { productId: item.id }, // item.id ya está mapeado al product_id
     query: {
         rentalType: 'daily', // O el tipo de alquiler que aplique
         productName: item.name // Pasa el nombre para la página de alquiler
@@ -254,8 +253,7 @@ function startRentalProcess(item) {
 }
 
 function startBuyProcess(item) {
-  // La ruta para comprar puede ser diferente, ajusta según tu router
-  router.push({ path: `/checkout/buy/${item.id}` });
+  router.push({ path: `/checkout/buy/${item.id}` }); // item.id ya está mapeado al product_id
 }
 </script>
 

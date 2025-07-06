@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white font-sans antialiased">
-    <main class="container mx-auto px-4 py-8">
-      <section class="bg-white rounded-2xl shadow-lg p-6 mb-10 border border-gray-100 transition-all duration-300 hover:shadow-xl">
-        <div class="max-w-4xl mx-auto text-center mb-8">
-          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 leading-tight">Encuentra tu estilo perfecto</h2>
-          <p class="text-lg text-gray-600">Descubre prendas únicas para comprar o alquilar</p>
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white font-sans antialiased text-gray-800">
+    <main class="container mx-auto px-3 py-6 sm:px-4 lg:px-6 max-w-7xl">
+      <section class="bg-white rounded-2xl shadow-md p-4 sm:p-6 mb-8 border border-gray-100 transform transition-all duration-300 hover:scale-[1.005] hover:shadow-lg">
+        <div class="max-w-3xl mx-auto text-center mb-6">
+          <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2 leading-tight tracking-tight drop-shadow-sm">Descubre tu Próximo Estilo</h2>
+          <p class="text-lg text-gray-600 font-light">Explora prendas únicas y encuentra lo que necesitas para cada ocasión.</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-          <div class="space-y-1">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 items-end">
+          <div class="space-y-1.5">
             <label for="category-select" class="block text-sm font-medium text-gray-700">Categoría</label>
             <div class="relative">
-              <select id="category-select" v-model="filters.category" class="input-select">
-                <option value="">Todas las categorías</option>
+              <select id="category-select" v-model="filters.category" class="input-select-compact">
+                <option value="">Todas</option>
                 <option value="vestidos">Vestidos</option>
                 <option value="trajes">Trajes</option>
                 <option value="disfraces">Disfraces</option>
@@ -20,19 +20,20 @@
                 <option value="calzado">Calzado</option>
                 <option value="otro">Otros</option>
               </select>
-              <div class="input-select-icon">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <div class="input-select-icon-compact">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                 </svg>
               </div>
             </div>
           </div>
+ 
 
-          <div class="space-y-1">
+          <div class="space-y-1.5">
             <label for="size-select" class="block text-sm font-medium text-gray-700">Talla</label>
             <div class="relative">
-              <select id="size-select" v-model="filters.size" class="input-select">
-                <option value="">Todas las tallas</option>
+              <select id="size-select" v-model="filters.size" class="input-select-compact">
+                <option value="">Todas</option>
                 <option value="XS">XS</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
@@ -40,41 +41,43 @@
                 <option value="XL">XL</option>
                 <option value="XXL">XXL</option>
               </select>
-              <div class="input-select-icon">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <div class="input-select-icon-compact">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                 </svg>
               </div>
             </div>
           </div>
+ 
 
-          <div class="space-y-1">
+          <div class="space-y-1.5">
             <label for="max-price-input" class="block text-sm font-medium text-gray-700">Precio máximo</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-                <span class="text-sm">S/</span>
+                <span class="text-sm font-medium">S/</span>
               </div>
               <input
                 type="number"
                 id="max-price-input"
                 v-model.number="filters.maxPrice"
                 placeholder=""
-                class="pl-9 input-text"
+                class="input-text-compact pl-8"
               />
             </div>
           </div>
+ 
 
-          <div class="space-y-1">
-            <label for="status-select" class="block text-sm font-medium text-gray-700">Estado</label>
+          <div class="space-y-1.5">
+            <label for="offer-type-select" class="block text-sm font-medium text-gray-700">Tipo de Oferta</label>
             <div class="relative">
-              <select id="status-select" v-model="filters.status" class="input-select">
-                <option value="">Todos los estados</option>
-                <option value="available">Disponible</option>
-                <option value="rented">Alquilado</option>
-                <option value="sold">Vendido</option>
+              <select id="offer-type-select" v-model="filters.offerType" class="input-select-compact">
+                <option value="">Todas</option>
+                <option value="venta">En Venta</option>
+                <option value="alquiler">En Alquiler</option>
+                <option value="ambos">Venta y Alquiler</option>
               </select>
-              <div class="input-select-icon">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <div class="input-select-icon-compact">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                 </svg>
               </div>
@@ -82,47 +85,81 @@
           </div>
           
           <div class="flex items-end h-full">
-            <button @click="clearFilters" class="w-full button-secondary">
-              <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button @click="clearFilters" class="w-full button-clear-filters group">
+              <svg class="w-4 h-4 mr-1 text-gray-500 group-hover:text-gray-700 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
               </svg>
-              Limpiar
+              Limpiar filtros
             </button>
           </div>
         </div>
       </section>
+ 
 
-      <div v-if="isLoading" class="py-16 flex flex-col items-center justify-center">
-        <div class="relative w-20 h-20 mb-6">
-          <div class="absolute inset-0 rounded-full border-4 border-purple-200 animate-spin"></div>
-          <div class="absolute inset-2 rounded-full border-4 border-purple-500 border-t-transparent animate-spin animation-delay-150"></div>
+      <transition name="fade-in" appear v-if="isLoading">
+        <div class="py-16 flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg border border-gray-100">
+          <div class="relative w-24 h-24 mb-6">
+            <div class="absolute inset-0 rounded-full border-3 border-pink-200 animate-spin"></div>
+            <div class="absolute inset-3 rounded-full border-3 border-pink-600 border-t-transparent animate-spin-slow"></div>
+            <div class="absolute inset-6 rounded-full border-3 border-pink-400 border-l-transparent animate-spin animation-delay-300"></div>
+          </div>
+          <p class="text-xl font-bold text-gray-800 mb-2">Buscando productos increíbles...</p>
+          <p class="text-base text-gray-500">Un momento, por favor. Estamos cargando la moda para ti.</p>
         </div>
-        <p class="text-lg font-medium text-gray-700">Buscando productos increíbles...</p>
-        <p class="text-sm text-gray-500 mt-2">Por favor espera un momento</p>
-      </div>
-
-      <div v-else-if="!isLoading && paginatedProducts.length === 0" class="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
-        <div class="max-w-md mx-auto">
-          <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <h3 class="text-xl font-semibold text-gray-800 mt-4">No encontramos resultados</h3>
-          <p class="text-gray-500 mt-2">Prueba ajustando los filtros o busca en otras categorías</p>
-          <button @click="clearFilters" class="mt-6 button-primary">
-            Mostrar todos los productos
-          </button>
+      </transition>
+ 
+      <transition name="fade-in" appear v-else-if="fetchError">
+        <div class="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-100">
+          <div class="max-w-md mx-auto">
+            <svg class="w-20 h-20 mx-auto text-red-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 class="text-2xl font-bold text-gray-800 mt-3 mb-2">¡Oops! Error al cargar productos</h3>
+            <p class="text-base text-gray-600 mt-1">No pudimos conectar con el servidor para cargar los productos. Por favor, asegúrate de que el backend esté funcionando y que no haya problemas de red.</p>
+            <button @click="fetchAllProducts" class="mt-8 button-primary group">
+              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.582m-15.356-2A8.001 8.001 0 0119.418 15m0 0H15"></path>
+              </svg>
+              Reintentar
+            </button>
+          </div>
         </div>
-      </div>
+      </transition>
+ 
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <transition name="fade-in" appear v-else-if="!isLoading && paginatedProducts.length === 0">
+        <div class="text-center py-16 bg-white rounded-2xl shadow-lg border border-gray-100">
+          <div class="max-w-md mx-auto">
+            <svg class="w-20 h-20 mx-auto text-gray-300 mb-6 animate-bounce-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 class="text-2xl font-bold text-gray-800 mt-3 mb-2">¡Lo sentimos! No hay resultados</h3>
+            <p class="text-base text-gray-600 mt-1">Parece que no encontramos productos que coincidan con tus criterios. Intenta ajustar tus filtros o explora todas las opciones disponibles.</p>
+            <button @click="clearFilters" class="mt-8 button-primary group">
+              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+              Ver todos los productos
+            </button>
+          </div>
+        </div>
+      </transition>
+ 
+
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         <article v-for="product in paginatedProducts" :key="product.product_id" 
           @click="openProductModal(product)"
-          class="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group">
+          class="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group border border-gray-100 flex flex-col">
           
-          <div class="relative w-full h-64 bg-gray-50 overflow-hidden">
-            <div v-if="product.imageUrl" class="absolute inset-0 bg-gray-200">
+          <div class="relative w-full h-56 bg-gray-50 overflow-hidden">
+            <div v-if="product.image_urls && product.image_urls.length > 0" class="absolute inset-0 bg-gray-200">
+              <img :src="getFullImageUrl(product.image_urls?.[0])" :alt="product.name" 
+                class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105" 
+                loading="lazy">
+            </div>
+            <div v-else-if="product.imageUrl" class="absolute inset-0 bg-gray-200">
               <img :src="getFullImageUrl(product.imageUrl)" :alt="product.name" 
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105" 
                 loading="lazy">
             </div>
             <div v-else class="absolute inset-0 flex items-center justify-center text-gray-300">
@@ -131,61 +168,94 @@
               </svg>
             </div>
             
-            <div class="absolute top-3 left-3 flex flex-col space-y-2">
-              <span class="badge bg-purple-600">{{ product.category }}</span>
-              <span v-if="product.status === 'available'" class="badge bg-green-500">Disponible</span>
-              <span v-else-if="product.status === 'rented'" class="badge bg-yellow-500">Alquilado</span>
-              <span v-else-if="product.status === 'sold'" class="badge bg-red-500">Vendido</span>
+            <div class="absolute bottom-2 right-2 flex space-x-1.5 z-10">
+              <img v-if="product.image_urls?.[1]" :src="getFullImageUrl(product.image_urls[1])" :alt="`${product.name} - image 2`" 
+                class="w-12 h-12 object-cover rounded-md border border-white shadow-md transition-transform duration-300 transform group-hover:scale-110 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
+                style="transition-delay: 50ms;" loading="lazy">
+              <img v-if="product.image_urls?.[2]" :src="getFullImageUrl(product.image_urls[2])" :alt="`${product.name} - image 3`" 
+                class="w-12 h-12 object-cover rounded-md border border-white shadow-md transition-transform duration-300 transform group-hover:scale-110 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
+                style="transition-delay: 100ms;" loading="lazy">
+            </div>
+            
+            <div class="absolute top-3 left-3 flex flex-col space-y-1.5">
+              <span class="badge-sm bg-pink-600 animate-fade-in-up">{{ product.category }}</span>
+              <span v-if="product.status === 'available'" class="badge-sm bg-green-500 animate-fade-in-up animation-delay-100">Disponible</span>
+              <span v-else-if="product.status === 'rented'" class="badge-sm bg-yellow-500 animate-fade-in-up animation-delay-100">Alquilado</span>
+              <span v-else-if="product.status === 'sold'" class="badge-sm bg-red-500 animate-fade-in-up animation-delay-100">Vendido</span>
             </div>
             
             <div class="absolute top-3 right-3">
-              <span class="badge bg-pink-600 text-lg font-bold">{{ getProductDisplayPrice(product) }}</span>
+              <span class="badge-sm bg-rose-600 text-[9px] font-extrabold shadow-md animate-fade-in-right px-1.5 py-0.5">{{ getProductDisplayPrice(product) }}</span>
             </div>
           </div>
+ 
 
-          <div class="p-5">
-            <h3 class="text-lg font-bold text-gray-900 mb-2 leading-tight line-clamp-2">{{ product.name }}</h3>
-            <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ product.description }}</p>
+          <div class="p-4 flex-grow">
+            <h3 class="text-lg font-bold text-gray-900 mb-1.5 leading-tight line-clamp-2">{{ capitalizeFirstLetter(product.name) }}</h3>
+            <p class="text-gray-600 text-xs mb-2 line-clamp-2">{{ product.description }}</p>
             
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-1.5 mb-2">
               <span v-for="type in product.offer_types" :key="type"
-                :class="['badge-sm', 
-                  {'bg-blue-500': type === 'venta', 
-                   'bg-green-500': type === 'alquiler', 
-                   'bg-purple-500': type === 'venta_alquiler'}]">
+                :class="['badge-xs animate-fade-in', 
+                  {'bg-blue-600': type === 'venta', 
+                   'bg-green-600': type === 'alquiler', 
+                   'bg-pink-600': type === 'venta_alquiler' || type === 'ambos'}]">
                 {{ getOfferTypeText(type) }}
               </span>
             </div>
+ 
 
-            <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500">
+            <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-100 text-[11px] text-gray-500">
               <span class="flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-3.5 h-3.5 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                 </svg>
-                {{ formatDate(product.created_at) }}
+                Publicado: {{ formatDate(product.created_at) }}
               </span>
               <span class="flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-3.5 h-3.5 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
                 </svg>
-                {{ product.stock }} en stock
+                Stock: {{ product.stock }}
               </span>
             </div>
           </div>
+          <div class="p-4 pt-0"> <button
+                v-if="product.offer_types && (product.offer_types.includes('venta') || product.offer_types.includes('ambos'))"
+                @click.stop="navigateToBuyPage(product)"
+                class="card-button-primary"
+            >
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63-.63-.182 1.703.707 1.703H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Comprar Ahora
+            </button>
+            <button
+                v-else-if="product.offer_types && (product.offer_types.includes('alquiler'))"
+                @click.stop="navigateToBuyPage(product)"
+                class="card-button-secondary"
+            >
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Alquilar Ahora
+            </button>
+          </div>
         </article>
       </div>
+ 
 
-      <div v-if="totalPages > 1" class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-gray-500">
-          Mostrando <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> a 
-          <span class="font-medium">{{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }}</span> de 
-          <span class="font-medium">{{ filteredProducts.length }}</span> resultados
+      <div v-if="totalPages > 1" class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-gray-600">
+          Mostrando <span class="font-semibold text-gray-800">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> a 
+          <span class="font-semibold text-gray-800">{{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }}</span> de 
+          <span class="font-semibold text-gray-800">{{ filteredProducts.length }}</span> resultados
         </div>
         
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1.5">
           <button @click="currentPage--" :disabled="currentPage === 1"
-            class="pagination-button" :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="pagination-button-compact" :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
             <span class="sr-only">Anterior</span>
@@ -194,185 +264,186 @@
           <div class="flex items-center space-x-1">
             <button v-for="page in visiblePages" :key="page"
               @click="currentPage = page"
-              class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium"
-              :class="page === currentPage ? 'bg-purple-600 text-white' : 'text-gray-700 hover:bg-gray-100'">
+              class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-200"
+              :class="page === currentPage ? 'bg-pink-600 text-white shadow-sm' : 'text-gray-700 hover:bg-gray-100'">
               {{ page }}
             </button>
-            <span v-if="showEllipsis" class="px-2 text-gray-500">...</span>
+            <span v-if="showEllipsis" class="px-1.5 text-gray-500 text-xs">...</span>
           </div>
           
           <button @click="currentPage++" :disabled="currentPage === totalPages"
-            class="pagination-button" :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages}">
+            class="pagination-button-compact" :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages}">
             <span class="sr-only">Siguiente</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
           </button>
         </div>
       </div>
+ 
 
-      <transition name="modal">
+      <transition name="modal-slide-fade">
         <div v-if="selectedProduct" class="fixed inset-0 z-50 overflow-y-auto">
           <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <transition name="modal-fade">
+            <transition name="modal-fade-overlay">
               <div class="fixed inset-0 transition-opacity" @click="closeProductModal">
-                <div class="absolute inset-0 bg-gray-900 bg-opacity-75"></div>
+                <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
               </div>
             </transition>
+ 
 
-            <div class="inline-block align-bottom bg-white rounded-2xl shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full overflow-hidden">
+            <div class="inline-block align-bottom bg-white rounded-2xl shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full overflow-hidden border border-gray-100">
               <div class="flex flex-col lg:flex-row">
-                <div class="lg:w-1/2 p-6 bg-gray-50">
-                  <div class="relative h-96 rounded-xl overflow-hidden mb-4 bg-white shadow-inner flex items-center justify-center">
+                <div class="lg:w-1/2 p-4 sm:p-5 bg-gray-50 flex flex-col items-center justify-center">
+                  <div class="relative h-72 w-full rounded-xl overflow-hidden bg-white shadow-inner flex items-center justify-center border border-gray-200">
                     <img v-if="mainImageUrl" :src="mainImageUrl" :alt="selectedProduct.name" 
-                      class="max-h-full max-w-full object-contain transition-opacity duration-300">
+                      class="max-h-full max-w-full object-contain transition-opacity duration-300 transform-gpu animate-fade-in-zoom">
                     <div v-else class="text-gray-300">
                       <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M4 3h16a2 2 0 012 2v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2zm0 2v14h16V5H4zm2 2h12v10H6V7zM7 8h10v8H7V8zm5 0a3 3 0 100 6 3 3 0 000-6zm0 2a1 1 0 110 2 1 1 0 010-2z"/>
                       </svg>
                     </div>
                   </div>
-                  
-                  <div v-if="selectedProduct.image_urls && selectedProduct.image_urls.length > 1" 
-                    class="flex space-x-3 overflow-x-auto pb-2">
-                    <button v-for="(url, index) in selectedProduct.image_urls" :key="index"
-                      @click="mainImageUrl = getFullImageUrl(url)"
-                      class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all"
-                      :class="{'border-purple-600 shadow-md': mainImageUrl === getFullImageUrl(url), 'border-transparent': mainImageUrl !== getFullImageUrl(url)}">
-                      <img :src="getFullImageUrl(url)" :alt="`Thumbnail ${index + 1}`"
-                        class="w-full h-full object-cover">
-                    </button>
+                  <div v-if="selectedProductImages.length > 1" class="mt-3 w-full px-0.5">
+                    <div class="flex space-x-1.5 overflow-x-auto pb-0.5 hide-scrollbar justify-center">
+                      <img v-for="(image, index) in selectedProductImages" :key="index"
+                        :src="getFullImageUrl(image)"
+                        :alt="`${selectedProduct.name} - thumbnail ${index + 1}`"
+                        @click="setMainImage(image)"
+                        class="w-16 h-16 object-cover rounded-md border-2 cursor-pointer transition-all duration-200 shadow-sm"
+                        :class="{'border-pink-500 ring-1 ring-pink-500 shadow-md transform scale-105': getFullImageUrl(image) === mainImageUrl, 'border-gray-200 hover:border-gray-400': getFullImageUrl(image) !== mainImageUrl}">
+                    </div>
                   </div>
                 </div>
                 
-                <div class="lg:w-1/2 p-6 flex flex-col">
+                <div class="lg:w-1/2 p-4 sm:p-5 flex flex-col">
                   <div class="flex-grow">
-                    <div class="flex justify-between items-start mb-4">
+                    <div class="flex justify-between items-start mb-3 pb-2 border-b border-gray-100">
                       <div>
-                        <h2 class="text-2xl font-extrabold text-gray-900">{{ selectedProduct.name }}</h2>
-                        <span class="inline-block mt-1 px-3 py-1 rounded-full text-sm font-semibold text-purple-700 bg-purple-100">
+                        <h2 class="text-2xl font-extrabold text-gray-900 mb-1.5 leading-tight">{{ capitalizeFirstLetter(selectedProduct.name) }}</h2>
+                        <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold text-rose-700 bg-rose-100 border border-rose-200 shadow-sm">
                           {{ selectedProduct.category }}
                         </span>
                       </div>
-                      <button @click="closeProductModal" class="text-gray-400 hover:text-gray-500 transition-colors">
+                      <button @click="closeProductModal" class="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 rounded-full p-1 -mt-1 -mr-1">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                       </button>
                     </div>
                     
-                    <div class="mb-6 flex items-center justify-between">
+                    <div class="mb-4 pb-3 border-b border-gray-100 flex items-center justify-between">
                       <div>
-                        <p class="text-3xl font-bold text-purple-700">{{ getProductDisplayPrice(selectedProduct) }}</p>
-                        <div class="flex items-center mt-1 text-sm text-gray-500">
-                          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <p class="text-3xl font-bold text-pink-700">{{ getProductDisplayPrice(selectedProduct) }}</p>
+                        <div class="flex items-center mt-0.5 text-xs text-gray-500">
+                          <svg class="w-3.5 h-3.5 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                           </svg>
                           Publicado el {{ formatDate(selectedProduct.created_at) }}
                         </div>
                       </div>
-                      <div v-if="selectedProduct.status === 'available'" class="badge bg-green-100 text-green-800">
+                      <div v-if="selectedProduct.status === 'available'" class="badge bg-green-500 animate-pulse-fade text-white text-sm">
                         Disponible
                       </div>
-                      <div v-else-if="selectedProduct.status === 'rented'" class="badge bg-yellow-100 text-yellow-800">
+                      <div v-else-if="selectedProduct.status === 'rented'" class="badge bg-yellow-500 animate-pulse-fade text-white text-sm">
                         Alquilado
                       </div>
-                      <div v-else-if="selectedProduct.status === 'sold'" class="badge bg-red-100 text-red-800">
+                      <div v-else-if="selectedProduct.status === 'sold'" class="badge bg-red-500 animate-pulse-fade text-white text-sm">
                         Vendido
                       </div>
                     </div>
                     
-                    <div class="mb-6">
+                    <div class="mb-4">
                       <h3 class="text-lg font-semibold text-gray-900 mb-2">Descripción</h3>
-                      <p class="text-gray-700 whitespace-pre-line">{{ selectedProduct.description }}</p>
+                      <p class="text-gray-700 text-sm whitespace-pre-line leading-relaxed line-clamp-3">{{ selectedProduct.description }}</p>
                     </div>
                     
-                    <div v-if="selectedProduct.offer_types && (selectedProduct.offer_types.includes('alquiler') || selectedProduct.offer_types.includes('venta_alquiler')) && selectedProduct.rental_details" 
-                      class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
-                      <h3 class="text-lg font-semibold text-purple-800 mb-3">Detalles de alquiler</h3>
-                      <div class="grid grid-cols-2 gap-4">
+                    <div v-if="selectedProduct.offer_types && (selectedProduct.offer_types.includes('alquiler') || selectedProduct.offer_types.includes('ambos')) && selectedProduct.rental_details" 
+                      class="mb-4 p-3 bg-pink-50 rounded-lg border border-pink-100 shadow-sm">
+                      <h3 class="text-base font-semibold text-rose-800 mb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-1.5 text-rose-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Detalles de Alquiler
+                      </h3>
+                      <div class="grid grid-cols-2 gap-3 text-sm">
                         <div>
-                          <p class="text-sm text-gray-600">Precio por día</p>
-                          <p class="font-bold text-purple-700">S/ {{ selectedProduct.rental_details.price_per_day ? selectedProduct.rental_details.price_per_day.toFixed(2) : 'N/A' }}</p>
+                          <p class="text-gray-600">Precio/día</p>
+                          <p class="font-bold text-pink-700">S/ {{ selectedProduct.rental_details.pricePerDay ? selectedProduct.rental_details.pricePerDay.toFixed(2) : 'N/A' }}</p>
                         </div>
                         <div>
-                          <p class="text-sm text-gray-600">Días mínimos</p>
-                          <p class="font-bold text-purple-700">{{ selectedProduct.rental_details.min_days || '1' }}</p>
+                          <p class="text-gray-600">Días min.</p>
+                          <p class="font-bold text-pink-700">{{ selectedProduct.rental_details.min_days || '1' }}</p>
                         </div>
                         <div v-if="selectedProduct.rental_details.max_days">
-                          <p class="text-sm text-gray-600">Días máximos</p>
-                          <p class="font-bold text-purple-700">{{ selectedProduct.rental_details.max_days }}</p>
+                          <p class="text-gray-600">Días máx.</p>
+                          <p class="font-bold text-pink-700">{{ selectedProduct.rental_details.max_days }}</p>
                         </div>
                         <div v-if="selectedProduct.rental_details.deposit_amount">
-                          <p class="text-sm text-gray-600">Depósito</p>
-                          <p class="font-bold text-purple-700">S/ {{ selectedProduct.rental_details.deposit_amount.toFixed(2) }}</p>
+                          <p class="text-gray-600">Depósito</p>
+                          <p class="font-bold text-pink-700">S/ {{ selectedProduct.rental_details.deposit_amount.toFixed(2) }}</p>
                         </div>
                       </div>
                     </div>
                     
-                    <div v-if="selectedProduct.variations && selectedProduct.variations.length > 0" class="mb-6">
-                      <h3 class="text-lg font-semibold text-gray-900 mb-3">Variaciones disponibles</h3>
-                      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div v-if="selectedProduct.variations && selectedProduct.variations.length > 0" class="mb-4">
+                      <h3 class="text-lg font-semibold text-gray-900 mb-2">Variaciones</h3>
+                      <div class="grid grid-cols-2 gap-2 text-sm">
                         <div v-for="(variation, index) in selectedProduct.variations" :key="index"
-                          class="p-3 border rounded-lg hover:border-purple-300 transition-colors"
-                          :class="{'border-purple-500 bg-purple-50': variation.stock > 0, 'border-gray-200': variation.stock <= 0}">
-                          <p class="font-medium text-gray-800">Talla: {{ variation.size }}</p>
-                          <p class="text-sm text-gray-600">Color: {{ variation.color }}</p>
-                          <p class="text-sm mt-1" :class="{'text-green-600 font-bold': variation.stock > 0, 'text-red-600 font-bold': variation.stock <= 0}">
+                          class="p-2 border rounded-lg transition-all duration-200 transform hover:scale-105 shadow-sm"
+                          :class="{'border-pink-500 bg-pink-50 shadow-md': variation.stock > 0, 'border-gray-200 bg-gray-50 text-gray-400 opacity-70 cursor-not-allowed': variation.stock <= 0}">
+                          <p class="font-medium text-gray-800" :class="{'text-gray-500': variation.stock <= 0}">Talla: <span class="font-semibold">{{ variation.size }}</span></p>
+                          <p class="text-gray-600" :class="{'text-gray-400': variation.stock <= 0}">Color: <span class="font-semibold">{{ variation.color }}</span></p>
+                          <p class="mt-0.5 font-bold" :class="{'text-green-600': variation.stock > 0, 'text-red-600': variation.stock <= 0}">
                             Stock: {{ variation.stock }}
                           </p>
                         </div>
                       </div>
                     </div>
                     
-                    <div class="pt-4 border-t border-gray-200">
-                      <h3 class="text-lg font-semibold text-gray-900 mb-3">Información del vendedor</h3>
+                    <div class="pt-3 border-t border-gray-200">
+                      <h3 class="text-lg font-semibold text-gray-900 mb-2">Información del Vendedor</h3>
                       <div class="space-y-2">
-                        <p class="flex items-center text-gray-700">
-                          <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                        <div class="flex items-center p-2.5 bg-pink-50 rounded-lg border border-pink-100 shadow-sm">
+                          <svg class="w-5 h-5 mr-2 text-pink-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
                           </svg>
-                          {{ selectedProduct.seller_name }}
-                        </p>
-                        <p v-if="selectedProduct.seller_phone" class="flex items-center text-gray-700">
-                          <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
-                          </svg>
-                          <a :href="`tel:${selectedProduct.seller_phone}`" class="hover:underline">{{ selectedProduct.seller_phone }}</a>
-                        </p>
-                        <p v-if="selectedProduct.seller_email" class="flex items-center text-gray-700">
-                          <svg class="w-5 h-5 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                          <p class="text-gray-800 font-medium text-base">{{ selectedProduct.seller_business_name || 'Nombre del Vendedor No Disponible' }}</p>
+                        </div>
+                        <div v-if="selectedProduct.seller_email" class="flex items-center p-2.5 bg-white rounded-lg border border-gray-200 shadow-sm">
+                          <svg class="w-5 h-5 mr-2 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
                             <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
                           </svg>
-                          <a :href="`mailto:${selectedProduct.seller_email}`" class="hover:underline">{{ selectedProduct.seller_email }}</a>
-                        </p>
-                        <p v-if="selectedProduct.seller_address" class="flex items-start text-gray-700">
+                          <a :href="`mailto:${selectedProduct.seller_email}`" class="text-pink-600 hover:text-pink-800 font-medium text-base hover:underline transition-colors duration-200">{{ selectedProduct.seller_email }}</a>
+                        </div>
+                        <div v-if="selectedProduct.seller_phone" class="flex items-center p-2.5 bg-white rounded-lg border border-gray-200 shadow-sm">
                           <svg class="w-5 h-5 mr-2 text-gray-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                            <path d="M14.414 7l-5.707 5.707a1 1 0 01-1.414 0L3.586 10H5a1 1 0 010 2H.586a1 1 0 01-.707-1.707l5-5a1 1 0 011.414 0zM17 12a1 1 0 01-.707-.293l-5-5a1 1 0 011.414-1.414l5 5A1 1 0 0117 12z"></path>
                           </svg>
-                          {{ selectedProduct.seller_address }}
-                        </p>
+                          <a :href="`tel:${selectedProduct.seller_phone}`" class="text-pink-600 hover:text-pink-800 font-medium text-base hover:underline transition-colors duration-200">{{ selectedProduct.seller_phone }}</a>
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  <div class="mt-6 pt-5 border-t border-gray-200 flex flex-col sm:flex-row gap-3">
-                    <button v-if="selectedProduct.offer_types && (selectedProduct.offer_types.includes('alquiler') || selectedProduct.offer_types.includes('venta_alquiler'))"
-                      class="button-primary flex-1">
-                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="mt-6 pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-3">
+                    <button v-if="selectedProduct.offer_types && (selectedProduct.offer_types.includes('alquiler') || selectedProduct.offer_types.includes('ambos'))"
+                      @click="navigateToBuyPage(selectedProduct)"
+                      class="button-primary-compact flex-1 animate-fade-in-up">
+                      <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                       </svg>
                       Alquilar ahora
                     </button>
                     <button 
-                      v-if="selectedProduct.offer_types && (selectedProduct.offer_types.includes('venta') || selectedProduct.offer_types.includes('venta_alquiler'))"
-                      @click="handleAddToWishlist(selectedProduct)"
-                      class="button-secondary flex-1">
-                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.182 1.703.707 1.703H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      v-if="selectedProduct.offer_types && (selectedProduct.offer_types.includes('venta') || selectedProduct.offer_types.includes('ambos'))"
+                      @click="navigateToBuyPage(selectedProduct)"
+                      class="button-secondary-compact flex-1 animate-fade-in-up animation-delay-100">
+                      <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63-.63-.182 1.703.707 1.703H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                       </svg>
-                      Añadir a lista de deseos
+                      Comprar ahora
                     </button>
                   </div>
                 </div>
@@ -384,41 +455,48 @@
     </main>
   </div>
 </template>
+ 
 
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { useWishlist } from '@/components/useWishlist'; // ¡IMPORTA EL COMPOSABLE AQUÍ!
+// Importa `useRouter` para acceder al enrutador de Vue
+import { useRouter } from 'vue-router'; 
+ 
 
-const BASE_URL_BACKEND = 'https://back-visteteya.onrender.com';
+const BASE_URL_BACKEND = 'http://localhost:8000';
+ 
 
 const products = ref([]);
 const isLoading = ref(true);
+const fetchError = ref(false); // New state to track fetching errors
 const selectedProduct = ref(null);
 const mainImageUrl = ref('');
+const selectedProductImages = ref([]); 
+ 
 
 const filters = reactive({
   category: '',
   size: '',
   maxPrice: null,
-  status: '',
+  offerType: '',
 });
+ 
 
 const currentPage = ref(1);
 const itemsPerPage = 8;
+ 
 
+// Inicializa el enrutador
 const router = useRouter();
-const { addToWishlist } = useWishlist(); // Obtiene la función addToWishlist del composable
+ 
 
-// Computed para paginación visible (mejor experiencia UX)
 const visiblePages = computed(() => {
   const pages = [];
   const total = totalPages.value;
   const current = currentPage.value;
-  const range = 2; // Cuántas páginas mostrar alrededor de la actual
+  const range = 2; 
   
-  // Caso cuando hay pocas páginas
   if (total <= 5) {
     for (let i = 1; i <= total; i++) {
       pages.push(i);
@@ -426,70 +504,76 @@ const visiblePages = computed(() => {
     return pages;
   }
   
-  // Lógica para mostrar páginas con elipsis
   if (current <= range + 1) {
     for (let i = 1; i <= range * 2 + 1; i++) {
       pages.push(i);
     }
-    // Si no es el último bloque de páginas, añade elipsis y la última página
     if (total > range * 2 + 1 && current < total - range) {
-        pages.push('...'); // Representa elipsis
+        pages.push('...'); 
         pages.push(total);
     }
   } else if (current >= total - range) {
     pages.push(1);
-    // Si no es el primer bloque de páginas, añade elipsis
     if (total > range * 2 + 1 && current > range + 1) {
-        pages.unshift('...'); // Representa elipsis
+        pages.unshift('...'); 
     }
     for (let i = total - range * 2; i <= total; i++) {
       pages.push(i);
     }
   } else {
     pages.push(1);
-    pages.push('...'); // Elipsis al inicio
+    pages.push('...'); 
     for (let i = current - range; i <= current + range; i++) {
       pages.push(i);
     }
-    pages.push('...'); // Elipsis al final
+    pages.push('...'); 
     pages.push(total);
   }
   
-  // Filtra los duplicados si se produce alguno (ej. 1, ..., 5, 6, 7, ..., 10 -> 1, ..., 5, 6, 7, 10)
   return Array.from(new Set(pages));
 });
+ 
 
 const showEllipsis = computed(() => {
   return totalPages.value > 5 && 
     !(currentPage.value <= 3 || currentPage.value >= totalPages.value - 2);
 });
+ 
 
 const fetchAllProducts = async () => {
   isLoading.value = true;
+  fetchError.value = false; // Reset error state on new fetch attempt
   try {
     const response = await axios.get(`${BASE_URL_BACKEND}/products`);
     products.value = response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
+    fetchError.value = true; // Set error state if fetching fails
+    products.value = []; // Ensure products array is empty on error
   } finally {
     isLoading.value = false;
   }
 };
+ 
 
 onMounted(() => {
   fetchAllProducts();
 });
+ 
 
 watch(filters, () => {
   currentPage.value = 1;
 });
+ 
 
 const filteredProducts = computed(() => {
   let filtered = products.value;
+ 
 
   if (filters.category) {
     filtered = filtered.filter(p => p.category === filters.category);
   }
+ 
 
   if (filters.size) {
     filtered = filtered.filter(p => 
@@ -498,62 +582,111 @@ const filteredProducts = computed(() => {
       )
     );
   }
+ 
 
   if (filters.maxPrice !== null && filters.maxPrice !== '') {
     filtered = filtered.filter(p => {
-      // Considera el precio de venta si el producto está a la venta
-      const hasSalePrice = p.offer_types && (p.offer_types.includes('venta') || p.offer_types.includes('venta_alquiler')) && p.price !== null && p.price <= filters.maxPrice;
-      // Considera el precio de alquiler si el producto está en alquiler
-      const hasRentalPrice = p.offer_types && (p.offer_types.includes('alquiler') || p.offer_types.includes('venta_alquiler')) && p.rental_details && p.rental_details.price_per_day !== null && p.rental_details.price_per_day <= filters.maxPrice;
+      const hasSalePrice = p.offer_types && (p.offer_types.includes('venta') || p.offer_types.includes('venta_alquiler') || p.offer_types.includes('ambos')) && p.price !== null && p.price <= filters.maxPrice;
+      const hasRentalPrice = p.offer_types && (p.offer_types.includes('alquiler') || p.offer_types.includes('venta_alquiler') || p.offer_types.includes('ambos')) && p.rental_details && p.rental_details.pricePerDay !== null && p.rental_details.pricePerDay <= filters.maxPrice;
       
       return hasSalePrice || hasRentalPrice;
     });
   }
+ 
 
-  if (filters.status) {
-    filtered = filtered.filter(p => p.status === filters.status);
+  if (filters.offerType) {
+    filtered = filtered.filter(p => {
+      if (!p.offer_types) return false;
+      
+      if (filters.offerType === 'ambos') {
+        return p.offer_types.includes('venta_alquiler') || p.offer_types.includes('ambos');
+      } else {
+        return p.offer_types.includes(filters.offerType);
+      }
+    });
   }
+ 
 
   return filtered;
 });
+ 
 
 const totalPages = computed(() => {
   return Math.ceil(filteredProducts.value.length / itemsPerPage);
 });
+ 
 
 const paginatedProducts = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   return filteredProducts.value.slice(start, end);
 });
+ 
 
 const clearFilters = () => {
   filters.category = '';
   filters.size = '';
   filters.maxPrice = null;
-  filters.status = '';
+  filters.offerType = '';
   currentPage.value = 1;
 };
+ 
+
+// Modificado para navegar a la página de Buy.vue
+const navigateToBuyPage = (product) => {
+  // Cierra el modal si está abierto antes de navegar
+  if (selectedProduct.value) {
+    closeProductModal();
+  }
+  // Navega a la ruta /buy, pasando el product_id como parámetro
+  // Asegúrate de que tienes una ruta configurada en tu router/index.js (o similar)
+  // Por ejemplo: { path: '/buy/:productId', name: 'Buy', component: Buy }
+  router.push({ name: 'Buy', params: { productId: product.product_id } });
+  
+  // Si prefieres pasar el producto completo como estado (puede ser grande)
+  // router.push({ name: 'Buy', params: { productId: product.product_id }, state: { productData: product } });
+  
+  // O como query parameter
+  // router.push({ path: '/buy', query: { productId: product.product_id } });
+};
+ 
 
 const openProductModal = (product) => {
   selectedProduct.value = product;
   mainImageUrl.value = product.image_urls && product.image_urls.length > 0 
     ? getFullImageUrl(product.image_urls[0]) 
-    : (product.imageUrl ? getFullImageUrl(product.imageUrl) : ''); // Fallback a imageUrl si no hay image_urls
+    : (product.imageUrl ? getFullImageUrl(product.imageUrl) : ''); 
+  
+  selectedProductImages.value = [];
+  if (product.image_urls && product.image_urls.length > 0) {
+    selectedProductImages.value = product.image_urls;
+  } else if (product.imageUrl) {
+    selectedProductImages.value.push(product.imageUrl);
+  }
+  
   document.body.style.overflow = 'hidden';
 };
+ 
 
 const closeProductModal = () => {
   selectedProduct.value = null;
   mainImageUrl.value = '';
+  selectedProductImages.value = [];
   document.body.style.overflow = '';
 };
+ 
+
+const setMainImage = (imagePath) => {
+  mainImageUrl.value = getFullImageUrl(imagePath);
+};
+ 
 
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
   return new Date(dateString).toLocaleDateString('es-ES', options);
 };
+ 
 
 const getStatusText = (status) => {
   switch (status) {
@@ -563,30 +696,36 @@ const getStatusText = (status) => {
     default: return status;
   }
 };
+ 
 
 const getOfferTypeText = (type) => {
   switch (type) {
     case 'venta': return 'En Venta';
     case 'alquiler': return 'En Alquiler';
-    case 'venta_alquiler': return 'Venta y Alquiler';
+    case 'venta_alquiler': 
+    case 'ambos': 
+      return 'Venta/Alq.';
     default: return type;
   }
 };
+ 
 
 const getProductDisplayPrice = (product) => {
-  const hasRental = product.offer_types && (product.offer_types.includes('alquiler') || product.offer_types.includes('venta_alquiler')) && product.rental_details && product.rental_details.price_per_day !== null;
-  const hasSale = product.offer_types && (product.offer_types.includes('venta') || product.offer_types.includes('venta_alquiler')) && product.price !== null;
+  const hasRental = product.offer_types && (product.offer_types.includes('alquiler') || product.offer_types.includes('venta_alquiler') || product.offer_types.includes('ambos')) && product.rental_details && product.rental_details.pricePerDay !== null;
+  const hasSale = product.offer_types && (product.offer_types.includes('venta') || product.offer_types.includes('venta_alquiler') || product.offer_types.includes('ambos')) && product.price !== null;
+ 
 
   let priceText = '';
   if (hasSale) {
     priceText += `S/ ${product.price.toFixed(2)}`;
   }
   if (hasRental) {
-    if (priceText) priceText += ' o ';
-    priceText += `S/ ${product.rental_details.price_per_day.toFixed(2)}/día`;
+    if (priceText) priceText += ' / '; 
+    priceText += `${product.rental_details.pricePerDay.toFixed(2)}/día`;
   }
   return priceText || 'N/A';
 };
+ 
 
 const getFullImageUrl = (relativePath) => {
   if (!relativePath) return '';
@@ -595,76 +734,172 @@ const getFullImageUrl = (relativePath) => {
   }
   return `${BASE_URL_BACKEND}${relativePath}`;
 };
+ 
 
-// Esta función ahora usa el composable para añadir a la lista de deseos
-const handleAddToWishlist = (product) => {
-  addToWishlist(product); // Llama a la función del composable para añadir el producto
-  // Opcional: Puedes navegar a la lista de deseos o simplemente mostrar un mensaje de éxito.
-  // router.push({ name: 'wishlist' }); // Si quieres navegar directamente a la wishlist
-  closeProductModal(); // Cierra el modal después de añadir
-  alert(`"${product.name}" añadido a tu lista de deseos!`); // Mensaje de confirmación
+const capitalizeFirstLetter = (string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };
 </script>
+ 
 
 <style scoped>
-/* Estilos base */
-.input-select {
-  @apply w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-lg bg-white text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 cursor-pointer;
+/* Estilos compactos y mejorados */
+.input-select-compact,
+.input-text-compact {
+  @apply w-full px-4 py-2 border border-gray-200 rounded-lg bg-white text-gray-800 text-sm font-medium focus:ring-1 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 ease-in-out shadow-sm placeholder-gray-400;
 }
+ 
 
-.input-select-icon {
-  @apply pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500;
+.input-select-compact {
+  appearance: none;
 }
+ 
 
-.input-text {
-  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-800 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200;
+.input-select-icon-compact {
+  @apply pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400;
 }
+ 
 
-.button-primary {
-  @apply px-5 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center;
+.button-primary-compact {
+  @apply px-5 py-2.5 bg-pink-600 text-white text-sm font-semibold rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-all duration-200 ease-in-out flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-[1.01];
 }
+ 
 
-.button-secondary {
-  @apply px-5 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center;
+.button-secondary-compact {
+  @apply px-5 py-2.5 bg-white border border-gray-200 text-gray-600 text-sm font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 ease-in-out flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-[1.01];
 }
+ 
+
+.button-clear-filters {
+  @apply px-5 py-2.5 bg-white border border-gray-200 text-gray-600 text-sm font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 ease-in-out flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-[1.01];
+}
+ 
 
 .badge {
-  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold leading-4 text-white;
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold leading-none text-white shadow-sm;
 }
+ 
 
 .badge-sm {
-  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium leading-4 text-white;
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium leading-none text-white shadow-sm;
 }
+ 
 
-.pagination-button {
-  @apply w-10 h-10 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors duration-200;
+.badge-xs {
+  @apply inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium leading-none text-white shadow-sm;
 }
+ 
 
-/* Animaciones para el modal */
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
+.pagination-button-compact {
+  @apply w-9 h-9 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors duration-200;
 }
+ 
 
-.modal-enter-from,
-.modal-leave-to {
+/* New styles for card buttons */
+.card-button-primary {
+  @apply w-full px-3 py-2 bg-pink-600 text-white text-sm font-semibold rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition-all duration-200 ease-in-out flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-[1.01];
+}
+ 
+
+.card-button-secondary {
+  @apply w-full px-3 py-2 bg-white border border-gray-200 text-gray-600 text-sm font-semibold rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 ease-in-out flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-[1.01];
+}
+ 
+
+/* Animaciones de entrada/salida */
+.fade-in-enter-active, .fade-in-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-in-enter-from, .fade-in-leave-to {
   opacity: 0;
 }
+ 
 
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.3s ease;
+/* Animaciones específicas para elementos */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+ 
 
-.modal-fade-enter-from,
-.modal-fade-leave-to {
+@keyframes pulse-fade {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.animate-pulse-fade {
+  animation: pulse-fade 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+ 
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out forwards;
+  opacity: 0; 
+}
+ 
+
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-in-right {
+  animation: fade-in-right 0.3s ease-out forwards;
   opacity: 0;
 }
+ 
 
-/* Animación de carga */
-.animation-delay-150 {
-  animation-delay: 0.15s;
+@keyframes fade-in-zoom {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
+.animate-fade-in-zoom {
+  animation: fade-in-zoom 0.4s ease-out forwards;
+}
+ 
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.animate-bounce-subtle {
+  animation: bounce-subtle 1.2s infinite ease-in-out;
+}
+ 
+
+/* Retrasos de animación */
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-500 { animation-delay: 0.5s; }
+ 
+
+/* Animaciones para el modal (personalizadas) */
+.modal-slide-fade-enter-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.modal-slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.modal-slide-fade-enter-from,
+.modal-slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(15px) scale(0.99);
+}
+ 
+
+.modal-fade-overlay-enter-active, .modal-fade-overlay-leave-active {
+  transition: opacity 0.2s ease;
+}
+.modal-fade-overlay-enter-from, .modal-fade-overlay-leave-to {
+  opacity: 0;
+}
+ 
 
 /* Clamp para texto multilínea */
 .line-clamp-2 {
@@ -673,6 +908,7 @@ const handleAddToWishlist = (product) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+ 
 
 .line-clamp-3 {
   display: -webkit-box;
@@ -680,61 +916,31 @@ const handleAddToWishlist = (product) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+ 
 
-/* Scrollbar personalizado */
+/* Scrollbar personalizado (para el carrusel de miniaturas) */
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+ 
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+ 
 
-/* Efecto hover para las tarjetas */
-.group:hover .group-hover\:scale-105 {
-  transform: scale(1.05);
-}
-
-/* Transiciones suaves */
+/* Transiciones suaves y transformaciones */
 .transition-all {
   transition-property: all;
 }
-
-.duration-200 {
-  transition-duration: 200ms;
-}
-
-.duration-300 {
-  transition-duration: 300ms;
-}
-
-.duration-500 {
-  transition-duration: 500ms;
-}
-
-/* Efecto de zoom en imágenes */
 .transform {
-  transform: translateZ(0);
+  transform: translateZ(0); 
 }
-
-/* Mejoras de accesibilidad */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+.transform-gpu {
+  transform: translateZ(0); 
 }
-
-/* Estilos para el placeholder de imágenes */
-.text-gray-300 {
-  color: #e5e7eb;
-}
+ 
 
 /* Mejoras para el modal en móviles */
 @media (max-width: 640px) {

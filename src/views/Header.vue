@@ -69,7 +69,7 @@
                 >
                   <div v-if="isProfileMenuOpen" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none top-full">
                     <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                      <router-link v-if="userRole === 'cliente'" to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600" role="menuitem" tabindex="-1" id="user-menu-item-0" @click="isProfileMenuOpen = false">
+                      <router-link v-if="userRole === 'cliente'" to="/myprofile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600" role="menuitem" tabindex="-1" id="user-menu-item-0" @click="isProfileMenuOpen = false">
                         Mi Perfil
                       </router-link>
                       <router-link v-else-if="userRole === 'vendedor'" to="/dashboard-vendedor/add-product" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-pink-600" role="menuitem" tabindex="-1" id="user-menu-item-1" @click="isProfileMenuOpen = false">
@@ -288,8 +288,8 @@ onUnmounted(() => {
 });
 
 const closeProfileMenuOnClickOutside = (event) => {
-  // Solo cerrar si el clic no fue dentro del contenedor del menú del perfil
-  if (isProfileMenuOpen.value && !event.target.closest('.group.relative')) {
+  const profileMenuButton = document.querySelector('.group.relative'); // Selector del botón/contenedor del perfil
+  if (isProfileMenuOpen.value && profileMenuButton && !profileMenuButton.contains(event.target)) {
     isProfileMenuOpen.value = false;
   }
 };
@@ -331,7 +331,8 @@ const goToLogin = () => {
 };
 
 const goToProfile = () => {
-  router.push('/profile'); // Ejemplo: Ruta a la página de perfil del cliente
+  // CAMBIO AQUÍ: Redirige a /myprofile para clientes
+  router.push('/myprofile'); 
   isProfileMenuOpen.value = false; // Asegurarse de cerrar el menú
   isMobileMenuOpen.value = false;
 };
