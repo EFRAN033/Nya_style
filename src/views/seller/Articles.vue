@@ -176,14 +176,14 @@
     </div>
   </SellerDashboardLayout>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import SellerDashboardLayout from './SellerDashboardLayout.vue'; 
 
 const isLoading = ref(true);
 const articles = ref([]);
-const API_BASE_URL = 'http://localhost:8000'; // Asegúrate de que esta URL sea correcta para tu backend
+// Define la URL base del backend usando la variable de entorno
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
 
 const getStatusText = (status) => {
   switch (status) {

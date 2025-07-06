@@ -297,6 +297,9 @@ import SellerDashboardLayout from './seller/SellerDashboardLayout.vue'; // Ajust
 
 const router = useRouter();
 
+// Define la URL base del backend usando la variable de entorno
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
+
 const product = ref({
   name: '',
   description: '',
@@ -394,10 +397,11 @@ const addVariation = () => {
 
 const removeVariation = (index) => {
   if (product.value.variations.length > 1) {
-    product.value.variations.splice(index, 1);
-  } else {
     console.warn('Debe haber al menos una variación para el producto.');
     errors.value.variations = 'Debe haber al menos una variación para el producto.';
+    return; // Don't remove if only one left
+  } else {
+    product.value.variations.splice(index, 1);
   }
 };
 
@@ -521,7 +525,7 @@ const submitProduct = async () => {
   });
 
   try {
-    const response = await fetch('http://localhost:8000/products', { // <<<--- CRITICAL CHANGE HERE
+    const response = await fetch(`${API_BASE_URL}/products`, { // <<<--- CAMBIADO AQUÍ
       method: 'POST',
       body: formData,
     });

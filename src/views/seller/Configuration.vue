@@ -115,13 +115,12 @@
     </div>
   </SellerDashboardLayout>
 </template>
-
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
 import SellerDashboardLayout from './SellerDashboardLayout.vue';
 
 // --- CAMBIO 1: Corregir API_BASE_URL (era 'hhttp') ---
-const API_BASE_URL = 'http://localhost:8000'; // Asegúrate de que esta URL sea correcta para tu backend o la URL de Render
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
 
 const isLoading = ref(true);
 const userId = ref(null);

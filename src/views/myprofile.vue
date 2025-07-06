@@ -141,24 +141,19 @@
       </div>
     </div>
   </template>
-  
   <script setup>
   import { ref, onMounted, reactive } from 'vue';
-  import { useRouter } from 'vue-router'; // Importa useRouter para la navegación
+  import { useRouter } from 'vue-router';
   
-  const router = useRouter(); // Inicializa router
+  const router = useRouter();
   
   // Función para volver a la página anterior
   const goBack = () => {
     router.go(-1);
   };
   
-  // Puedes eliminar esta función o redirigir a donde desees si necesitas un goToHome explícito
-  // const goToHome = () => {
-  //   router.push('/'); 
-  // };
-  
-  const API_BASE_URL = 'http://localhost:8000'; // Asegúrate de que esta URL sea correcta para tu backend
+  // Define la URL base del backend usando la variable de entorno
+  const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
   
   const isLoading = ref(true);
   const userId = ref(null);
@@ -167,7 +162,7 @@
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    address: '', // Campo para la dirección del cliente
+    address: '',
     email: '',
   });
   
@@ -178,14 +173,13 @@
   });
   
   const errors = ref({});
-  const submissionStatus = ref(null); // null, 'submitting', 'success', 'error' for profile updates
-  const passwordChangeStatus = ref(null); // null, 'submitting', 'success', 'error' for password changes
+  const submissionStatus = ref(null);
+  const passwordChangeStatus = ref(null);
   
   const clearError = (field) => {
     if (errors.value[field]) {
       delete errors.value[field];
     }
-    // Clear overall submission error if a specific field error is cleared
     if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'address', 'email'].includes(field)) {
       delete errors.value.profile;
     }
@@ -196,7 +190,7 @@
   
   const validateProfileForm = () => {
     let isValid = true;
-    errors.value = {}; // Reset errors for profile form
+    errors.value = {};
   
     if (!profileForm.firstName.trim()) {
       errors.value.firstName = 'El nombre es obligatorio.';
@@ -209,7 +203,7 @@
     if (!profileForm.phoneNumber.trim()) {
       errors.value.phoneNumber = 'El número de teléfono es obligatorio.';
       isValid = false;
-    } else if (!/^\d{9}$/.test(profileForm.phoneNumber.trim())) { // Simple 9-digit phone number validation
+    } else if (!/^\d{9}$/.test(profileForm.phoneNumber.trim())) {
       errors.value.phoneNumber = 'El número de teléfono debe tener 9 dígitos.';
       isValid = false;
     }
@@ -220,7 +214,7 @@
     if (!profileForm.email.trim()) {
       errors.value.email = 'El email es obligatorio.';
       isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profileForm.email.trim())) { // Basic email validation
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profileForm.email.trim())) {
       errors.value.email = 'Introduce un email válido.';
       isValid = false;
     }
@@ -230,7 +224,7 @@
   
   const validatePasswordForm = () => {
     let isValid = true;
-    errors.value = {}; // Reset errors for password form
+    errors.value = {};
   
     if (!passwordForm.currentPassword.trim()) {
       errors.value.currentPassword = 'La contraseña actual es obligatoria.';
@@ -253,8 +247,8 @@
   
   const fetchCustomerProfile = async () => {
     isLoading.value = true;
-    userId.value = localStorage.getItem('user_id'); // Asegúrate de que 'user_id' se guarda en localStorage durante el login
-    profileForm.email = localStorage.getItem('user_email'); // Asegúrate de que 'user_email' se guarda en localStorage durante el login
+    userId.value = localStorage.getItem('user_id');
+    profileForm.email = localStorage.getItem('user_email');
   
     if (!userId.value) {
       console.error("User ID no encontrado en localStorage.");
@@ -264,7 +258,6 @@
     }
   
     try {
-      // --- IMPORTANTE: Este fetch asume que has añadido el endpoint GET /profile/customer/{user_id} en tu main.py ---
       const customerResponse = await fetch(`${API_BASE_URL}/profile/customer/${userId.value}`);
       if (!customerResponse.ok) {
         const errorData = await customerResponse.json();
@@ -276,14 +269,9 @@
       profileForm.phoneNumber = customerData.phone_number || '';
       profileForm.address = customerData.address || '';
   
-      // El email ya debería estar en profileForm.email si lo obtuviste de localStorage
-      // Si necesitas recargarlo desde la DB y tu login no lo guarda, podrías necesitar un endpoint GET /users/{user_id}
-      // const userResponse = await fetch(`${API_BASE_URL}/users/${userId.value}`);
-      // ... y obtener el email de allí si no lo tienes ya.
-  
     } catch (error) {
       console.error('Error al cargar la configuración del cliente:', error);
-      submissionStatus.value = 'error'; // Set a general error for profile loading
+      submissionStatus.value = 'error';
       errors.value.profile = error.message || 'No se pudieron cargar los datos del perfil.';
     } finally {
       isLoading.value = false;
@@ -291,16 +279,15 @@
   };
   
   const saveProfile = async () => {
-    submissionStatus.value = null; // Clear previous status
+    submissionStatus.value = null;
     if (!validateProfileForm()) {
       submissionStatus.value = 'error';
-      errors.value.profile = 'Por favor, corrige los errores en el formulario.'; // Set a general error for submission
+      errors.value.profile = 'Por favor, corrige los errores en el formulario.';
       return;
     }
   
     submissionStatus.value = 'submitting';
     try {
-      // --- IMPORTANTE: Este fetch asume que has añadido el endpoint PUT /profile/customer/{user_id} en tu main.py ---
       const customerUpdateResponse = await fetch(`${API_BASE_URL}/profile/customer/${userId.value}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -317,7 +304,6 @@
         throw new Error(errorData.detail || 'Error al actualizar los datos del cliente.');
       }
   
-      // Actualizar el email usando el endpoint existente
       const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/change-email`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -330,9 +316,8 @@
       }
   
       submissionStatus.value = 'success';
-      // Opcional: Actualizar el email en localStorage si fue exitoso
       localStorage.setItem('user_email', profileForm.email);
-      setTimeout(() => { submissionStatus.value = null; }, 3000); // Clear status after 3 seconds
+      setTimeout(() => { submissionStatus.value = null; }, 3000);
   
     } catch (error) {
       console.error('Error al guardar el perfil:', error);
@@ -342,16 +327,15 @@
   };
   
   const changePassword = async () => {
-    passwordChangeStatus.value = null; // Clear previous status
+    passwordChangeStatus.value = null;
     if (!validatePasswordForm()) {
       passwordChangeStatus.value = 'error';
-      errors.value.password = 'Por favor, corrige los errores en el formulario de contraseña.'; // Set general error
+      errors.value.password = 'Por favor, corrige los errores en el formulario de contraseña.';
       return;
     }
   
     passwordChangeStatus.value = 'submitting';
     try {
-      // Usar el endpoint existente para cambiar contraseña
       const response = await fetch(`${API_BASE_URL}/users/${userId.value}/change-password`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -367,11 +351,10 @@
       }
   
       passwordChangeStatus.value = 'success';
-      // Clear password fields on success
       passwordForm.currentPassword = '';
       passwordForm.newPassword = '';
       passwordForm.confirmPassword = '';
-      setTimeout(() => { passwordChangeStatus.value = null; }, 3000); // Clear status after 3 seconds
+      setTimeout(() => { passwordChangeStatus.value = null; }, 3000);
   
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error);

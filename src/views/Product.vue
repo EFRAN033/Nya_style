@@ -464,7 +464,8 @@ import axios from 'axios';
 import { useRouter } from 'vue-router'; 
  
 
-const BASE_URL_BACKEND = 'http://localhost:8000';
+// Define la URL base del backend usando la variable de entorno
+const BASE_URL_BACKEND = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
  
 
 const products = ref([]);

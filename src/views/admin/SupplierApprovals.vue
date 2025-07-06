@@ -128,12 +128,12 @@
       </div>
     </div>
   </template>
-  
   <script setup>
   import { ref, onMounted, computed } from 'vue';
   import axios from 'axios';
   
-  const API_BASE_URL = 'http://127.0.0.1:8000'; // Asegúrate de que esta URL sea correcta
+  // Define la URL base del backend usando la variable de entorno
+  const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
   
   const pendingSuppliers = ref([]);
   const loading = ref(true);
