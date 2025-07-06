@@ -10,9 +10,7 @@ build/
 
 # Archivos de configuracion del entorno
 
-.env
-.env.local
-.env.*.local
+
 
 # Archivos de editores y sistemas operativos
 
