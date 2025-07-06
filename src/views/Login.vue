@@ -138,9 +138,7 @@
       </div>
     </main>
   </div>
-</template>
-
-<script setup>
+</template><script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
@@ -154,7 +152,8 @@ const loginForm = reactive({
   password: ''
 })
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
+// CAMBIO CLAVE: Usa la variable de entorno aquí
+const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
 
 const goToHome = () => {
   router.push('/');
@@ -165,6 +164,7 @@ const handleLogin = async () => {
   errorMessage.value = null
 
   try {
+    // Asegúrate de que esta llamada use API_BASE_URL
     const response = await axios.post(
       `${API_BASE_URL}/login`,
       {
@@ -188,17 +188,15 @@ const handleLogin = async () => {
 
       alert(`¡Bienvenido, ${response.data.first_name || response.data.email}! Has iniciado sesión como ${response.data.role}.`);
 
-      // --- ¡MODIFICACIÓN CLAVE AÑADIDA PARA ADMIN! ---
       if (response.data.role === 'admin') {
-        router.push({ name: 'admin-dashboard' }); // Redirige al administrador
+        router.push({ name: 'admin-dashboard' });
       } else if (response.data.role === 'cliente') {
-        router.push('/'); // Redirige al cliente
+        router.push('/');
       } else if (response.data.role === 'vendedor') {
-        router.push('/dashboard-vendedor/mis-articulos'); // Redirige al vendedor
+        router.push('/dashboard-vendedor/mis-articulos');
       } else {
-        router.push('/'); // Fallback para otros roles no definidos
+        router.push('/');
       }
-      // --- FIN MODIFICACIÓN ---
 
     } else {
       errorMessage.value = 'Respuesta inesperada del servidor. Inténtalo de nuevo.';
