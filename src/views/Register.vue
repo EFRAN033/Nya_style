@@ -181,8 +181,7 @@ const router = useRouter();
 
 // --- Configuración de la API ---
 // Usa import.meta.env para Vite. Si usas Vue CLI (Webpack), sería process.env.VUE_APP_API_BASE_URL
-const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL || 'http://localhost:8000'; 
-
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 // --- Estados del Formulario ---
 const currentStep = ref(1);
 const userType = ref(null); // 'customer' o 'seller'
