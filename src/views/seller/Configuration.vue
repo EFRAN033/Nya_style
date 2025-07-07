@@ -59,6 +59,31 @@
               <input type="email" id="contactEmail" v-model="profileForm.email" @input="clearError('email')" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-pink-500 focus:border-pink-500">
               <p v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email }}</p>
             </div>
+
+            <div class="md:col-span-2">
+              <label for="qrImage" class="block text-sm font-medium text-gray-700 mb-2">QR de Yape/Plin (Opcional):</label>
+              <div class="flex items-center space-x-4">
+                <div v-if="profileForm.qrImageUrl" class="flex-shrink-0">
+                  <img :src="getFullImageUrl(profileForm.qrImageUrl)" alt="QR Actual" class="w-24 h-24 object-contain border border-gray-300 rounded-lg shadow-sm p-1">
+                  <p class="text-xs text-gray-500 mt-1 text-center">QR Actual</p>
+                </div>
+                <input
+                  type="file"
+                  id="qrImage"
+                  @change="handleQrImageUpload"
+                  accept="image/png, image/jpeg"
+                  class="block w-full text-sm text-gray-500
+                         file:mr-4 file:py-2 file:px-4
+                         file:rounded-full file:border-0
+                         file:text-sm file:font-semibold
+                         file:bg-pink-50 file:text-pink-700
+                         hover:file:bg-pink-100"
+                >
+              </div>
+              <p class="text-xs text-gray-500 mt-2">Sube una imagen PNG o JPG para tu QR de pago (Max. 2MB).</p>
+              <p v-if="errors.qrImage" class="text-red-500 text-xs mt-1">{{ errors.qrImage }}</p>
+              <p v-if="qrImageFile" class="text-sm text-gray-600 mt-2">Archivo seleccionado: <span class="font-medium">{{ qrImageFile.name }}</span></p>
+            </div>
             
             <div class="md:col-span-2 flex justify-end">
               <button type="submit" :disabled="submissionStatus === 'submitting'" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
@@ -140,7 +165,10 @@ const profileForm = reactive({
   bankAccount: '',
   email: '',
   address: '',
+  qrImageUrl: '', // Nuevo campo para la URL de la imagen QR existente
 });
+
+const qrImageFile = ref(null); // Para el archivo de imagen QR que se va a subir
 
 const passwordForm = reactive({
   currentPassword: '',
@@ -157,7 +185,7 @@ const clearError = (field) => {
     delete errors.value[field];
   }
   // Clear overall submission error if a specific field error is cleared
-  if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'storeName', 'bankAccount', 'email', 'address'].includes(field)) {
+  if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'storeName', 'bankAccount', 'email', 'address', 'qrImage'].includes(field)) {
     delete errors.value.profile;
   }
   if (errors.value.password && ['currentPassword', 'newPassword', 'confirmPassword'].includes(field)) {
@@ -204,6 +232,21 @@ const validateProfileForm = () => {
     isValid = false;
   }
 
+  // Validación para la imagen QR (opcional pero con validación de tipo/tamaño si se sube)
+  if (qrImageFile.value) {
+    const allowedTypes = ['image/png', 'image/jpeg'];
+    if (!allowedTypes.includes(qrImageFile.value.type)) {
+      errors.value.qrImage = 'Solo se permiten imágenes PNG o JPG.';
+      isValid = false;
+    }
+    const maxSize = 2 * 1024 * 1024; // 2 MB
+    if (qrImageFile.value.size > maxSize) {
+      errors.value.qrImage = 'La imagen es demasiado grande (Máx. 2MB).';
+      isValid = false;
+    }
+  }
+
+
   return isValid;
 };
 
@@ -230,6 +273,14 @@ const validatePasswordForm = () => {
   return isValid;
 };
 
+const getFullImageUrl = (relativePath) => {
+  if (!relativePath) return '';
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
+  }
+  return `${API_BASE_URL}${relativePath}`; // Asume que las URLs relativas se basan en la URL base del backend
+};
+
 const fetchSellerProfile = async () => {
   isLoading.value = true;
   userId.value = localStorage.getItem('user_id'); // Asegúrate de que 'user_id' esté guardado en localStorage al iniciar sesión
@@ -254,6 +305,7 @@ const fetchSellerProfile = async () => {
     profileForm.storeName = sellerData.business_name || ''; // Mapeado de business_name
     profileForm.bankAccount = sellerData.bank_account || '';
     profileForm.address = sellerData.address || '';
+    profileForm.qrImageUrl = sellerData.qr_image_url || ''; // Asume que el backend envía esta URL
 
     profileForm.email = localStorage.getItem('user_email') || ''; // Asumiendo que el email se guarda como 'user_email'
 
@@ -266,6 +318,11 @@ const fetchSellerProfile = async () => {
   }
 };
 
+const handleQrImageUpload = (event) => {
+  qrImageFile.value = event.target.files[0];
+  clearError('qrImage'); // Clear any previous error on file change
+};
+
 const saveProfile = async () => {
   submissionStatus.value = null;
   if (!validateProfileForm()) {
@@ -276,17 +333,24 @@ const saveProfile = async () => {
 
   submissionStatus.value = 'submitting';
   try {
-    const sellerUpdateResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`, { // Usando la variable dinámica
+    const formData = new FormData();
+    formData.append('first_name', profileForm.firstName);
+    formData.append('last_name', profileForm.lastName);
+    formData.append('phone_number', profileForm.phoneNumber);
+    formData.append('business_name', profileForm.storeName);
+    formData.append('bank_account', profileForm.bankAccount);
+    formData.append('address', profileForm.address);
+    // No incluyas el email en este FormData si el backend lo maneja por separado
+    // El email se actualiza con otro endpoint en tu código actual
+
+    if (qrImageFile.value) {
+      formData.append('qr_image', qrImageFile.value); // 'qr_image' debe coincidir con el nombre de campo esperado por tu backend
+    }
+
+    const sellerUpdateResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        first_name: profileForm.firstName,
-        last_name: profileForm.lastName,
-        phone_number: profileForm.phoneNumber,
-        business_name: profileForm.storeName, // Mapeo de storeName a business_name
-        bank_account: profileForm.bankAccount,
-        address: profileForm.address,
-      }),
+      // No establecer 'Content-Type' para FormData; el navegador lo hace automáticamente con el boundary correcto
+      body: formData,
     });
 
     if (!sellerUpdateResponse.ok) {
@@ -294,7 +358,8 @@ const saveProfile = async () => {
       throw new Error(errorData.detail || 'Error al actualizar los datos del vendedor.');
     }
 
-    const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/change-email`, { // Usando la variable dinámica
+    // Actualización del email (separado como en tu código original)
+    const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/change-email`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: profileForm.email }),
@@ -306,6 +371,8 @@ const saveProfile = async () => {
     }
 
     submissionStatus.value = 'success';
+    qrImageFile.value = null; // Clear the selected file after successful upload
+    fetchSellerProfile(); // Re-fetch profile to display the new QR image URL if updated
     setTimeout(() => { submissionStatus.value = null; }, 3000);
 
   } catch (error) {
