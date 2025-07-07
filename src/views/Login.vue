@@ -29,7 +29,7 @@
               aria-label="Ir a la página de inicio"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 0 001 1h3m10-11l2 2m-2-2v10a1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
               Inicio
             </router-link>
@@ -153,7 +153,7 @@ const loginForm = reactive({
   password: ''
 })
 
-// --- CAMBIO CLAVE AQUÍ ---
+// --- AJUSTE DE VARIABLES DE ENTORNO PARA LAS URLs del backend (coincidiendo con tu .env) ---
 // Determina la URL base de la API según el entorno
 const API_BASE_URL = import.meta.env.MODE === 'development'
   ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa esta si estás en desarrollo
@@ -170,7 +170,6 @@ const handleLogin = async () => {
   errorMessage.value = null
 
   try {
-    // Asegúrate de que esta llamada use API_BASE_URL
     const response = await axios.post(
       `${API_BASE_URL}/login`, // ¡Aquí es donde se usa la URL dinámica!
       {
@@ -184,7 +183,12 @@ const handleLogin = async () => {
       }
     )
 
-    if (response.data.user_id) {
+    // --- CAMBIO CLAVE AQUÍ: Almacenar el token JWT y el tipo de token ---
+    if (response.data.access_token && response.data.token_type) {
+      localStorage.setItem('accessToken', response.data.access_token);
+      localStorage.setItem('tokenType', response.data.token_type); // Esto debería ser 'bearer'
+
+      // Almacenar también la información del usuario
       localStorage.setItem('user_id', response.data.user_id);
       localStorage.setItem('user_email', response.data.email);
       localStorage.setItem('user_role', response.data.role);
@@ -205,7 +209,7 @@ const handleLogin = async () => {
       }
 
     } else {
-      errorMessage.value = 'Respuesta inesperada del servidor. Inténtalo de nuevo.';
+      errorMessage.value = 'Respuesta inesperada del servidor: falta el token de autenticación. Inténtalo de nuevo.';
     }
   } catch (error) {
     if (error.response) {
@@ -213,13 +217,14 @@ const handleLogin = async () => {
       console.error('Código de estado:', error.response.status);
 
       switch (error.response.status) {
-        case 401:
+        case 400: // Bad Request, para errores de validación o credenciales incorrectas en algunos casos
+        case 401: // Unauthorized
           errorMessage.value = error.response.data.detail || 'Credenciales incorrectas. Por favor, verifica tu correo y contraseña.';
           break;
-        case 403:
-          errorMessage.value = error.response.data.detail || 'Tu cuenta está inactiva. Contacta al soporte.';
+        case 403: // Forbidden (si la cuenta está inactiva, etc.)
+          errorMessage.value = error.response.data.detail || 'Tu cuenta está inactiva o no tienes permisos. Contacta al soporte.';
           break;
-        case 422:
+        case 422: // Unprocessable Entity (errores de validación de FastAPI)
           errorMessage.value = 'Datos de entrada inválidos. Por favor, verifica los campos.';
           break;
         case 500:
