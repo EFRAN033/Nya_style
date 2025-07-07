@@ -182,8 +182,14 @@ import SellerDashboardLayout from './SellerDashboardLayout.vue';
 
 const isLoading = ref(true);
 const articles = ref([]);
-// Define la URL base del backend usando la variable de entorno
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
+// --- CAMBIO CLAVE AQUÍ ---
+// Determina la URL base del backend según el entorno
+const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
+  : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
+
+// Opcional: Para verificar en consola qué URL se está usando
+// console.log('API Base URL en uso:', API_BASE_URL);
 
 const getStatusText = (status) => {
   switch (status) {
@@ -216,7 +222,7 @@ const fetchArticles = async () => {
     }
 
     // Esta línea ya está buscando productos solo para el vendedor logueado
-    const response = await fetch(`${API_BASE_URL}/products/seller/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/products/seller/${userId}`); // Usando la variable dinámica
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || 'Error al obtener los artículos');

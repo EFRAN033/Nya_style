@@ -127,14 +127,19 @@
         </div>
       </div>
     </div>
-  </template>
-  <script setup>
+  </template><script setup>
   import { ref, onMounted, computed } from 'vue';
   import axios from 'axios';
   
-  // Define la URL base del backend usando la variable de entorno
-  const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
+  // --- CAMBIO CLAVE AQUÍ ---
+  // Determina la URL base del backend según el entorno
+  const API_BASE_URL = import.meta.env.MODE === 'development'
+    ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
+    : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
   
+  // Opcional: Para verificar en consola qué URL se está usando
+  // console.log('API Base URL en uso:', API_BASE_URL);
+
   const pendingSuppliers = ref([]);
   const loading = ref(true);
   const errorMessage = ref(null);
@@ -184,7 +189,7 @@
         loading.value = false;
         return;
       }
-      const response = await axios.get(`${API_BASE_URL}/admin/suppliers/pending`, {
+      const response = await axios.get(`${API_BASE_URL}/admin/suppliers/pending`, { // Usando la variable dinámica
         headers: { Authorization: `Bearer ${token}` }
       });
       pendingSuppliers.value = response.data;
@@ -223,12 +228,12 @@
   
       let response;
       if (actionType.value === 'approve') {
-        response = await axios.post(`${API_BASE_URL}/admin/suppliers/${selectedSupplierId.value}/approve`, {}, {
+        response = await axios.post(`${API_BASE_URL}/admin/suppliers/${selectedSupplierId.value}/approve`, {}, { // Usando la variable dinámica
           headers: { Authorization: `Bearer ${token}` }
         });
         successMessage.value = `Proveedor '${selectedSupplierId.value}' aprobado exitosamente.`;
       } else if (actionType.value === 'reject') {
-        response = await axios.post(`${API_BASE_URL}/admin/suppliers/${selectedSupplierId.value}/reject`, {}, {
+        response = await axios.post(`${API_BASE_URL}/admin/suppliers/${selectedSupplierId.value}/reject`, {}, { // Usando la variable dinámica
           headers: { Authorization: `Bearer ${token}` }
         });
         successMessage.value = `Proveedor '${selectedSupplierId.value}' rechazado exitosamente.`;
@@ -247,7 +252,7 @@
   onMounted(() => {
     fetchSuppliers();
   });
-  </script>
+</script>
   
   <style scoped>
   /*

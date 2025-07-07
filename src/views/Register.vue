@@ -180,8 +180,15 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // --- Configuración de la API ---
-// Usa import.meta.env para Vite. Si usas Vue CLI (Webpack), sería process.env.VUE_APP_API_BASE_URL
-const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+// --- CAMBIO CLAVE AQUÍ ---
+// Determina la URL base del backend según el entorno
+const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
+  : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
+
+// Opcional: Para verificar en consola qué URL se está usando
+// console.log('API Base URL en uso:', API_BASE_URL);
+
 // --- Estados del Formulario ---
 const currentStep = ref(1);
 const userType = ref(null); // 'customer' o 'seller'
@@ -277,7 +284,7 @@ const handleCustomerRegister = async () => {
     loading.value = true;
     formError.value = '';
 
-    const response = await axios.post(`${API_BASE_URL}/register/customer`, {
+    const response = await axios.post(`${API_BASE_URL}/register/customer`, { // Usando la variable dinámica
       email: customerForm.value.email,
       password: customerForm.value.password,
       first_name: customerForm.value.firstName,
@@ -343,7 +350,7 @@ const handleSellerRegister = async () => {
       accepts_terms: sellerForm.value.acceptsTerms, // Asegúrate de que esto sea un booleano (true/false)
     };
 
-    const response = await axios.post(`${API_BASE_URL}/register/seller`, sellerPayload, {
+    const response = await axios.post(`${API_BASE_URL}/register/seller`, sellerPayload, { // Usando la variable dinámica
         headers: {
             'Content-Type': 'application/json' // <-- ¡ESTO ES CRÍTICO!
         }

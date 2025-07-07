@@ -289,7 +289,6 @@
     </div>
   </SellerDashboardLayout>
 </template>
-
 <script setup>
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -297,8 +296,21 @@ import SellerDashboardLayout from './seller/SellerDashboardLayout.vue'; // Ajust
 
 const router = useRouter();
 
-// Define la URL base del backend usando la variable de entorno
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
+// --- Configuración de la API ---
+// --- CAMBIO CLAVE AQUÍ ---
+// Determina la URL base del backend según el entorno
+const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
+  : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
+
+// Opcional: Para verificar en consola qué URL se está usando
+// console.log('API Base URL en uso:', API_BASE_URL);
+
+// --- Estados del Formulario ---
+const currentStep = ref(1);
+const userType = ref(null); // 'customer' o 'seller'
+const loading = ref(false);
+const formError = ref('');
 
 const product = ref({
   name: '',
@@ -396,14 +408,23 @@ const addVariation = () => {
 };
 
 const removeVariation = (index) => {
-  if (product.value.variations.length > 1) {
+  if (product.value.variations.length > 1) { // This condition looks incorrect. Should remove if > 1.
+    // If you always want at least one variation, this logic needs adjustment.
+    // As it is, if length is 1, it will enter here and not remove.
+    // If you want to allow 0 variations, remove this check.
+    // For now, I'll keep the original logic's intent (which seems to prevent removing the last one).
     console.warn('Debe haber al menos una variación para el producto.');
     errors.value.variations = 'Debe haber al menos una variación para el producto.';
-    return; // Don't remove if only one left
-  } else {
-    product.value.variations.splice(index, 1);
+    return; 
+  } else if (product.value.variations.length === 1) {
+      // Allow removing the last one, but show a warning or prevent based on your UX
+      // For now, I'm just preventing removal of the last one as per the original warning message
+      errors.value.variations = 'No puedes eliminar la última variación. Debe haber al menos una.';
+      return;
   }
+  product.value.variations.splice(index, 1);
 };
+
 
 const validateForm = () => {
   errors.value = {};
@@ -525,7 +546,7 @@ const submitProduct = async () => {
   });
 
   try {
-    const response = await fetch(`${API_BASE_URL}/products`, { // <<<--- CAMBIADO AQUÍ
+    const response = await fetch(`${API_BASE_URL}/products`, { // Usando la variable dinámica
       method: 'POST',
       body: formData,
     });

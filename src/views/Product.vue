@@ -456,7 +456,6 @@
   </div>
 </template>
  
-
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import axios from 'axios';
@@ -464,8 +463,14 @@ import axios from 'axios';
 import { useRouter } from 'vue-router'; 
  
 
-// Define la URL base del backend usando la variable de entorno
-const BASE_URL_BACKEND = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
+// --- CAMBIO CLAVE AQUÍ ---
+// Determina la URL base del backend según el entorno
+const BASE_URL_BACKEND = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
+  : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
+
+// Opcional: Para verificar en consola qué URL se está usando
+// console.log('Backend Base URL en uso:', BASE_URL_BACKEND);
  
 
 const products = ref([]);
@@ -545,7 +550,7 @@ const fetchAllProducts = async () => {
   isLoading.value = true;
   fetchError.value = false; // Reset error state on new fetch attempt
   try {
-    const response = await axios.get(`${BASE_URL_BACKEND}/products`);
+    const response = await axios.get(`${BASE_URL_BACKEND}/products`); // Usando la variable dinámica
     products.value = response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -733,7 +738,7 @@ const getFullImageUrl = (relativePath) => {
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
     return relativePath; 
   }
-  return `${BASE_URL_BACKEND}${relativePath}`;
+  return `${BASE_URL_BACKEND}${relativePath}`; // Usando la variable dinámica
 };
  
 

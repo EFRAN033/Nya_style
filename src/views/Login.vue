@@ -138,7 +138,8 @@
       </div>
     </main>
   </div>
-</template><script setup>
+</template>
+<script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
@@ -152,8 +153,13 @@ const loginForm = reactive({
   password: ''
 })
 
-// CAMBIO CLAVE: Usa la variable de entorno aquí
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL;
+// --- CAMBIO CLAVE AQUÍ ---
+// Determina la URL base de la API según el entorno
+const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa esta si estás en desarrollo
+  : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa esta si estás en producción
+
+console.log('API Base URL en uso:', API_BASE_URL); // Puedes añadir esto para depurar y ver qué URL se está usando
 
 const goToHome = () => {
   router.push('/');
@@ -166,7 +172,7 @@ const handleLogin = async () => {
   try {
     // Asegúrate de que esta llamada use API_BASE_URL
     const response = await axios.post(
-      `${API_BASE_URL}/login`,
+      `${API_BASE_URL}/login`, // ¡Aquí es donde se usa la URL dinámica!
       {
         email: loginForm.email,
         password: loginForm.password

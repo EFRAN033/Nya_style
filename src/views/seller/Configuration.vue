@@ -115,12 +115,19 @@
     </div>
   </SellerDashboardLayout>
 </template>
+
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
 import SellerDashboardLayout from './SellerDashboardLayout.vue';
 
-// --- CAMBIO 1: Corregir API_BASE_URL (era 'hhttp') ---
-const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
+// --- CAMBIO CLAVE AQUÍ ---
+// Determina la URL base del backend según el entorno
+const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
+  : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
+
+// Opcional: Para verificar en consola qué URL se está usando
+// console.log('API Base URL en uso:', API_BASE_URL);
 
 const isLoading = ref(true);
 const userId = ref(null);
@@ -132,7 +139,7 @@ const profileForm = reactive({
   storeName: '', // Mapeado a business_name en la DB
   bankAccount: '',
   email: '',
-  address: '', // --- CAMBIO 2: Añadir el campo 'address' que está en tu backend ---
+  address: '',
 });
 
 const passwordForm = reactive({
@@ -150,7 +157,7 @@ const clearError = (field) => {
     delete errors.value[field];
   }
   // Clear overall submission error if a specific field error is cleared
-  if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'storeName', 'bankAccount', 'email', 'address'].includes(field)) { // --- CAMBIO 3: Añadir 'address' aquí también ---
+  if (errors.value.profile && ['firstName', 'lastName', 'phoneNumber', 'storeName', 'bankAccount', 'email', 'address'].includes(field)) {
     delete errors.value.profile;
   }
   if (errors.value.password && ['currentPassword', 'newPassword', 'confirmPassword'].includes(field)) {
@@ -185,7 +192,6 @@ const validateProfileForm = () => {
     errors.value.bankAccount = 'La cuenta bancaria es obligatoria.';
     isValid = false;
   }
-  // --- CAMBIO 4: Validación para 'address' si es obligatoria ---
   if (!profileForm.address.trim()) {
     errors.value.address = 'La dirección es obligatoria.';
     isValid = false;
@@ -236,8 +242,7 @@ const fetchSellerProfile = async () => {
   }
 
   try {
-    // --- CAMBIO 5: Llamar al endpoint correcto para obtener los datos del vendedor ---
-    const sellerResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`);
+    const sellerResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`); // Usando la variable dinámica
     if (!sellerResponse.ok) {
       const errorData = await sellerResponse.json();
       throw new Error(errorData.detail || `Error al cargar datos del vendedor: ${sellerResponse.statusText}`);
@@ -248,25 +253,9 @@ const fetchSellerProfile = async () => {
     profileForm.phoneNumber = sellerData.phone_number || '';
     profileForm.storeName = sellerData.business_name || ''; // Mapeado de business_name
     profileForm.bankAccount = sellerData.bank_account || '';
-    profileForm.address = sellerData.address || ''; // --- CAMBIO 6: Cargar la dirección ---
+    profileForm.address = sellerData.address || '';
 
-    // --- CAMBIO 7: Obtener el email del usuario.
-    // Tu backend no tiene un GET /users/{user_id} para solo el email.
-    // Opción A (Recomendado si ya lo tienes): Obtenerlo de localStorage si se guardó en el login.
     profileForm.email = localStorage.getItem('user_email') || ''; // Asumiendo que el email se guarda como 'user_email'
-
-    // Opción B (Si necesitas traerlo de la DB y no está en localStorage y no quieres modificar el login):
-    // Tendrías que crear un endpoint GET /users/{user_id} en tu main.py que devuelva al menos el email.
-    // Ejemplo de cómo llamarías si existiera un endpoint GET /users/{user_id}:
-    /*
-    const userResponse = await fetch(`${API_BASE_URL}/users/${userId.value}`);
-    if (!userResponse.ok) {
-        const errorData = await userResponse.json();
-        throw new Error(errorData.detail || `Error al cargar datos de usuario: ${userResponse.statusText}`);
-    }
-    const userData = await userResponse.json();
-    profileForm.email = userData.email || '';
-    */
 
   } catch (error) {
     console.error('Error al cargar la configuración del vendedor:', error);
@@ -287,8 +276,7 @@ const saveProfile = async () => {
 
   submissionStatus.value = 'submitting';
   try {
-    // --- CAMBIO 8: Actualizar datos del Vendedor (PUT /profile/seller/{user_id}) ---
-    const sellerUpdateResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`, {
+    const sellerUpdateResponse = await fetch(`${API_BASE_URL}/profile/seller/${userId.value}`, { // Usando la variable dinámica
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -297,7 +285,7 @@ const saveProfile = async () => {
         phone_number: profileForm.phoneNumber,
         business_name: profileForm.storeName, // Mapeo de storeName a business_name
         bank_account: profileForm.bankAccount,
-        address: profileForm.address, // --- CAMBIO 9: Enviar la dirección en la actualización ---
+        address: profileForm.address,
       }),
     });
 
@@ -306,8 +294,7 @@ const saveProfile = async () => {
       throw new Error(errorData.detail || 'Error al actualizar los datos del vendedor.');
     }
 
-    // --- CAMBIO 10: Actualizar Email del Usuario (PUT /users/{user_id}/change-email) ---
-    const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/change-email`, {
+    const emailUpdateResponse = await fetch(`${API_BASE_URL}/users/${userId.value}/change-email`, { // Usando la variable dinámica
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: profileForm.email }),
@@ -338,8 +325,7 @@ const changePassword = async () => {
 
   passwordChangeStatus.value = 'submitting';
   try {
-    // --- CAMBIO 11: Llamar al endpoint correcto para cambiar la contraseña ---
-    const response = await fetch(`${API_BASE_URL}/users/${userId.value}/change-password`, {
+    const response = await fetch(`${API_BASE_URL}/users/${userId.value}/change-password`, { // Usando la variable dinámica
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

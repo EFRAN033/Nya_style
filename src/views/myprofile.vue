@@ -152,8 +152,14 @@
     router.go(-1);
   };
   
-  // Define la URL base del backend usando la variable de entorno
-  const API_BASE_URL = import.meta.env.VITE_APP_API_URL; // <<<--- CAMBIO AQUÍ
+  // --- CAMBIO CLAVE AQUÍ ---
+  // Determina la URL base de la API según el entorno
+  const API_BASE_URL = import.meta.env.MODE === 'development'
+    ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa esta si estás en desarrollo
+    : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa esta si estás en producción
+  
+  // Opcional: Para verificar en consola qué URL se está usando
+  // console.log('API Base URL en uso:', API_BASE_URL);
   
   const isLoading = ref(true);
   const userId = ref(null);
@@ -366,8 +372,7 @@
   onMounted(() => {
     fetchCustomerProfile();
   });
-  </script>
-  
+</script>
   <style scoped>
   /* Spinner styling for animate-spin */
   @keyframes spin {
