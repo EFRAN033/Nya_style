@@ -139,6 +139,7 @@
     </main>
   </div>
 </template>
+
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -165,6 +166,21 @@ const goToHome = () => {
   router.push('/');
 };
 
+// --- Función para decodificar JWT ---
+const decodeJwt = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error("Error decoding JWT:", e);
+    return null;
+  }
+};
+
 const handleLogin = async () => {
   loading.value = true
   errorMessage.value = null
@@ -185,27 +201,38 @@ const handleLogin = async () => {
 
     // --- CAMBIO CLAVE AQUÍ: Almacenar el token JWT y el tipo de token ---
     if (response.data.access_token && response.data.token_type) {
-      localStorage.setItem('accessToken', response.data.access_token);
-      localStorage.setItem('tokenType', response.data.token_type); // Esto debería ser 'bearer'
+      const accessToken = response.data.access_token;
+      const tokenType = response.data.token_type; // Esto debería ser 'bearer'
 
-      // Almacenar también la información del usuario
-      localStorage.setItem('user_id', response.data.user_id);
-      localStorage.setItem('user_email', response.data.email);
-      localStorage.setItem('user_role', response.data.role);
-      if (response.data.first_name) {
-        localStorage.setItem('user_first_name', response.data.first_name);
-      }
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('tokenType', tokenType);
 
-      alert(`¡Bienvenido, ${response.data.first_name || response.data.email}! Has iniciado sesión como ${response.data.role}.`);
+      // --- Decodificar el token para obtener la información del usuario ---
+      const decodedToken = decodeJwt(accessToken);
 
-      if (response.data.role === 'admin') {
-        router.push({ name: 'admin-dashboard' });
-      } else if (response.data.role === 'cliente') {
-        router.push('/');
-      } else if (response.data.role === 'vendedor') {
-        router.push('/dashboard-vendedor/mis-articulos');
+      if (decodedToken) {
+        localStorage.setItem('user_id', decodedToken.user_id);
+        localStorage.setItem('user_email', decodedToken.sub); // 'sub' es el estándar para el email/identificador
+        localStorage.setItem('user_role', decodedToken.role);
+        if (decodedToken.first_name) {
+          localStorage.setItem('user_first_name', decodedToken.first_name);
+        }
+
+        alert(`¡Bienvenido, ${decodedToken.first_name || decodedToken.sub}! Has iniciado sesión como ${decodedToken.role}.`);
+
+        // --- Redirección basada en el rol del usuario ---
+        if (decodedToken.role === 'admin') {
+          router.push({ name: 'admin-dashboard' });
+        } else if (decodedToken.role === 'cliente') {
+          router.push('/'); // O a la ruta de dashboard de cliente si tienes una
+        } else if (decodedToken.role === 'vendedor') {
+          router.push('/dashboard-vendedor/mis-articulos');
+        } else {
+          router.push('/'); // Redirección por defecto
+        }
+
       } else {
-        router.push('/');
+        errorMessage.value = 'El token de autenticación no pudo ser decodificado. Inténtalo de nuevo.';
       }
 
     } else {

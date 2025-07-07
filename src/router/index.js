@@ -242,17 +242,27 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || 'VisteteYA';
 
-  const isAuthenticated = localStorage.getItem('authToken');
+  // --- CAMBIO CLAVE AQUÍ: Buscar 'accessToken' en lugar de 'authToken' ---
+  const isAuthenticated = localStorage.getItem('accessToken'); 
   const userRole = localStorage.getItem('user_role'); // Asegúrate de que este valor esté presente en localStorage después del login
 
-  // Si se va a la página de login o registro, permite el acceso
+  // Si se va a la página de login o registro, permite el acceso sin importar el estado de autenticación
   if (to.name === 'login' || to.name === 'register') {
-    next();
+    // Si ya está autenticado e intenta ir a login/register, redirigir al home (opcional, pero buena práctica)
+    // COMENTA O ELIMINA ESTA LÍNEA PARA PERMITIR ACCESO AL LOGIN AUNQUE EL TOKEN EXISTA
+    // Esto es útil para depuración o si quieres que los usuarios puedan ver la página de login
+    // incluso si están "logueados" (por ejemplo, para cerrar sesión de forma manual desde allí).
+    // if (isAuthenticated) { 
+    //   next({ name: 'home' }); 
+    // } else {
+      next(); // Permitir acceso normal a login/register
+    // }
     return;
   }
 
-  // Verifica si la ruta requiere autenticación y si el usuario no está autenticado
+  // Verifica si la ruta requiere autenticación y si el usuario NO está autenticado
   if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Ruta protegida y no hay token. Redirigiendo a /login'); // Para depuración
     next({
       name: 'login',
       query: { redirect: to.fullPath }
@@ -261,12 +271,15 @@ router.beforeEach((to, from, next) => {
   }
 
   // Verifica si la ruta requiere un rol específico y si el usuario no tiene ese rol
-  // Esta parte ya está bastante bien en tu código, solo asegúrate de que 'user_role' se guarde correctamente.
   if (to.meta.role && userRole !== to.meta.role) {
+    console.log(`Rol requerido: ${to.meta.role}, Rol del usuario: ${userRole}. Acceso denegado.`); // Para depuración
     if (isAuthenticated) {
+      // Si está autenticado pero con rol incorrecto
       alert('Acceso denegado. No tienes los permisos necesarios para esta sección.');
-      next('/'); // Redirige a la página de inicio o a una de "Acceso Denegado"
+      next('/'); // Redirige a la página de inicio
     } else {
+      // Si no está autenticado Y tiene rol incorrecto (probablemente aquí no hay rol definido aún)
+      // En este caso, redirigir al login si es una ruta protegida con rol.
       next({
         name: 'login',
         query: { redirect: to.fullPath }
@@ -275,7 +288,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  next(); // Permite la navegación
+  next(); // Permite la navegación si todas las condiciones anteriores pasan
 });
 
 export default router;
