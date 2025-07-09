@@ -5,6 +5,19 @@
 
       <form @submit.prevent="submitProduct" class="space-y-8">
 
+        <div v-if="submissionStatus === 'loading'" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Cargando...</strong>
+          <span class="block sm:inline">Enviando tu artículo, por favor espera...</span>
+        </div>
+        <div v-if="submissionStatus === 'success'" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">¡Éxito!</strong>
+          <span class="block sm:inline">Artículo añadido con éxito. Redirigiendo a tus artículos.</span>
+        </div>
+        <div v-if="submissionStatus === 'error'" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Error:</strong>
+          <span class="block sm:inline">{{ errors.submission || 'Error al añadir el artículo. Por favor, revisa los campos e intenta de nuevo.' }}</span>
+        </div>
+
         <section class="border-b border-gray-200 pb-8">
           <h2 class="text-xl font-extrabold text-gray-800 mb-4 flex items-center">
             <svg class="h-7 w-7 mr-3 text-pink-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -297,14 +310,10 @@ import SellerDashboardLayout from './seller/SellerDashboardLayout.vue'; // Ajust
 const router = useRouter();
 
 // --- Configuración de la API ---
-// --- CAMBIO CLAVE AQUÍ ---
 // Determina la URL base del backend según el entorno
 const API_BASE_URL = import.meta.env.MODE === 'development'
   ? import.meta.env.VITE_APP_API_URL_LOCAL  // Usa tu URL local si estás en desarrollo
   : import.meta.env.VITE_APP_API_URL_PRODUCTION; // Usa tu URL de producción en otro caso (como al hacer build para desplegar)
-
-// Opcional: Para verificar en consola qué URL se está usando
-// console.log('API Base URL en uso:', API_BASE_URL);
 
 // --- Estados del Formulario ---
 const currentStep = ref(1);
@@ -408,23 +417,12 @@ const addVariation = () => {
 };
 
 const removeVariation = (index) => {
-  if (product.value.variations.length > 1) { // This condition looks incorrect. Should remove if > 1.
-    // If you always want at least one variation, this logic needs adjustment.
-    // As it is, if length is 1, it will enter here and not remove.
-    // If you want to allow 0 variations, remove this check.
-    // For now, I'll keep the original logic's intent (which seems to prevent removing the last one).
-    console.warn('Debe haber al menos una variación para el producto.');
-    errors.value.variations = 'Debe haber al menos una variación para el producto.';
-    return; 
-  } else if (product.value.variations.length === 1) {
-      // Allow removing the last one, but show a warning or prevent based on your UX
-      // For now, I'm just preventing removal of the last one as per the original warning message
-      errors.value.variations = 'No puedes eliminar la última variación. Debe haber al menos una.';
-      return;
+  if (product.value.variations.length <= 1) { // Changed condition to prevent removing if only one left
+    errors.value.variations = 'No puedes eliminar la última variación. Debe haber al menos una.';
+    return;
   }
   product.value.variations.splice(index, 1);
 };
-
 
 const validateForm = () => {
   errors.value = {};
@@ -545,10 +543,29 @@ const submitProduct = async () => {
     formData.append('images', image.file, image.file.name); // 'images' for the list of UploadFile
   });
 
+  // --- CAMBIO DE FUNCIONALIDAD CLAVE: ADJUNTAR EL TOKEN DE AUTENTICACIÓN ---
+  const accessToken = localStorage.getItem('accessToken');
+  const tokenType = localStorage.getItem('tokenType'); // Esto debería ser 'bearer'
+
+  if (!accessToken || !tokenType) {
+    errors.value.submission = 'No autenticado. Por favor, inicia sesión para publicar un artículo.';
+    submissionStatus.value = 'error';
+    router.push('/login'); // Redirigir al login si no hay token
+    return;
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/products`, { // Usando la variable dinámica
       method: 'POST',
       body: formData,
+      headers: {
+        // MUY IMPORTANTE: No establezcas 'Content-Type': 'multipart/form-data' manualmente aquí.
+        // Cuando usas FormData con fetch, el navegador lo establece automáticamente con el boundary correcto.
+        // Si lo estableces manualmente, puede causar problemas.
+
+        // ¡Aquí se adjunta el token de autenticación!
+        'Authorization': `${tokenType} ${accessToken}`
+      },
     });
 
     if (!response.ok) {
